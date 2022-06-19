@@ -1,0 +1,30 @@
+version: "3.5"
+
+services:
+  node-api:
+    container_name: Sistem-za-spremljanje-in-analizo-eksperimentov
+    restart: always
+    ports:
+      - "3000:3000"
+    image: sistem-za-eksperimente-node-js
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: "npm start"
+    networks:
+      - sistem-network
+  mongo-db:
+    image: mongo
+    container_name: sistem-mongodb
+    ports:
+      - "27017-27019:27017-27019"
+    networks:
+      - sistem-network
+
+networks:
+  sistem-network:
+    name: sistem-network
+    driver: bridge

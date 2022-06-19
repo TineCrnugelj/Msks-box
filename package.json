@@ -1,0 +1,27 @@
+{
+  "name": "diplomska-naloga",
+  "version": "1.0.0",
+  "description": "Diplomska naloga FRI",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TineCrnugelj/Diplomska-naloga.git"
+  },
+  "author": "Tine Crnugelj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TineCrnugelj/Diplomska-naloga/issues"
+  },
+  "homepage": "https://github.com/TineCrnugelj/Diplomska-naloga#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.8",
+    "multer": "^1.4.5-lts.1",
+    "nodemon": "^2.0.16",
+    "proper-lockfile": "^4.1.2"
+  }
+}
