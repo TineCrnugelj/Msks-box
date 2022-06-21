@@ -5,10 +5,14 @@ const ctrlRuns = require('../controllers/runs');
 
 router.post('/runs', ctrlRuns.postAddRun);
 
-router.get('/runs/:idRun', ctrlRuns.getRun);
+router.post('/runs/reset/:runId', ctrlRuns.postResetRun);
+
+router.post('/runs/status/:runId/:status', ctrlRuns.postStatus);
+
+router.get('/runs/:runId', ctrlRuns.getRun);
 
 router.get('/runs', ctrlRuns.getAllRuns);
 
-router.delete('/runs/:idRun', ctrlRuns.deleteRun);
+router.delete('/runs/:runId', ctrlRuns.deleteRun);
 
 module.exports = router;

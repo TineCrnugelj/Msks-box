@@ -9,6 +9,9 @@ const runSchema = new mongoose.Schema({
     command: {type: String},
     created: {type: Date},
     updated: {type: Date},
+    // tag: {type: String},
+    // properties: {type: String},
+
     // environment:
 
 });

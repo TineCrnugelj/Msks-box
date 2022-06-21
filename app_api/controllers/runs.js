@@ -2,10 +2,11 @@ const Run = require('../models/Run');
 const lockfile = require('proper-lockfile');
 const Environment = require('../classes/Environment.js');
 const fs = require('fs');
+const shell = require('shelljs');
 
 const RUNS_DIR = 'runs';
 
-const saveRun = (newRunMeta) => {
+const saveRunToServer = (newRunMeta) => {
     const runDir = RUNS_DIR + '/' + newRunMeta.id;
     fs.mkdir(runDir, err => {
         if (err) console.log(err);
@@ -29,47 +30,97 @@ const getAllRuns = (req, res) => {
 };
 
 const getRun = (req, res) => {
-    const id = req.params.idRun;
+    const id = req.params.runId;
     if (!id) {
         return res.status(404).json({message: 'Id not provided'});
     }
-    Run.findById(id).then(run => {
-        return res.status(200).json(run);
+    Run.findById(id).then((err, run) => {
+        if (err) {
+            return res.status(500).json(err);
+        }
+        return res.status(200).json(run);  
     })
 }
 
 const deleteRun = (req, res) => {
-    const id = req.params.idRun;
+    const id = req.params.runId;
     if (!id) {
         return res.status(404).json({message: 'Id not provided'});
     }
 
-    fs.rmSync(`runs/${id}`,{recursive: true, force: true});
+    fs.rmSync(`runs/${id}`, {recursive: true, force: true});
 
     Run.findByIdAndRemove(id).exec(error => {
         if (error) {
             return res.status(500).json(error);
         }
-        console.log("delete");
         return res.status(204).json({message: 'deleted'});
     });
 }
+
+const postResetRun = (req, res) => {
+    const runId = req.params.runId;
+    const remove = req.query.remove;
+
+    lockfile.lock(RUNS_DIR)
+        .then((release) => {
+            if (remove) {
+                deleteRun(req, res);
+            }
+            else {
+                Run.findByIdAndUpdate(runId, {'status': 'PENDING', 'updated': Date.now()}, (err, run) => {
+                    if (err) {
+                        return res.status(500).json(err);
+                    }
+                    else {
+                        run.status = 'PENDING';
+                        console.log(run);
+                        fs.writeFile(RUNS_DIR + '/' + runId + '/meta.json', JSON.stringify(run), err => console.log(err));
+                        return res.status(204).json(run);
+                    }
+                });
+            }
+
+            return lockfile.unlock(RUNS_DIR);
+        })
+    .catch(err => {
+        console.log(err); 
+    });
+    
+};
+
+const postStatus = (req, res) => {
+    const runId = req.params.runId;
+    const status = req.params.status;
+
+    Run.findByIdAndUpdate(runId, {'status': status, 'updated': Date.now()}, (err, run) => {
+        if (err) console.log(err);
+        else {
+            run.status = status;
+            fs.writeFile(RUNS_DIR + '/' + runId + '/meta.json', JSON.stringify(run), err => console.log(err));
+            return res.status(204).json(run);
+        }
+    });
+};
 
 const postAddRun = (req, res) => {
     const newRun = {
        source: req.body.source,
        entrypoint: req.body.entrypoint,
        arguments: req.body.arguments,
-       tags: req.body.tags,
+       tag: req.body.tag,
        force: req.body.force,
     };
 
     const env = new Environment(newRun.source);
+
+    shell.exec(`git clone ${newRun.source}`);
     /*
     if (!env.entrypoints.contains(newRun.entrypoint)) {
         throw new Error('Entry point not found.');
     }
      */
+
 
     lockfile.lock(RUNS_DIR)
         .then((release) => {
@@ -82,23 +133,25 @@ const postAddRun = (req, res) => {
                 // command: {type: String},
                 created: Date.now(),
                 updated: Date.now(),
+                // tags: newRun.tag,
+                // properties: newRun.tag,
             });
             newRunMeta.save();
 
-            saveRun(newRunMeta);
+            saveRunToServer(newRunMeta);
             res.status(201).json(newRunMeta);
             return lockfile.unlock(RUNS_DIR);
         })
         .catch(err => {
             console.log(err);
         });
-
-
 };
 
 module.exports = {
     postAddRun,
     getRun,
     deleteRun,
-    getAllRuns
+    getAllRuns,
+    postResetRun,
+    postStatus,
 }

@@ -8,7 +8,7 @@ const fileStorageEngine = multer.diskStorage({
        cb(null, 'files');
    },
     filename: (req, file, cb) => {
-       cb(null, file.originalname + '-' + Date.now());
+       cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
@@ -24,13 +24,11 @@ const getAllFiles = (req, res) => {
 };
 
 const postAddFile = (req, res) => {
-    // console.log(req.files);
-    const metadataFilePath = req.files[0].path;
-    const outputFilePath = req.files[1].path;
+    // console.log(req.file);
+    const metadataFilePath = req.file.path;
 
     const newFile = new File({
         metadataPath: metadataFilePath,
-        outputPath: outputFilePath
     });
 
     console.log(newFile);
