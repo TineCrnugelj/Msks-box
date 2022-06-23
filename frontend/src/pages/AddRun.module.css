@@ -1,0 +1,7 @@
+.formContainer {
+    max-width: 60rem;
+    width: 90%;
+    margin: 2rem auto;
+    background-color: white;
+    border-radius: 12px;
+}

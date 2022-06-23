@@ -1,0 +1,34 @@
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.btnAddRun {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: #044599;
+    padding: 0.25rem 2rem;
+    border-radius: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 2rem;
+    height: 3rem;
+}
+
+.header {
+    display: flex;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #7cadee;
+    border-color: #7cadee;
+}
+
+th {
+    text-align: left;
+    background-color: #95bcf0;
+}

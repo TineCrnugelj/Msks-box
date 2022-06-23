@@ -1,0 +1,11 @@
+.tasks {
+    max-width: 80rem;
+    width: 90%;
+    margin: 2rem auto;
+}
+
+.tasks ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
