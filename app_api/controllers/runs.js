@@ -1,8 +1,12 @@
 const Run = require('../models/Run');
+const User = require('../models/User');
+
 const lockfile = require('proper-lockfile');
 const Environment = require('../classes/Environment.js');
 const fs = require('fs');
 const shell = require('shelljs');
+const asyncHandler = require('express-async-handler')
+
 
 const RUNS_DIR = 'runs';
 
@@ -19,7 +23,7 @@ const saveRunToServer = (newRunMeta) => {
 }
 
 const getAllRuns = (req, res) => {
-  Run.find()
+  Run.find({user: req.user.id})
       .then(runs => {
           if (!runs) {
               return res.status(404).json({message: 'No runs found!'});
@@ -44,8 +48,19 @@ const getRun = (req, res) => {
 
 const deleteRun = (req, res) => {
     const id = req.params.runId;
+    const run = Run.findById(id);
     if (!id) {
         return res.status(404).json({message: 'Id not provided'});
+    }
+
+    const user = await User.findById(req.user.id)
+
+    if (!user) {
+        return res.status(401).json('User not found!');
+    }
+
+    if (run.user.toString() !== user.id) {
+        return res.status(401).json('User not authorized');
     }
 
     fs.rmSync(`runs/${id}`, {recursive: true, force: true});
@@ -110,6 +125,7 @@ const postAddRun = (req, res) => {
        arguments: req.body.arguments,
        tag: req.body.tag,
        force: req.body.force,
+       user: req.user.id
     };
 
     const env = new Environment(newRun.source);
@@ -125,6 +141,7 @@ const postAddRun = (req, res) => {
     lockfile.lock(RUNS_DIR)
         .then((release) => {
             const newRunMeta = new Run({
+                user: newRun.user,
                 repository: env.repository,
                 commit: env.commit,
                 entrypoint: newRun.entrypoint,

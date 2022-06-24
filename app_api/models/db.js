@@ -5,7 +5,7 @@ let dbURI = 'mongodb://localhost/sistem';
 if (process.env.NODE_ENV === 'production')
     dbURI = process.env.MONGODB_CLOUD_URI;
 else if (process.env.NODE_ENV === 'docker')
-    dbURI = 'mongodb://sistem-mongodb/sitem';
+    dbURI = 'mongodb://sistem-mongodb/sistem';
 mongoose.connect(dbURI);
 
 mongoose.connection.on("connected", () => {

@@ -3,16 +3,18 @@ const router = express.Router();
 
 const ctrlRuns = require('../controllers/runs');
 
-router.post('/runs', ctrlRuns.postAddRun);
+const {protect} = require('../middleware/auth')
+
+router.post('/runs', protect, ctrlRuns.postAddRun);
 
 router.post('/runs/reset/:runId', ctrlRuns.postResetRun);
 
 router.post('/runs/status/:runId/:status', ctrlRuns.postStatus);
 
-router.get('/runs/:runId', ctrlRuns.getRun);
+router.get('/runs/:runId', protect, ctrlRuns.getRun);
 
-router.get('/runs', ctrlRuns.getAllRuns);
+router.get('/runs', protect, ctrlRuns.getAllRuns);
 
-router.delete('/runs/:runId', ctrlRuns.deleteRun);
+router.delete('/runs/:runId', protect, ctrlRuns.deleteRun);
 
 module.exports = router;

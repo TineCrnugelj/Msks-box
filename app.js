@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -5,8 +7,10 @@ const app = express();
 
 const fileApi = require('./app_api/routes/files');
 const runApi = require('./app_api/routes/runs');
+const usersApi = require('./app_api/routes/users');
 
 require('./app_api/models/db');
+
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -22,5 +26,8 @@ app.use("/api", (req, res, next) => {
 
 app.use('/api', fileApi);
 app.use('/api', runApi);
+app.use('/api', usersApi);
+
 
 app.listen(3000);
+ 

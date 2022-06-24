@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const runSchema = new mongoose.Schema({
+    user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     repository: {type: String, required: true},
     commit: {type: String, required: true},
     entrypoint: {type: String, required: true},
@@ -16,4 +17,4 @@ const runSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model('Run', runSchema, 'Run');
+module.exports = mongoose.model('Run', runSchema, 'Run'); 
