@@ -6,7 +6,7 @@ import classes from './TaskForm.module.css'
 
 const TaskForm = (props) => {
     let [numOfArgs, setNumOfArgs] = useState(1);
-    let [children, setChildren] = useState([<ArgumentPair key={Math.random()} />]);
+    let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
 
     const {
         value: enteredSource,
@@ -45,17 +45,34 @@ const TaskForm = (props) => {
             return;
         }
 
+        const args = [];
+        for (let i = 1; i <= numOfArgs; i++) {
+            const key = event.target[`key${i}`].value
+            const value = event.target[`value${i}`].value;
+
+            console.log(key, value)
+
+            let arg = {};
+            arg[key] = value;
+            args.push(arg);
+            event.target[`key${i}`].value = '';
+            event.target[`value${i}`].value = '';
+        }
+
         // POST run
         const run = {
             source: enteredSource,
             entrypoint: enteredEntrypoint,
-            tag: enteredTag
+            tag: enteredTag,
+            arguments: args
         }
 
         console.log(run);
 
-        resetSourceInput();
-        resetEntrypointInput();
+        event.target.source.value = '';
+        event.target.entrypoint.value = '';
+        event.target.tag.value = '';
+
     }
 
     const addArgumentHandler = (event) => {
@@ -63,7 +80,7 @@ const TaskForm = (props) => {
         setNumOfArgs(++numOfArgs);
         // setChildren([...children, <ArgumentPair key={numOfArgs} />])
         setChildren(prevState => {
-            return [...prevState, <ArgumentPair key={Math.random()} />]
+            return [...prevState, <ArgumentPair index={numOfArgs} key={Math.random()} />]
         })
     };
 
@@ -72,9 +89,8 @@ const TaskForm = (props) => {
         if (numOfArgs > 0) {
             setNumOfArgs(--numOfArgs);
             let newChildren = [...children];
-            newChildren.splice(numOfArgs - 1, 1);
+            newChildren.pop();
             setChildren(newChildren);
-            //setChildren(children.splice(-1, 1));
         }
     }
 

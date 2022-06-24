@@ -13,6 +13,7 @@ const inputStateReducer = (state, action) => {
         return { isTouched: true, value: state.value };
     }
     if (action.type === 'RESET') {
+        console.log('reset');
         return { isTouched: false, value: '' };
     }
     return initialInputState;
