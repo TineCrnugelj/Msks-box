@@ -1,0 +1,55 @@
+.container {
+    max-width: 60rem;
+    width: 90%;
+    margin: 2rem auto;
+    background-color: white;
+    border-radius: 12px;
+}
+
+.head {
+    margin-left: 2rem;
+    margin-top: 1rem;
+}
+
+.container label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    margin-left: 2rem;
+}
+
+.container input,
+.container select {
+    font: inherit;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 30rem;
+    max-width: 100%;
+    margin-left: 2rem;
+}
+
+.btnSubmit {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: black;
+    padding: 0.25rem 2rem;
+    border-radius: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 2rem;
+    height: 3rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btnSubmit:disabled,
+.btnSubmit:disabled:hover,
+.btnSubmit:disabled:active {
+    background-color: #ccc;
+    color: black;
+    border-color: #ccc;
+    cursor: not-allowed;
+}

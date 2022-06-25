@@ -1,7 +1,6 @@
 import { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { fetchRunData } from "../store/run-actions";
 
 import TaskItem from "./TaskItem";
 
@@ -113,13 +112,8 @@ const DUMMY_TASKS = [
 
 
 const TaskTable = (props) => {
-    const dispatch = useDispatch();
-    const runs = useSelector(state => state.runs);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        dispatch(fetchRunData())
-    }, [dispatch]);
 
     const tasksList = DUMMY_TASKS.map(task => (
         <TaskItem

@@ -46,7 +46,7 @@ const getRun = (req, res) => {
     })
 }
 
-const deleteRun = (req, res) => {
+const deleteRun = asyncHandler(async (req, res) => {
     const id = req.params.runId;
     const run = Run.findById(id);
     if (!id) {
@@ -71,7 +71,7 @@ const deleteRun = (req, res) => {
         }
         return res.status(204).json({message: 'deleted'});
     });
-}
+})
 
 const postResetRun = (req, res) => {
     const runId = req.params.runId;

@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "npm start --prefix frontend"
+    "server": "nodemon backend/app.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -29,5 +31,8 @@
     "nodemon": "^2.0.16",
     "proper-lockfile": "^4.1.2",
     "shelljs": "^0.8.5"
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.2"
   }
 }
