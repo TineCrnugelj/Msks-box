@@ -1,12 +1,17 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
 import useInput from '../hooks/use-input';
+import { createRun } from '../features/runs/runSlice'
+import { useNavigate } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
 
 const TaskForm = (props) => {
+    const dispatch = useDispatch();
     let [numOfArgs, setNumOfArgs] = useState(1);
     let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
+    const navigate = useNavigate()
 
     const {
         value: enteredSource,
@@ -51,12 +56,16 @@ const TaskForm = (props) => {
             const value = event.target[`value${i}`].value;
 
             console.log(key, value)
-
+            /*
             let arg = {};
             arg[key] = value;
             args.push(arg);
+            */
+
+            args.push(key + '=' + value);
             event.target[`key${i}`].value = '';
             event.target[`value${i}`].value = '';
+
         }
 
         // POST run
@@ -64,8 +73,9 @@ const TaskForm = (props) => {
             source: enteredSource,
             entrypoint: enteredEntrypoint,
             tag: enteredTag,
-            arguments: args
+            arguments: args.toString()
         }
+        dispatch(createRun(run));
 
         console.log(run);
 
@@ -73,6 +83,7 @@ const TaskForm = (props) => {
         event.target.entrypoint.value = '';
         event.target.tag.value = '';
 
+        navigate('/')
     }
 
     const addArgumentHandler = (event) => {

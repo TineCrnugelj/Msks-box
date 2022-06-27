@@ -1,6 +1,8 @@
 import { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
+import { getRuns, reset } from "../features/runs/runSlice";
+import Spinner from '../components/Spinner'
 
 import TaskItem from "./TaskItem";
 
@@ -113,11 +115,27 @@ const DUMMY_TASKS = [
 
 const TaskTable = (props) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { user } = useSelector(state => state.auth)
+    const { runs, isLoading, isError, message } = useSelector(state => state.runs)
+
+    useEffect(() => {
+        if (isError) {
+            console.log(message)
+        }
+
+        dispatch(getRuns())
+
+        return () => {
+            dispatch(reset())
+        }
+    }, []);
 
 
-    const tasksList = DUMMY_TASKS.map(task => (
+    const tasksList = runs.map(task => (
         <TaskItem
-            key={task._id}
+            key={Math.random()}
             id={task._id}
             entrypoint={task.entrypoint}
             status={task.status}
@@ -128,6 +146,10 @@ const TaskTable = (props) => {
 
     const redirectHandler = () => {
         navigate('/add-run');
+    }
+
+    if (isLoading) {
+        return <Spinner />
     }
 
     return (
