@@ -24,14 +24,13 @@ const getAllFiles = (req, res) => {
 };
 
 const postAddFile = (req, res) => {
-    // console.log(req.file);
+    console.log(req.file);
     const metadataFilePath = req.file.path;
 
     const newFile = new File({
         metadataPath: metadataFilePath,
     });
 
-    console.log(newFile);
 
     newFile.save((err, file) => {
         if (err) {
