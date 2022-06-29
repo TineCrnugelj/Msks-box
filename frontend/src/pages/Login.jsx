@@ -5,11 +5,18 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
 import Spinner from "../components/Spinner";
+import ClipLoader from 'react-spinners/ClipLoader'
 
 import classes from './Register.module.css'
 
+const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "#044599",
+};
 
 const Login = (props) => {
+    let [color, setColor] = useState("#044599");
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -53,7 +60,7 @@ const Login = (props) => {
     }
 
     if (isLoading) {
-        return <Spinner />
+        return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
 
     formIsValid = email.includes('@') && password !== '';

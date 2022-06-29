@@ -1,0 +1,16 @@
+.btnClose,
+.btnClose:hover {
+    background: none;
+    border: none;
+    box-shadow: none;
+    cursor: pointer;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.head {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+}

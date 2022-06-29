@@ -150,7 +150,7 @@ const postAddRun = (req, res) => {
                 // command: {type: String},
                 created: Date.now(),
                 updated: Date.now(),
-                // tags: newRun.tag,
+                tag: newRun.tag,
                 // properties: newRun.tag,
             });
             newRunMeta.save();

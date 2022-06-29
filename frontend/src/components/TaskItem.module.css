@@ -1,3 +1,17 @@
 tr {
     height: 4rem;
 }
+
+.btnDetails {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: black;
+    padding: 0.25rem 2rem;
+    border-radius: 7px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 1rem;
+    height: 2rem;
+}

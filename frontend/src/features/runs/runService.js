@@ -22,8 +22,19 @@ const getRuns = async (token) => {
           Authorization: `Bearer ${token}`,
         },
     }
-
     const response = await axios.get(API_URL, config)
+
+    return response.data;
+}
+
+// Get run by id
+const getRun = async (runId, token) => {
+    const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.get(API_URL + ':' + runId, config)
 
     return response.data;
 }
@@ -31,6 +42,8 @@ const getRuns = async (token) => {
 const runService = {
     createRun,
     getRuns,
+    getRun, 
+    
 }
 
 export default runService

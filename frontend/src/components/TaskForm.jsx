@@ -73,11 +73,9 @@ const TaskForm = (props) => {
             source: enteredSource,
             entrypoint: enteredEntrypoint,
             tag: enteredTag,
-            arguments: args.toString()
+            arguments: args
         }
         dispatch(createRun(run));
-
-        console.log(run);
 
         event.target.source.value = '';
         event.target.entrypoint.value = '';

@@ -4,11 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify'
 import { FaUser } from 'react-icons/fa'
 import { register, reset } from '../features/auth/authSlice'
-import Spinner from "../components/Spinner";
+import ClipLoader from 'react-spinners/ClipLoader'
 
 import classes from './Register.module.css'
 
+const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "#044599",
+};
+
 const Register = (props) => {
+    let [color, setColor] = useState('#044599');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -59,7 +66,7 @@ const Register = (props) => {
     isFormValid = name.trim() !== '' && email.trim().includes('@') && password.trim() !== '' && password2.trim() !== '';
 
     if (isLoading) {
-        return <Spinner />
+        return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
 
     return <Fragment>

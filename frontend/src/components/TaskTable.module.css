@@ -1,4 +1,4 @@
-table {
+.table {
     width: 100%;
     table-layout: fixed;
 }
@@ -28,7 +28,7 @@ button:hover {
     border-color: #7cadee;
 }
 
-th {
+.th {
     text-align: left;
     background-color: #95bcf0;
 }
