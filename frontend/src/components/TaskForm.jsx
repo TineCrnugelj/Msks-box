@@ -54,15 +54,14 @@ const TaskForm = (props) => {
         for (let i = 1; i <= numOfArgs; i++) {
             const key = event.target[`key${i}`].value
             const value = event.target[`value${i}`].value;
-
-            console.log(key, value)
             /*
             let arg = {};
             arg[key] = value;
             args.push(arg);
             */
-
-            args.push(key + '=' + value);
+            if (key !== '' && value !== '') {
+                args.push(key + '=' + value);
+            }
             event.target[`key${i}`].value = '';
             event.target[`value${i}`].value = '';
 

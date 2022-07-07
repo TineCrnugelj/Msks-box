@@ -58,8 +58,8 @@ const TaskTable = (props) => {
     return (
         <Fragment>
             <div className={classes.header}>
-                <h1>Runs ({tasksList.length})</h1>
-                <button className={classes.btnAddRun} onClick={redirectHandler}>+ Add run</button>
+                <h1>Tasks ({tasksList.length})</h1>
+                <button className={classes.btnAddRun} onClick={redirectHandler}>+ Add task</button>
             </div>
             <table className={classes.table}>
                 <thead>

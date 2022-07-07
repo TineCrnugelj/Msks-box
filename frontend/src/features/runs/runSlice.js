@@ -3,6 +3,7 @@ import runService from "./runService";
 
 const initialState = {
     runs: [],
+    lockedRuns: [],
     run: null,
     isError: false,
     isSuccess: false,
@@ -34,6 +35,26 @@ export const getRun = createAsyncThunk('runs/getOne', async (runId, thunkAPI) =>
     try {
         const token = thunkAPI.getState().auth.user.token
         return await runService.getRun(runId, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
+export const lockRun = createAsyncThunk('runs/lock', async (runId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await runService.lockRun(runId, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
+export const unlockRun = createAsyncThunk('runs/unlock', async (runId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await runService.unlockRun(runId, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -91,6 +112,19 @@ export const runSlice = createSlice({
                 state.run = action.payload
             })
             .addCase(getRun.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(lockRun.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(lockRun.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.lockedRuns.push(action.payload)
+            })
+            .addCase(lockRun.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

@@ -11,6 +11,10 @@ router.post('/runs/reset/:runId', ctrlRuns.postResetRun);
 
 router.post('/runs/status/:runId/:status', ctrlRuns.postStatus);
 
+router.post('/runs/lock/:runId', ctrlRuns.lockRun);
+
+router.post('/runs/unlock/:runId', ctrlRuns.unlockRun);
+
 router.get('/runs/:runId', protect, ctrlRuns.getRun);
 
 router.get('/runs', protect, ctrlRuns.getAllRuns);

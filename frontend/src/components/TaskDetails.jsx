@@ -26,7 +26,7 @@ const TaskDetails = (props) => {
         <p><strong>Created: </strong>{run.created}</p>
         <p><strong>Updated: </strong>{run.updated}</p> 
         <h3>Arguments:</h3>
-        <ArgumentTable args={run.arguments}/>
+        {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>} 
         <Graph />
     </Fragment> 
 }

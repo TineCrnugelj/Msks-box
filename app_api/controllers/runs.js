@@ -160,9 +160,40 @@ const postAddRun = (req, res) => {
             return lockfile.unlock(RUNS_DIR);
         })
         .catch(err => {
-            console.log(err);
+            return res.status(400).json(err);
         });
 };
+
+const lockRun = (req, res) => {
+    const runId = req.params.runId;
+    lockfile.lock(RUNS_DIR + '/' + runId)
+        .then(() => {
+            // do something with the file
+            return res.status(200).json({msg: `Task ${runId} locked.`})
+        })
+        .catch(err => {
+            return res.status(400).json(err)
+        })
+}
+
+const unlockRun = (req, res) => {
+    const runId = req.params.runId 
+    lockfile.check(RUNS_DIR + '/' + runId)
+        .then((isLocked) => {
+            if (isLocked) {
+                lockfile.unlock(RUNS_DIR + '/' + runId)
+                .then(() => {
+                    return res.status(200).json({msg: `Task ${runId} unlocked.`})
+                })
+                .catch(err => console.log(err))
+            }
+            else {
+                return res.status(400).json({msg: 'Task is not locked'})
+            }
+        })
+}
+    
+
 
 module.exports = {
     postAddRun,
@@ -171,4 +202,6 @@ module.exports = {
     getAllRuns,
     postResetRun,
     postStatus,
+    lockRun,
+    unlockRun,
 }

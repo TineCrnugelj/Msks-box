@@ -23,7 +23,7 @@ function Header() {
                 <ul>
                     <li>
                         <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/'>
-                            <FaHome /> Runs
+                            <FaHome /> Tasks
                         </NavLink>
                     </li>
                     {!user ? (<Fragment>
