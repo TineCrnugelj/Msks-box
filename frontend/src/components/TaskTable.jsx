@@ -78,4 +78,4 @@ const TaskTable = (props) => {
     )
 };
 
-export default TaskTable;
+export default TaskTable
