@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = '/api/runs/'
+const API_URL = '/api/tasks/'
 
 // Create new run
 const createRun = async (runData, token) => {

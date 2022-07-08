@@ -34,47 +34,41 @@ const getAllRuns = (req, res) => {
 };
 
 const getRun = (req, res) => {
-    const id = req.params.runId;
+    const id = req.params.taskId;
     if (!id) {
         return res.status(404).json({message: 'Id not provided'});
     }
-    Run.findById(id).then((err, run) => {
-        if (err) {
-            return res.status(500).json(err);
-        }
+    Run.find({user: req.user.id, _id: id}).then((run) => {
+
         return res.status(200).json(run);  
     })
 }
 
 const deleteRun = asyncHandler(async (req, res) => {
-    const id = req.params.runId;
-    const run = Run.findById(id);
-    if (!id) {
-        return res.status(404).json({message: 'Id not provided'});
+    const id = req.params.taskId;
+    const run = await Run.findById(id);
+
+
+    if (!run) {
+        return res.status(404).json({message: 'Run not found'});
     }
 
-    const user = await User.findById(req.user.id)
-
-    if (!user) {
+    if (!req.user) {
         return res.status(401).json('User not found!');
     }
 
-    if (run.user.toString() !== user.id) {
+    if (run.user.toString() !== req.user.id) {
         return res.status(401).json('User not authorized');
     }
 
     fs.rmSync(`runs/${id}`, {recursive: true, force: true});
 
-    Run.findByIdAndRemove(id).exec(error => {
-        if (error) {
-            return res.status(500).json(error);
-        }
-        return res.status(204).json({message: 'deleted'});
-    });
+    await run.remove()
+    return res.status(204).json({message: 'Task deleted'})
 })
 
 const postResetRun = (req, res) => {
-    const runId = req.params.runId;
+    const taskId = req.params.taskId;
     const remove = req.query.remove;
 
     lockfile.lock(RUNS_DIR)
@@ -83,14 +77,14 @@ const postResetRun = (req, res) => {
                 deleteRun(req, res);
             }
             else {
-                Run.findByIdAndUpdate(runId, {'status': 'PENDING', 'updated': Date.now()}, (err, run) => {
+                Run.findByIdAndUpdate(taskId, {'status': 'PENDING', 'updated': Date.now()}, (err, run) => {
                     if (err) {
                         return res.status(500).json(err);
                     }
                     else {
                         run.status = 'PENDING';
                         console.log(run);
-                        fs.writeFile(RUNS_DIR + '/' + runId + '/meta.json', JSON.stringify(run), err => console.log(err));
+                        fs.writeFile(RUNS_DIR + '/' + taskId + '/meta.json', JSON.stringify(run), err => console.log(err));
                         return res.status(204).json(run);
                     }
                 });
@@ -105,14 +99,14 @@ const postResetRun = (req, res) => {
 };
 
 const postStatus = (req, res) => {
-    const runId = req.params.runId;
+    const taskId = req.params.taskId;
     const status = req.params.status;
 
-    Run.findByIdAndUpdate(runId, {'status': status, 'updated': Date.now()}, (err, run) => {
+    Run.findByIdAndUpdate(taskId, {'status': status, 'updated': Date.now()}, (err, run) => {
         if (err) console.log(err);
         else {
             run.status = status;
-            fs.writeFile(RUNS_DIR + '/' + runId + '/meta.json', JSON.stringify(run), err => console.log(err));
+            fs.writeFile(RUNS_DIR + '/' + taskId + '/meta.json', JSON.stringify(run), err => console.log(err));
             return res.status(204).json(run);
         }
     });
@@ -165,11 +159,11 @@ const postAddRun = (req, res) => {
 };
 
 const lockRun = (req, res) => {
-    const runId = req.params.runId;
-    lockfile.lock(RUNS_DIR + '/' + runId)
+    const taskId = req.params.taskId;
+    lockfile.lock(RUNS_DIR + '/' + taskId)
         .then(() => {
             // do something with the file
-            return res.status(200).json({msg: `Task ${runId} locked.`})
+            return res.status(200).json({msg: `Task ${taskId} locked.`})
         })
         .catch(err => {
             return res.status(400).json(err)
@@ -177,13 +171,13 @@ const lockRun = (req, res) => {
 }
 
 const unlockRun = (req, res) => {
-    const runId = req.params.runId 
-    lockfile.check(RUNS_DIR + '/' + runId)
+    const taskId = req.params.taskId 
+    lockfile.check(RUNS_DIR + '/' + taskId)
         .then((isLocked) => {
             if (isLocked) {
-                lockfile.unlock(RUNS_DIR + '/' + runId)
+                lockfile.unlock(RUNS_DIR + '/' + taskId)
                 .then(() => {
-                    return res.status(200).json({msg: `Task ${runId} unlocked.`})
+                    return res.status(200).json({msg: `Task ${taskId} unlocked.`})
                 })
                 .catch(err => console.log(err))
             }

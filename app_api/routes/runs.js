@@ -5,20 +5,38 @@ const ctrlRuns = require('../controllers/runs');
 
 const {protect} = require('../middleware/auth')
 
-router.post('/runs', protect, ctrlRuns.postAddRun);
+router.post('/tasks', protect, ctrlRuns.postAddRun);
 
-router.post('/runs/reset/:runId', ctrlRuns.postResetRun);
+router.post('/tasks/reset/:taskId', ctrlRuns.postResetRun);
 
-router.post('/runs/status/:runId/:status', ctrlRuns.postStatus);
+router.post('/tasks/status/:rutaskIdnId/:status', ctrlRuns.postStatus);
 
-router.post('/runs/lock/:runId', ctrlRuns.lockRun);
+router.post('/tasks/lock/:taskId', ctrlRuns.lockRun);
 
-router.post('/runs/unlock/:runId', ctrlRuns.unlockRun);
+router.post('/tasks/unlock/:taskId', ctrlRuns.unlockRun);
 
-router.get('/runs/:runId', protect, ctrlRuns.getRun);
+router.get('/tasks/:taskId', protect, ctrlRuns.getRun);
 
-router.get('/runs', protect, ctrlRuns.getAllRuns);
+/**
+ * @swagger
+ *  /tasks:
+ *   get:
+ *    summary: A list of all runs
+ *    descriptions: Get a list of all runs from the database
+ *    tags: [Tasks]
+ *    responses:
+ *     "200":
+ *      description: Request succeeded, the list of runs is returned
+ *      content:
+ *       application/json:
+ *        schema:
+ *         type: array
+ *         items:
+ *          $ref: "#/components/schemas/LokacijaBranjePovzetek"
+ */
 
-router.delete('/runs/:runId', protect, ctrlRuns.deleteRun);
+router.get('/tasks', protect, ctrlRuns.getAllRuns);
+
+router.delete('/tasks/:taskId', protect, ctrlRuns.deleteRun);
 
 module.exports = router;

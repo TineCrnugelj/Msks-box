@@ -7,10 +7,7 @@ import { useDispatch } from 'react-redux'
 import { showDetails } from '../features/details/detailsSlice'
 import { lockRun, unlockRun } from '../features/runs/runSlice'
 import { toast } from 'react-toastify'
-
-
 import {setRun} from '../features/runs/runSlice'
-
 
 const TaskItem = (props) => {
     const dispatch = useDispatch();
@@ -50,11 +47,12 @@ const TaskItem = (props) => {
             <td>{props.status}</td>
             <td>{props.created}</td>
             <td>{props.updated}</td>
-            <div className={classes.actions}>
-                <button onClick={toggleDetailsHandler} className={classes.btnDetails}><FaArrowDown /> Details</button>
-                {locked ? (<button onClick={toggleUnlockHandler} className={classes.btnDetails}>Unlock <FaLockOpen /></button>) : (<button onClick={toggleLockHandler} className={classes.btnDetails}>Lock <FaLock /></button>)}
-                
-            </div>
+            <td>
+                <div className={classes.actions}>
+                    <button onClick={toggleDetailsHandler} className={classes.btnDetails}><FaArrowDown /> Details</button>
+                    {locked ? (<button onClick={toggleUnlockHandler} className={classes.btnDetails}>Unlock <FaLockOpen /></button>) : (<button onClick={toggleLockHandler} className={classes.btnDetails}>Lock <FaLock /></button>)}
+                </div>
+            </td>
         </tr>
     </tbody>
 }
