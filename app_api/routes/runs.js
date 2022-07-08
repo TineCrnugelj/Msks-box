@@ -17,23 +17,7 @@ router.post('/tasks/unlock/:taskId', ctrlRuns.unlockRun);
 
 router.get('/tasks/:taskId', protect, ctrlRuns.getRun);
 
-/**
- * @swagger
- *  /tasks:
- *   get:
- *    summary: A list of all runs
- *    descriptions: Get a list of all runs from the database
- *    tags: [Tasks]
- *    responses:
- *     "200":
- *      description: Request succeeded, the list of runs is returned
- *      content:
- *       application/json:
- *        schema:
- *         type: array
- *         items:
- *          $ref: "#/components/schemas/LokacijaBranjePovzetek"
- */
+router.put('/tasks/:taskId', protect, ctrlRuns.putUpdateRun);
 
 router.get('/tasks', protect, ctrlRuns.getAllRuns);
 

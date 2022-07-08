@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
  * tags:
  *  - name: Tasks
  *    description: Managing tasks
+ *  - name: Users
+ *    description: Managing users
  */
 /**
  * @swagger
@@ -21,7 +23,16 @@ const mongoose = require('mongoose');
  * @swagger
  * components:
  *  schemas:
- *   Error:
+ *   Error: 
+ *    type: object
+ *    description: Error details
+ *    required:
+ *     - message
+ *    properties:
+ *     message:
+ *      type: string
+ *    example:
+ *     sporočilo: Parameters are mandatory
  * 
 */
 
@@ -82,6 +93,125 @@ const mongoose = require('mongoose');
  *     - repository
  *     - entrypoint
  *     - arguments
+ * 
+ *   AddTaskSchema:
+ *    type: object
+ *    properties:
+ *     source:
+ *      type: string
+ *      example: file:///home/lukacu/checkouts/gaptrack/
+ *     entrypoint:
+ *      type: string
+ *      example: train_match
+ *     arguments:
+ *      type: array
+ *      items:
+ *       type: string
+ *      example:
+ *       - feature_reduction=256
+ *       - augment_move=60
+ *     tag:
+ *      type: string
+ *      example: tag
+ *    required:
+ *     - source
+ *     - entrypoint
+ *     - arguments 
+ *   
+ *   AddTaskResponse:
+ *    type: object
+ *    properties:
+ *     user:
+ *      type: string
+ *      example: 62b5cd5aa614c565c00ea9f0
+ *     repository:
+ *      type: string
+ *      example: file:///home/lukacu/checkouts/gaptrack/
+ *     commit:
+ *      type: string
+ *      example: master
+ *     entrypoint:
+ *      type: string
+ *      example: train_match
+ *     arguments:
+ *      type: array
+ *      items:
+ *       type: string
+ *      example:
+ *       - feature_reduction=256
+ *       - augment_move=60
+ *     status:
+ *      type: string
+ *      example: PENDING
+ *     created:
+ *      type: string
+ *      example: 2022-07-08T12:38:01.493Z
+ *     updated:
+ *      type: string
+ *      example: 2022-07-08T12:38:01.493Z
+ *     _id:
+ *      type: string
+ *      example: 62c82529a4d213c3cceb1bab
+ *      
+ * 
+ *   UpdateTaskSchema:
+ *      type: object
+ *      properties:
+ *       source:
+ *        type: string
+ *        example: file:///home/lukacu/checkouts/gaptrack/
+ *       entrypoint:
+ *        type: string
+ *        example: train_match
+ *       arguments:
+ *        type: array
+ *        items:
+ *          type: string
+ *        example:
+ *         - feature_reduction=256
+ *         - augment_move=60
+ *       tag:
+ *        type: string
+ *        example: tag
+ *      required:
+ *       - source
+ *       - entrypoint
+ *       - arguments 
+ * 
+ *   UpdateTaskResponse:
+ *      type: object
+ *      properties:
+ *       user:
+ *        type: string
+ *        example: 62b5cd5aa614c565c00ea9f0
+ *       repository:
+ *        type: string
+ *        example: file:///home/lukacu/checkouts/gaptrack/
+ *       commit:
+ *        type: string
+ *        example: master
+ *       entrypoint:
+ *        type: string
+ *        example: train_match
+ *       arguments:
+ *        type: array
+ *        items:
+ *         type: string
+ *        example:
+ *         - feature_reduction=256
+ *         - augment_move=60
+ *       status:
+ *        type: string
+ *        example: PENDING
+ *       created:
+ *        type: string
+ *        example: 2022-07-08T12:38:01.493Z
+ *       updated:
+ *        type: string
+ *        example: 2022-07-08T12:38:01.493Z
+ *       _id:
+ *        type: string
+ *        example: 62c82529a4d213c3cceb1bab
  */
 
 /**
@@ -247,6 +377,86 @@ const mongoose = require('mongoose');
  *    
  */
 
+/**
+ * @swagger
+ *  /tasks:
+ *   post:
+ *    summary: Add a new task
+ *    description: Add a new task with all required data - user, repository, entrypoint and arguments
+ *    tags: [Tasks]
+ *    security:
+ *     - jwt: []
+ *    requestBody:
+ *     description: Task data
+ *     required: true 
+ *     content:
+ *      application/x-www-form-urlencoded:
+ *       schema:
+ *        $ref: "#/components/schemas/AddTaskSchema"
+ *    responses:
+ *     "201":
+ *      description: Task successfully added and it's retured in the response field
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/AddTaskResponse"
+ *     "400":
+ *      description: Task adding failed.
+ *     "401":
+ *      description: Authorization error.
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/Error"
+ *        examples:
+ *         ni zetona:
+ *          $ref: "#/components/examples/NoToken"
+ */
+
+/**
+ * @swagger
+ *  /tasks/{taskId}:
+ *   put:
+ *    summary: Update a task
+ *    description: Update a task with all required data - user, repository, entrypoint and arguments
+ *    tags: [Tasks]
+ *    security:
+ *     - jwt: []
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    requestBody:
+ *     description: Task data
+ *     required: true 
+ *     content:
+ *      application/x-www-form-urlencoded:
+ *       schema:
+ *        $ref: "#/components/schemas/UpdateTaskSchema"
+ *    responses:
+ *     "204":
+ *      description: Task successfully updated and it's retured in the response field
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/UpdateTaskResponse"
+ *     "400":
+ *      description: Task updating failed.
+ *     "401":
+ *      description: Authorization error.
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/Error"
+ *        examples:
+ *         ni zetona:
+ *          $ref: "#/components/examples/NoToken"
+ */
+
 const runSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     repository: {type: String, required: true},
@@ -258,10 +468,6 @@ const runSchema = new mongoose.Schema({
     created: {type: Date},
     updated: {type: Date},
     tag: {type: String},
-    // properties: {type: String},
-
-    // environment:
-
 });
 
-module.exports = mongoose.model('Run', runSchema, 'Run'); 
+module.exports = mongoose.model('Run', runSchema, 'Run');  

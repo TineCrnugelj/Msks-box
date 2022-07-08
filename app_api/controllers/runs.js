@@ -112,8 +112,47 @@ const postStatus = (req, res) => {
     });
 };
 
+const putUpdateRun = async (req, res) => {
+    const runId = req.params.taskId
+    if (!runId) {
+        return res.status(404).json({message: 'TaskId not provided'})
+    }
+
+    const run = await Run.findById(runId);
+
+    if (!run) {
+        return res.status(404).json({message: 'Task not found'});
+    }
+
+    if (!req.user) {
+        return res.status(401).json('User not found!');
+    }
+
+    if (run.user.toString() !== req.user.id) {
+        console.log(run.user.toString(), req.user.id)
+        return res.status(401).json('User not authorized');
+    }
+
+    run.repository = req.body.source
+    run.commit = req.body.commit
+    run.entrypoint = req.body.entrypoint
+    run.arguments = req.body.arguments
+    run.status = req.body.status
+    run.tag = req.body.tag
+    run.updated = Date.now()
+ 
+    run.save((err, run) => {
+        if (err) {
+            return res.status(404).json(err)
+        }
+        else {
+            res.status(204).json(run)
+        }
+    }) 
+}
+
 const postAddRun = (req, res) => {
-    const newRun = {
+    const newRun = { 
        source: req.body.source,
        entrypoint: req.body.entrypoint,
        arguments: req.body.arguments,
@@ -122,40 +161,26 @@ const postAddRun = (req, res) => {
        user: req.user.id
     };
 
+    console.log(newRun)
+
     const env = new Environment(newRun.source);
 
-    shell.exec(`git clone ${newRun.source}`);
-    /*
-    if (!env.entrypoints.contains(newRun.entrypoint)) {
-        throw new Error('Entry point not found.');
-    }
-     */
+    const newRunMeta = new Run({
+        user: newRun.user,
+        repository: env.repository,
+        commit: env.commit,
+        entrypoint: newRun.entrypoint,
+        arguments: newRun.arguments,
+        status: 'PENDING',
+        created: Date.now(),
+        updated: Date.now(), 
+        tag: newRun.tag,
+    });
+    newRunMeta.save();
 
-
-    lockfile.lock(RUNS_DIR)
-        .then((release) => {
-            const newRunMeta = new Run({
-                user: newRun.user,
-                repository: env.repository,
-                commit: env.commit,
-                entrypoint: newRun.entrypoint,
-                arguments: newRun.arguments,
-                status: 'PENDING',
-                // command: {type: String},
-                created: Date.now(),
-                updated: Date.now(),
-                tag: newRun.tag,
-                // properties: newRun.tag,
-            });
-            newRunMeta.save();
-
-            saveRunToServer(newRunMeta);
-            res.status(201).json(newRunMeta);
-            return lockfile.unlock(RUNS_DIR);
-        })
-        .catch(err => {
-            return res.status(400).json(err);
-        });
+    saveRunToServer(newRunMeta);
+    return res.status(201).json(newRunMeta);
+        
 };
 
 const lockRun = (req, res) => {
@@ -198,4 +223,5 @@ module.exports = {
     postStatus,
     lockRun,
     unlockRun,
+    putUpdateRun,
 }
