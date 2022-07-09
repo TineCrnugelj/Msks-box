@@ -37,6 +37,7 @@ const TaskTable = (props) => {
     const tasksList = runs.map(task => (
         <TaskItem
             key={Math.random()}
+            source={task.repository}
             id={task._id}
             tag={task.tag}
             entrypoint={task.entrypoint}
@@ -69,6 +70,7 @@ const TaskTable = (props) => {
                         <th className={classes.th}>Status</th>
                         <th className={classes.th}>Created</th>
                         <th className={classes.th}>Updated</th>
+                        <th className={classes.th}>Actions</th>
                     </tr>
                 </thead>
                 {tasksList}
