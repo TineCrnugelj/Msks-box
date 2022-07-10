@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux'
 import useInput from '../hooks/use-input';
 import { createRun } from '../features/runs/runSlice'
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
@@ -12,7 +12,6 @@ const TaskForm = (props) => {
     let [numOfArgs, setNumOfArgs] = useState(1);
     let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
     const navigate = useNavigate()
-    let [searchParams] = useSearchParams()
 
     const {
         value: enteredSource,
@@ -55,11 +54,7 @@ const TaskForm = (props) => {
         for (let i = 1; i <= numOfArgs; i++) {
             const key = event.target[`key${i}`].value
             const value = event.target[`value${i}`].value;
-            /*
-            let arg = {};
-            arg[key] = value;
-            args.push(arg);
-            */
+
             if (key !== '' && value !== '') {
                 args.push(key + '=' + value);
             }
@@ -87,7 +82,6 @@ const TaskForm = (props) => {
     const addArgumentHandler = (event) => {
         event.preventDefault();
         setNumOfArgs(++numOfArgs);
-        // setChildren([...children, <ArgumentPair key={numOfArgs} />])
         setChildren(prevState => {
             return [...prevState, <ArgumentPair index={numOfArgs} key={Math.random()} />]
         })
@@ -110,15 +104,15 @@ const TaskForm = (props) => {
         <h1 className={classes.heading}>Add a run</h1>
         <div className={sourceClasses}>
             <label htmlFor="source">Source</label>
-            <input type="text" id='source' value={searchParams.get('source') !== null ? searchParams.get('source') : ''} onChange={sourceChangedHandler} onBlur={sourceBlurHandler} />
+            <input type="text" id='source' value={enteredSource} onChange={sourceChangedHandler} onBlur={sourceBlurHandler} />
         </div>
         <div className={entrypointClasses}>
             <label htmlFor="entrypoint">Entrypoint</label>
-            <input type="text" id='entrypoint' value={searchParams.get('entrypoint') !== null ? searchParams.get('entrypoint') : ''} onChange={entrypointChangedHandler} onBlur={entrypointBlurHandler} />
+            <input type="text" id='entrypoint' value={enteredEntrypoint} onChange={entrypointChangedHandler} onBlur={entrypointBlurHandler} />
         </div>
         <div className={classes.formControl}>
             <label htmlFor="tag">Tag</label>
-            <input type="text" id='tag' value={searchParams.get('tag') !== null ? searchParams.get('tag') : ''} onChange={tagChangedHandler} onBlur={tagBlurHandler} />
+            <input type="text" id='tag' value={enteredTag} onChange={tagChangedHandler} onBlur={tagBlurHandler} />
         </div>
         <div className={classes.argumentsGroup}>
             <h3 className={classes.arguments}>Arguments</h3>

@@ -34,7 +34,7 @@ const getRun = async (runId, token) => {
           Authorization: `Bearer ${token}`,
         },
     }
-    const response = await axios.get(API_URL + ':' + runId, config)
+    const response = await axios.get(API_URL + runId, config)
 
     return response.data;
 }
@@ -61,12 +61,24 @@ const unlockRun = async (runId, token) => {
     return response.data;
 }
 
+const deleteRun = async (runId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.delete(API_URL + runId, config)
+
+    return response.data;
+}
+
 const runService = {
     createRun,
     getRuns,
     getRun, 
     lockRun,
     unlockRun,
+    deleteRun,
 }
 
 export default runService

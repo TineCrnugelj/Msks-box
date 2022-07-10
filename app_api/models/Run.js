@@ -366,7 +366,7 @@ const mongoose = require('mongoose');
  *       required: true
  *       example: 6ded18eb51386c3799833191
  *    responses:
- *     "204":
+ *     "200":
  *      description: Task successfully deleted
  *     "404":
  *      description: Task not found

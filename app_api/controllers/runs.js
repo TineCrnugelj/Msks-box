@@ -64,7 +64,7 @@ const deleteRun = asyncHandler(async (req, res) => {
     fs.rmSync(`runs/${id}`, {recursive: true, force: true});
 
     await run.remove()
-    return res.status(204).json({message: 'Task deleted'})
+    res.status(200).json({id: id})
 })
 
 const postResetRun = (req, res) => {

@@ -61,6 +61,17 @@ export const unlockRun = createAsyncThunk('runs/unlock', async (runId, thunkAPI)
     }
 });
 
+export const deleteRun = createAsyncThunk('runs/delete', async (runId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await runService.deleteRun(runId, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
+
 export const runSlice = createSlice({
     name: 'runs',
     initialState,
@@ -73,7 +84,7 @@ export const runSlice = createSlice({
         },
         setRun: (state, action) => {
             state.run = action.payload
-        }
+        },
     }, 
     extraReducers: (builder) => {
         builder
@@ -125,6 +136,19 @@ export const runSlice = createSlice({
                 state.lockedRuns.push(action.payload)
             })
             .addCase(lockRun.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(deleteRun.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(deleteRun.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.runs = state.runs.filter((run) => run._id !== action.payload.id)
+            })
+            .addCase(deleteRun.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

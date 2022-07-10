@@ -6,7 +6,7 @@ import { FaLock } from 'react-icons/fa'
 import { FaLockOpen } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { showDetails } from '../features/details/detailsSlice'
-import { lockRun, unlockRun } from '../features/runs/runSlice'
+import { deleteRun, lockRun, unlockRun } from '../features/runs/runSlice'
 import { toast } from 'react-toastify'
 import { setRun } from '../features/runs/runSlice'
 import { Dropdown } from 'react-bootstrap'
@@ -36,7 +36,6 @@ const TaskItem = (props) => {
         e.preventDefault()
         dispatch(lockRun(props.id))
         setLocked(true)
-        // show a toast
         toast.success('Task locked.', { autoClose: 2000 })
     }
 
@@ -49,6 +48,10 @@ const TaskItem = (props) => {
         navigate(`/update-run?source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
     }
 
+    const deleteTaskHandler = () => {
+        dispatch(deleteRun(props.id))
+    }
+
     return <tbody>
         <tr className={classes.task}>
             <td>{props.tag}</td>
@@ -59,8 +62,9 @@ const TaskItem = (props) => {
             <td>
                 <DropdownButton id="dropdown-basic-button" title="Options">
                     <Dropdown.Item onClick={toggleDetailsHandler} >Details</Dropdown.Item>
-                    {locked ? (<Dropdown.Item onClick={toggleUnlockHandler} >Unlock task</Dropdown.Item>) : (<Dropdown.Item onClick={toggleLockHandler} href="#/action-2">Lock task</Dropdown.Item>)}
+                    {locked ? (<Dropdown.Item onClick={toggleUnlockHandler} >Unlock</Dropdown.Item>) : (<Dropdown.Item onClick={toggleLockHandler} href="#/action-2">Lock</Dropdown.Item>)}
                     <Dropdown.Item onClick={cloneTaskHandler}>Clone</Dropdown.Item>
+                    <Dropdown.Item onClick={deleteTaskHandler}>Delete</Dropdown.Item>
                 </DropdownButton>
             </td>
         </tr>
