@@ -32,7 +32,7 @@ const mongoose = require('mongoose');
  *     message:
  *      type: string
  *    example:
- *     sporočilo: Parameters are mandatory
+ *     message: Parameters are mandatory
  * 
 */
 
@@ -212,6 +212,11 @@ const mongoose = require('mongoose');
  *       _id:
  *        type: string
  *        example: 62c82529a4d213c3cceb1bab
+ *   
+ *   LockTaskResponse:
+ *      type: object
+ *      properties:
+ *       message: Task 62c82529a4d213c3cceb1bab locked. 
  */
 
 /**
@@ -446,6 +451,78 @@ const mongoose = require('mongoose');
  *         $ref: "#/components/schemas/UpdateTaskResponse"
  *     "400":
  *      description: Task updating failed.
+ *     "401":
+ *      description: Authorization error.
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/Error"
+ *        examples:
+ *         ni zetona:
+ *          $ref: "#/components/examples/NoToken"
+ */
+
+/**
+ * @swagger
+ *  /tasks/lock/{taskId}:
+ *   post:
+ *    summary: Lock a task
+ *    tags: [Tasks]
+ *    security:
+ *     - jwt: []
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    responses:
+ *     "200":
+ *      description: Task successfully locked.
+ *     "400":
+ *      description: Task locking failed.
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/Error"
+ *     "401":
+ *      description: Authorization error.
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/Error"
+ *        examples:
+ *         ni zetona:
+ *          $ref: "#/components/examples/NoToken"
+ */
+
+/**
+ * @swagger
+ *  /tasks/unlock/{taskId}:
+ *   post:
+ *    summary: Unlock a task
+ *    tags: [Tasks]
+ *    security:
+ *     - jwt: []
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    responses:
+ *     "200":
+ *      description: Task successfully unlocked.
+ *     "400":
+ *      description: Task unlocking failed, task is not locked.
+ *      content:
+ *       application/json:
+ *        schema:
+ *         $ref: "#/components/schemas/Error"
  *     "401":
  *      description: Authorization error.
  *      content:
