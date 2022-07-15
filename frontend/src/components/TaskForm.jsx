@@ -60,10 +60,8 @@ const TaskForm = (props) => {
             }
             event.target[`key${i}`].value = '';
             event.target[`value${i}`].value = '';
-
         }
 
-        // POST run
         const run = {
             source: enteredSource,
             entrypoint: enteredEntrypoint,

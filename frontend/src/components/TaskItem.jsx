@@ -1,12 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import classes from './TaskItem.module.css'
-import { FaArrowDown } from 'react-icons/fa'
-import { FaLock } from 'react-icons/fa'
-import { FaLockOpen } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { showDetails } from '../features/details/detailsSlice'
-import { deleteRun, lockRun, unlockRun } from '../features/runs/runSlice'
+import { deleteRun, lockRun, unlockRun, updateRun } from '../features/runs/runSlice'
 import { toast } from 'react-toastify'
 import { setRun } from '../features/runs/runSlice'
 import { Dropdown } from 'react-bootstrap'
@@ -45,11 +42,15 @@ const TaskItem = (props) => {
     }
 
     const cloneTaskHandler = () => {
-        navigate(`/update-run?source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
+        navigate(`/update-run?action=clone&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
     }
 
     const deleteTaskHandler = () => {
         dispatch(deleteRun(props.id))
+    }
+
+    const updateTaskHandler = () => {
+        navigate(`/update-run?action=update&id=${props.id}&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
     }
 
     return <tbody>
@@ -65,6 +66,7 @@ const TaskItem = (props) => {
                     {locked ? (<Dropdown.Item onClick={toggleUnlockHandler} >Unlock</Dropdown.Item>) : (<Dropdown.Item onClick={toggleLockHandler} href="#/action-2">Lock</Dropdown.Item>)}
                     <Dropdown.Item onClick={cloneTaskHandler}>Clone</Dropdown.Item>
                     <Dropdown.Item onClick={deleteTaskHandler}>Delete</Dropdown.Item>
+                    <Dropdown.Item onClick={updateTaskHandler}>Edit</Dropdown.Item>
                 </DropdownButton>
             </td>
         </tr>

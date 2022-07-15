@@ -72,6 +72,18 @@ const deleteRun = async (runId, token) => {
     return response.data;
 }
 
+const updateRun = async (runData, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const { id } = runData;
+    const response = await axios.put(API_URL + id, runData, config)
+
+    return response.data;
+}
+
 const runService = {
     createRun,
     getRuns,
@@ -79,6 +91,7 @@ const runService = {
     lockRun,
     unlockRun,
     deleteRun,
+    updateRun,
 }
 
 export default runService

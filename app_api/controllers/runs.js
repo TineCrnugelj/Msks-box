@@ -137,7 +137,6 @@ const putUpdateRun = async (req, res) => {
     run.commit = req.body.commit
     run.entrypoint = req.body.entrypoint
     run.arguments = req.body.arguments
-    run.status = req.body.status
     run.tag = req.body.tag
     run.updated = Date.now()
  
@@ -146,7 +145,7 @@ const putUpdateRun = async (req, res) => {
             return res.status(404).json(err)
         }
         else {
-            res.status(204).json(run)
+            res.status(200).json(run)
         }
     }) 
 }

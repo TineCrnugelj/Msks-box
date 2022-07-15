@@ -71,6 +71,16 @@ export const deleteRun = createAsyncThunk('runs/delete', async (runId, thunkAPI)
     }
 });
 
+export const updateRun = createAsyncThunk('runs/update', async (runData, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await runService.updateRun(runData, token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
 
 export const runSlice = createSlice({
     name: 'runs',

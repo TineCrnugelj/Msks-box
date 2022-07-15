@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import { createRun } from '../features/runs/runSlice'
+import { createRun, updateRun } from '../features/runs/runSlice'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
@@ -13,6 +13,7 @@ const CloneTaskForm = (props) => {
     const [source, setSource] = useState(searchParams.get('source'))
     const [entrypoint, setEntrypoint] = useState(searchParams.get('entrypoint'))
     const [tag, setTag] = useState(searchParams.get('tag'))
+    const [action, setAction] = useState(searchParams.get('action'));
 
     let [numOfArgs, setNumOfArgs] = useState(searchParams.get('arguments').split(',').length);
     let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
@@ -67,10 +68,16 @@ const CloneTaskForm = (props) => {
             source: source,
             entrypoint: entrypoint,
             tag: tag,
-            arguments: args // todo
+            arguments: args
         }
-        console.log(run)
-        dispatch(createRun(run));
+
+        if (action === 'clone') { // FIX THIS
+            dispatch(createRun(run));
+        }
+        if (action === 'update') {
+            run['id'] = searchParams.get('id');
+            dispatch(updateRun(run));
+        }
 
         event.target.source.value = '';
         event.target.entrypoint.value = '';
@@ -99,7 +106,7 @@ const CloneTaskForm = (props) => {
 
 
     return <form onSubmit={submitFormHandler}>
-        <h1 className={classes.heading}>Add a run</h1>
+        <h1 className={classes.heading}>{action === 'update' ? 'Edit' : 'Add'} a task</h1>
         <div className={classes.formControl}>
             <label htmlFor="source">Source</label>
             <input type="text" id='source' value={source} onChange={sourceChangedHandler} />
@@ -107,7 +114,7 @@ const CloneTaskForm = (props) => {
         <div className={classes.formControl}>
             <label htmlFor="entrypoint">Entrypoint</label>
             <input type="text" id='entrypoint' value={entrypoint} onChange={entrypointChangedHandler} />
-        </div>
+        </div> 
         <div className={classes.formControl}>
             <label htmlFor="tag">Tag</label>
             <input type="text" id='tag' value={tag} onChange={tagChangedHandler} />
