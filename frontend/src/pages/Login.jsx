@@ -15,7 +15,7 @@ const override = {
 };
 
 const Login = (props) => {
-    let [color, setColor] = useState("#044599");
+    let [color] = useState("#044599");
     const [formData, setFormData] = useState({
         email: '',
         password: '',

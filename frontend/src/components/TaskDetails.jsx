@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {FaTimes} from 'react-icons/fa'
 import { hideDetails } from "../features/details/detailsSlice";
 import ArgumentTable from './ArgumentTable'
+import Dependencies from "./Dependencies";
 import Graph from './Graph'
 
 import classes from './TaskDetails.module.css'
@@ -26,7 +27,8 @@ const TaskDetails = (props) => {
         <p><strong>Created: </strong>{run.created}</p>
         <p><strong>Updated: </strong>{run.updated}</p> 
         <h3>Arguments:</h3>
-        {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>} 
+        {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
+        <Dependencies dependencies={run.dependencies} />
         <Graph />
     </Fragment> 
 }

@@ -4,7 +4,6 @@ const User = require('../models/User');
 const lockfile = require('proper-lockfile');
 const Environment = require('../classes/Environment.js');
 const fs = require('fs');
-const shell = require('shelljs');
 const asyncHandler = require('express-async-handler')
 
 
@@ -151,7 +150,8 @@ const putUpdateRun = async (req, res) => {
 }
 
 const postAddRun = (req, res) => {
-    const newRun = { 
+    console.log(res);
+    const newRun = {
        source: req.body.source,
        entrypoint: req.body.entrypoint,
        arguments: req.body.arguments,
@@ -160,26 +160,35 @@ const postAddRun = (req, res) => {
        user: req.user.id
     };
 
-    console.log(newRun)
-
     const env = new Environment(newRun.source);
+
+    const args = newRun.arguments;
+    const dependencies = [];
+
+    for (let arg of args) {
+        const value = arg.split('=')[1];
+        if (value.includes('@')) {
+            const dependency = value.substring(value.indexOf('@') + 1);
+            dependencies.push(dependency);
+        }
+    }
 
     const newRunMeta = new Run({
         user: newRun.user,
         repository: env.repository,
         commit: env.commit,
         entrypoint: newRun.entrypoint,
-        arguments: newRun.arguments,
+        arguments: args,
         status: 'PENDING',
         created: Date.now(),
         updated: Date.now(), 
         tag: newRun.tag,
+        dependencies: dependencies
     });
     newRunMeta.save();
 
     saveRunToServer(newRunMeta);
     return res.status(201).json(newRunMeta);
-        
 };
 
 const lockRun = (req, res) => {

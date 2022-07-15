@@ -39,15 +39,22 @@
     top: 12px;
 }
 
-.arguments {
+.args {
     font-weight: bold;
     margin-bottom: 0.5rem;
     display: block;
     margin-left: 2rem;
 }
 
+.addRemoveButtons {
+    position: relative;
+    margin-top: -13px;
+}
+
 .argumentsGroup {
     display: flex;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
 }
 
 .keyValueGroup {

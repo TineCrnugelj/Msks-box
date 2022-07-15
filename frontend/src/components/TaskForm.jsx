@@ -51,9 +51,16 @@ const TaskForm = (props) => {
         }
 
         const args = [];
+        const dependencies = [];
+
         for (let i = 1; i <= numOfArgs; i++) {
             const key = event.target[`key${i}`].value
             const value = event.target[`value${i}`].value;
+
+            if (value.includes('@')) {
+                const dependency = value.substring(value.indexOf('@') + 1);
+                dependencies.push(dependency);
+            }
 
             if (key !== '' && value !== '') {
                 args.push(key + '=' + value);
@@ -66,7 +73,8 @@ const TaskForm = (props) => {
             source: enteredSource,
             entrypoint: enteredEntrypoint,
             tag: enteredTag,
-            arguments: args
+            arguments: args,
+            dependencies: dependencies
         }
         dispatch(createRun(run));
 
@@ -113,9 +121,11 @@ const TaskForm = (props) => {
             <input type="text" id='tag' value={enteredTag} onChange={tagChangedHandler} onBlur={tagBlurHandler} />
         </div>
         <div className={classes.argumentsGroup}>
-            <h3 className={classes.arguments}>Arguments</h3>
-            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
-            <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
+            <h3 className={classes.args}>Arguments</h3>
+            <div className={classes.addRemoveButtons}>
+                <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
+                <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
+            </div>
         </div>
 
         {children}

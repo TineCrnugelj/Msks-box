@@ -545,6 +545,7 @@ const runSchema = new mongoose.Schema({
     created: {type: Date},
     updated: {type: Date},
     tag: {type: String, unique: true},
+    dependencies: [{type: String}]
 });
 
 module.exports = mongoose.model('Run', runSchema, 'Run');  

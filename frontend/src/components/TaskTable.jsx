@@ -16,9 +16,8 @@ const override = {
 const TaskTable = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    let [color, setColor] = useState("#044599");
+    let [color] = useState("#044599");
 
-    const { user } = useSelector(state => state.auth)
     const { runs, isLoading, isError, message } = useSelector(state => state.runs)
 
     useEffect(() => {
@@ -45,6 +44,7 @@ const TaskTable = (props) => {
             created={task.created}
             updated={task.updated}
             arguments={task.arguments}
+            dependencies={task.dependencies}
         />
     ));
 

@@ -15,7 +15,7 @@ const override = {
 };
 
 const Register = (props) => {
-    let [color, setColor] = useState('#044599');
+    let [color] = useState('#044599');
     const [formData, setFormData] = useState({
         name: '',
         email: '',

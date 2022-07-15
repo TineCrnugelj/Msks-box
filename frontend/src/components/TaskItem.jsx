@@ -24,7 +24,8 @@ const TaskItem = (props) => {
             status: props.status,
             created: props.created,
             updated: props.updated,
-            arguments: props.arguments
+            arguments: props.arguments,
+            dependencies: props.dependencies
         }
         dispatch(setRun(run));
     }

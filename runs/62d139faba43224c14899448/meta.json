@@ -1,0 +1,1 @@
+{"user":"62d139ce732eecce19cccfa2","repository":"SOURCE","commit":"master","entrypoint":"train_match","arguments":["\"feature_reduction=256\", \"augment_move=60\""],"status":"PENDING","created":"2022-07-15T09:57:14.635Z","updated":"2022-07-15T09:57:14.635Z","tag":"tag1","_id":"62d139faba43224c14899448"}

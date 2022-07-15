@@ -13,28 +13,26 @@ const CloneTaskForm = (props) => {
     const [source, setSource] = useState(searchParams.get('source'))
     const [entrypoint, setEntrypoint] = useState(searchParams.get('entrypoint'))
     const [tag, setTag] = useState(searchParams.get('tag'))
-    const [action, setAction] = useState(searchParams.get('action'));
+    const [action] = useState(searchParams.get('action'));
 
     let [numOfArgs, setNumOfArgs] = useState(searchParams.get('arguments').split(',').length);
     let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
-
 
     useEffect(() => {
         const args = searchParams.get('arguments').split(',')
         const argElements = []
         for (let i = 1; i <= numOfArgs; i++) {
             const keyValue = args[i - 1].split('=')
-            const key = keyValue[0].replace(/\W/g, '')
-            const value = keyValue[1].replace(/\W/g, '')
+            const key = keyValue[0].replace(/\W@:./g, '')
+            const value = keyValue[1].replace(/\W@:./g, '')
             argElements.push(<ArgumentPair key1={key} value={value} index={i} key={Math.random()} />)
         }
         setChildren(argElements)
     }, [])
 
-    let formIsValid = false
+    let formIsValid = false;
 
     const navigate = useNavigate()
-
 
     const sourceChangedHandler = (e) => {
         setSource(e.target.value)
@@ -52,9 +50,16 @@ const CloneTaskForm = (props) => {
         event.preventDefault();
 
         const args = [];
+        const dependencies = [];
+
         for (let i = 1; i <= numOfArgs; i++) {
             const key = event.target[`key${i}`].value
             const value = event.target[`value${i}`].value;
+
+            if (value.includes('@')) {
+                const dependency = value.substring(value.indexOf('@') + 1);
+                dependencies.push(dependency);
+            }
 
             if (key !== '' && value !== '') {
                 args.push(key + '=' + value);
@@ -68,8 +73,11 @@ const CloneTaskForm = (props) => {
             source: source,
             entrypoint: entrypoint,
             tag: tag,
-            arguments: args
+            arguments: args,
+            dependencies: dependencies
         }
+
+        console.log(run)
 
         if (action === 'clone') { // FIX THIS
             dispatch(createRun(run));
@@ -104,7 +112,6 @@ const CloneTaskForm = (props) => {
         }
     }
 
-
     return <form onSubmit={submitFormHandler}>
         <h1 className={classes.heading}>{action === 'update' ? 'Edit' : 'Add'} a task</h1>
         <div className={classes.formControl}>
@@ -120,7 +127,7 @@ const CloneTaskForm = (props) => {
             <input type="text" id='tag' value={tag} onChange={tagChangedHandler} />
         </div>
         <div className={classes.argumentsGroup}>
-            <h3 className={classes.arguments}>Arguments</h3>
+            <h3 className={classes.args}>Arguments</h3>
             <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
             <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
         </div>

@@ -2,8 +2,7 @@ import React, { Fragment } from 'react'
 
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { getRun } from '../features/runs/runSlice'
+import { useSelector } from 'react-redux'
 
 import classes from './Dashboard.module.css'
 import Card from '../UI/Card'
