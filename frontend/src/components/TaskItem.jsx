@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import classes from './TaskItem.module.css'
 import { useDispatch } from 'react-redux'
-import { showDetails } from '../features/details/detailsSlice'
 import { deleteRun, lockRun, unlockRun, updateRun } from '../features/runs/runSlice'
 import { toast } from 'react-toastify'
 import { setRun } from '../features/runs/runSlice'
@@ -16,7 +15,7 @@ const TaskItem = (props) => {
     const [locked, setLocked] = useState(false)
 
     const toggleDetailsHandler = () => {
-        dispatch(showDetails())
+        // dispatch(showDetails())
 
         const run = {
             tag: props.tag,
@@ -28,6 +27,8 @@ const TaskItem = (props) => {
             dependencies: props.dependencies
         }
         dispatch(setRun(run));
+
+        navigate('/tasks/' + props.id);
     }
 
     const toggleLockHandler = (e) => {

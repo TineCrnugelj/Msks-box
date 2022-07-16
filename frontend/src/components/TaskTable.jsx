@@ -52,6 +52,10 @@ const TaskTable = (props) => {
         navigate('/add-run');
     }
 
+    const searchHandler = () => {
+
+    }
+
     if (isLoading) {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }

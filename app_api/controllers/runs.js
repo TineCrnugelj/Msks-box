@@ -37,7 +37,7 @@ const getRun = (req, res) => {
     if (!id) {
         return res.status(404).json({message: 'Id not provided'});
     }
-    Run.find({user: req.user.id, _id: id}).then((run) => {
+    Run.findById({user: req.user.id, _id: id}).then((run) => {
 
         return res.status(200).json(run);  
     })

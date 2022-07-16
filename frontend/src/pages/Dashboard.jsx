@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux'
 import classes from './Dashboard.module.css'
 import Card from '../UI/Card'
 import TaskTable from '../components/TaskTable'
-import TaskDetails from '../components/TaskDetails'
 
 function Dashboard() {
     const navigate = useNavigate()
@@ -28,12 +27,6 @@ function Dashboard() {
                     <TaskTable />
                 </Card>
             </section>
-            {showDetails && 
-            <section className={classes.tasks}>
-                <Card>
-                    <TaskDetails />
-                </Card>
-            </section>}
         </Fragment>
     )
 }

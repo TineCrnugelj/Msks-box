@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = 'api/tasks/'
+const API_URL = '/api/tasks/'
 
 // Create new run
 const createRun = async (runData, token) => {
@@ -23,7 +23,6 @@ const getRuns = async (token) => {
         },
     }
     const response = await axios.get(API_URL, config)
-
     return response.data;
 }
 
@@ -35,7 +34,6 @@ const getRun = async (runId, token) => {
         },
     }
     const response = await axios.get(API_URL + runId, config)
-
     return response.data;
 }
 
