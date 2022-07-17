@@ -1,32 +1,45 @@
-import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import {useParams} from "react-router-dom";
 import ArgumentTable from './ArgumentTable'
 import Dependencies from "./Dependencies";
 import Graph from './Graph';
 import Card from '../UI/Card';
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 import classes from '../pages/Dashboard.module.css'
-import {getRun, reset} from "../features/runs/runSlice";
+import {getRun, getRuns, reset} from "../features/runs/runSlice";
+import ClipLoader from "react-spinners/ClipLoader";
 
-const API_URL = '/api/tasks/';
+const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "#044599",
+};
 
 const TaskDetails = (props) => {
     const dispatch = useDispatch();
     const { taskId } = useParams();
+    let [color] = useState("#044599");
 
-    useEffect( () => {
-        async function fetchTask() {
-            const response = await axios.get(API_URL + taskId)
-            console.log(response.data);
+    let run = useSelector(state => state.runs.run);
+    const {isLoading, isError, message} = useSelector(state => state.runs);
+
+    useEffect(() => {
+        if (isError) {
+            console.log(message);
         }
-        fetchTask()
+
+        dispatch(getRun(taskId))
+
+        return () => {
+            dispatch(reset())
+        }
     }, []);
 
+    if (isLoading) {
+        return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
+    }
 
-
-    /*
     return <section className={classes.tasks}>
         <Card>
             <div className={classes.head}>
@@ -37,12 +50,10 @@ const TaskDetails = (props) => {
             <p><strong>Updated: </strong>{run.updated}</p>
             <h3>Arguments:</h3>
             {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
-            <Dependencies dependencies={run.dependencies} />
+            <Dependencies dependencies={run.dependencies} id={run._id} />
             <Graph />
         </Card>
     </section>
-     */
-    return <h1>asd</h1>
 }
 
 export default TaskDetails;

@@ -1,14 +1,11 @@
 import {Fragment} from "react";
+import Dependency from "./Dependency";
 
 const Dependencies = (props) => {
 
-    const clickTagHandler = () => {
-        console.log('click');
-    }
-
     return <Fragment>
         <h3>Dependencies:</h3>
-        {props.dependencies.length === 0 ? <p>No dependencies.</p> : props.dependencies.map(dep => (<p key={Math.random()}>{dep}  <a href='#' onClick={clickTagHandler}>Details</a></p>)) }
+        {props.dependencies.length === 0 ? <p>No dependencies.</p> : props.dependencies.map(dep => (<Dependency key={dep} tag={dep} id={props.id} />)) }
     </Fragment>
 }
 

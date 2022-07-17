@@ -81,6 +81,15 @@ export const updateRun = createAsyncThunk('runs/update', async (runData, thunkAP
     }
 });
 
+export const getRunByTag = createAsyncThunk('runs/getRunByTag', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await runService.getRunByTag(token)
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
 
 export const runSlice = createSlice({
     name: 'runs',
@@ -133,6 +142,19 @@ export const runSlice = createSlice({
                 state.run = action.payload
             })
             .addCase(getRun.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(getRunByTag.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(getRunByTag.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.run = action.payload
+            })
+            .addCase(getRunByTag.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload

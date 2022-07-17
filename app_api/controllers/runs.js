@@ -64,7 +64,16 @@ const deleteRun = asyncHandler(async (req, res) => {
 
     await run.remove()
     res.status(200).json({id: id})
-})
+});
+
+const findByTag = (req, res) => {
+    const tag = req.query.tag;
+    Run.find({user: req.user.id , tag: tag})
+        .then(run => {
+            return res.status(200).json(run[0]);
+        })
+        .catch(err => console.log(err));
+}
 
 const postResetRun = (req, res) => {
     const taskId = req.params.taskId;
@@ -150,7 +159,6 @@ const putUpdateRun = async (req, res) => {
 }
 
 const postAddRun = (req, res) => {
-    console.log(res);
     const newRun = {
        source: req.body.source,
        entrypoint: req.body.entrypoint,
@@ -232,4 +240,5 @@ module.exports = {
     lockRun,
     unlockRun,
     putUpdateRun,
+    findByTag,
 }

@@ -83,7 +83,7 @@ const Login = (props) => {
                     <input type="password" name="password" id="password" value={password} placeholder='Enter your password' onChange={onChange} />
                 </div>
                 <div>
-                    <button type="submit" className={classes.btnSubmit} disabled={!formIsValid} >Submit</button>
+                    <button type="submit" className={classes.btnSubmit} disabled={!formIsValid} >Login</button>
                 </div>
             </form>
         </section>

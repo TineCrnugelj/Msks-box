@@ -5,6 +5,8 @@ const ctrlRuns = require('../controllers/runs');
 
 const {protect} = require('../middleware/auth')
 
+router.get('/tasks/find', protect, ctrlRuns.findByTag);
+
 router.post('/tasks', protect, ctrlRuns.postAddRun);
 
 router.post('/tasks/reset/:taskId', ctrlRuns.postResetRun);

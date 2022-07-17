@@ -82,6 +82,16 @@ const updateRun = async (runData, token) => {
     return response.data;
 }
 
+const getRunByTag = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.get(API_URL + 'find', config)
+    return response.data;
+}
+
 const runService = {
     createRun,
     getRuns,
@@ -90,6 +100,7 @@ const runService = {
     unlockRun,
     deleteRun,
     updateRun,
+    getRunByTag,
 }
 
 export default runService
