@@ -14,7 +14,7 @@ function Header() {
     const onLogout = () => {
         dispatch(logout())
         dispatch(reset())
-        navigate('/')
+        navigate('/tasks')
     }
 
     return (
@@ -22,7 +22,7 @@ function Header() {
             <nav>
                 <ul>
                     <li>
-                        <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/'>
+                        <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/tasks'>
                             <FaHome /> Tasks
                         </NavLink>
                     </li>

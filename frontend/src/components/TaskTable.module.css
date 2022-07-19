@@ -17,6 +17,10 @@
     height: 3rem;
 }
 
+.searchBar {
+    margin: auto;
+}
+
 .header {
     display: flex;
     margin-bottom: 2rem;

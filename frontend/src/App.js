@@ -17,10 +17,10 @@ function App() {
         <Header />
         <div className="App">
           <Routes>
-            <Route path='/' element={<Dashboard />} />
-            <Route path='/add-run' element={<AddRun />} />
-            <Route path='/update-run' element={<UpdateRun />} />
             <Route path='/tasks/:taskId' element={<TaskDetails />} />
+            <Route path='/tasks/add-task' element={<AddRun />} />
+            <Route path='/tasks' element={<Dashboard />} />
+            <Route path='/update-run' element={<UpdateRun />} />
             <Route path='/register' element={<Register />}  />
             <Route path='/login' element={<Login />}  />
           </Routes>

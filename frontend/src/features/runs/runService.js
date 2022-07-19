@@ -4,7 +4,6 @@ const API_URL = '/api/tasks/'
 
 // Create new run
 const createRun = async (runData, token) => {
-    
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
@@ -27,13 +26,8 @@ const getRuns = async (token) => {
 }
 
 // Get run by id
-const getRun = async (runId, token) => {
-    const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-    }
-    const response = await axios.get(API_URL + runId, config)
+const getRun = async (runId) => {
+    const response = await axios.get(API_URL + runId);
     return response.data;
 }
 
@@ -82,13 +76,13 @@ const updateRun = async (runData, token) => {
     return response.data;
 }
 
-const getRunByTag = async (token) => {
+const getRunByTag = async (tag, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await axios.get(API_URL + 'find', config)
+    const response = await axios.get(API_URL + `find?tag=${tag}`, config)
     return response.data;
 }
 

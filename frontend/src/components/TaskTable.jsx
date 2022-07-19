@@ -1,11 +1,13 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { getRuns, reset } from "../features/runs/runSlice";
+import { getRuns, reset, setFilteredRuns } from "../features/runs/runSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
 import TaskItem from "./TaskItem";
+import Searchbar from "./Searchbar";
 
 import classes from './TaskTable.module.css'
+import {MDBCol} from "mdbreact";
 
 const override = {
     display: "block",
@@ -17,23 +19,28 @@ const TaskTable = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let [color] = useState("#044599");
+    const [searchQuery, setSearchQuery] = useState('');
 
-    const { runs, isLoading, isError, message } = useSelector(state => state.runs)
+    let { runs, isLoading, isError, message } = useSelector(state => state.runs);
+    let filteredRuns = useSelector(state => state.runs.filteredRuns);
 
     useEffect(() => {
         if (isError) {
             console.log(message)
         }
 
-        dispatch(getRuns())
+        dispatch(getRuns());
 
         return () => {
             dispatch(reset())
         }
     }, []);
 
+    if (isLoading) {
+        return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
+    }
 
-    const tasksList = runs.map(task => (
+    const tasksList = filteredRuns.map(task => (
         <TaskItem
             key={Math.random()}
             source={task.repository}
@@ -49,15 +56,24 @@ const TaskTable = (props) => {
     ));
 
     const redirectHandler = () => {
-        navigate('/add-run');
+        navigate('/tasks/add-task');
     }
 
-    const searchHandler = () => {
+    const searchTasks = (e) => {
+        setSearchQuery(e.target.value);
+        const searchWord = e.target.value.toLowerCase();
+        const newFilter = runs.filter((run) => {
+            return run.tag.toLowerCase().includes(searchWord) ||
+                   run.status.toLowerCase().includes(searchWord) ||
+                   run.entrypoint.toLowerCase().includes(searchWord);
+        });
 
-    }
-
-    if (isLoading) {
-        return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
+        if (searchWord === '') {
+            return;
+        }
+        else {
+            dispatch(setFilteredRuns(newFilter));
+        }
     }
 
     return (
@@ -65,7 +81,20 @@ const TaskTable = (props) => {
             <div className={classes.header}>
                 <h1>Tasks ({tasksList.length})</h1>
                 <button className={classes.btnAddRun} onClick={redirectHandler}>+ Add task</button>
+                <MDBCol className={classes.searchBar} md="2">
+                    <div className="input-group md-form form-sm form-1 pl-0">
+                        <input
+                            onChange={searchTasks}
+                            className="form-control my-0 py-1"
+                            type="text"
+                            placeholder="Search"
+                            aria-label="Search"
+                            value={searchQuery}
+                        />
+                    </div>
+                </MDBCol>
             </div>
+
             <table className={classes.table}>
                 <thead>
                     <tr>

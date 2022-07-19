@@ -7,8 +7,8 @@ import Card from '../UI/Card';
 import {useEffect, useState} from "react";
 
 import classes from '../pages/Dashboard.module.css'
-import {getRun, getRuns, reset} from "../features/runs/runSlice";
 import ClipLoader from "react-spinners/ClipLoader";
+import {getRun, reset, setRun} from "../features/runs/runSlice";
 
 const override = {
     display: "block",
@@ -21,24 +21,25 @@ const TaskDetails = (props) => {
     const { taskId } = useParams();
     let [color] = useState("#044599");
 
-    let run = useSelector(state => state.runs.run);
-    const {isLoading, isError, message} = useSelector(state => state.runs);
+    const run  = useSelector(state => state.runs.run);
+    const { isLoading, isError, message } = useSelector(state => state.runs);
 
     useEffect(() => {
         if (isError) {
-            console.log(message);
+            console.log(message)
         }
-
-        dispatch(getRun(taskId))
+        dispatch(getRun(taskId));
 
         return () => {
             dispatch(reset())
         }
     }, []);
 
+
     if (isLoading) {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
+
 
     return <section className={classes.tasks}>
         <Card>
@@ -54,6 +55,9 @@ const TaskDetails = (props) => {
             <Graph />
         </Card>
     </section>
+
+
+    //return <h1>asd</h1>
 }
 
 export default TaskDetails;

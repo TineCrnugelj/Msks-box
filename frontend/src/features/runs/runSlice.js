@@ -5,6 +5,8 @@ const initialState = {
     runs: [],
     lockedRuns: [],
     run: null,
+    filteredRuns: [],
+    runDetails: null,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -81,10 +83,10 @@ export const updateRun = createAsyncThunk('runs/update', async (runData, thunkAP
     }
 });
 
-export const getRunByTag = createAsyncThunk('runs/getRunByTag', async (_, thunkAPI) => {
+export const getRunByTag = createAsyncThunk('runs/getRunByTag', async (tag, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token
-        return await runService.getRunByTag(token)
+        const token = thunkAPI.getState().auth.user.token;
+        return await runService.getRunByTag(tag, token);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -104,6 +106,9 @@ export const runSlice = createSlice({
         setRun: (state, action) => {
             state.run = action.payload
         },
+        setFilteredRuns: (state, action) => {
+            state.filteredRuns = action.payload
+        }
     }, 
     extraReducers: (builder) => {
         builder
@@ -127,6 +132,7 @@ export const runSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
                 state.runs = action.payload
+                state.filteredRuns = action.payload;
             })
             .addCase(getRuns.rejected, (state, action) => {
                 state.isLoading = false
@@ -152,7 +158,7 @@ export const runSlice = createSlice({
             .addCase(getRunByTag.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.run = action.payload
+                state.runDetails = action.payload
             })
             .addCase(getRunByTag.rejected, (state, action) => {
                 state.isLoading = false
@@ -190,4 +196,5 @@ export const runSlice = createSlice({
 
 export const {reset} = runSlice.actions
 export const {setRun} = runSlice.actions
+export const {setFilteredRuns} = runSlice.actions
 export default runSlice.reducer

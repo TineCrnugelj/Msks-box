@@ -35,7 +35,7 @@ const Login = (props) => {
             toast.error(message)
         }
         if (isSuccess || user) {
-            navigate('/')
+            navigate('/tasks')
         }
         dispatch(reset())
     }, [user, isError, isSuccess, message, navigate, dispatch]);
