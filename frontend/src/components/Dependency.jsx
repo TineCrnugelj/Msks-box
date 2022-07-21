@@ -1,7 +1,9 @@
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getRunByTag} from "../features/runs/runSlice";
-import {setRun} from "../features/runs/runSlice";
+import Button from 'react-bootstrap/Button';
+
+import classes from "./Dependency.module.css";
 
 const Dependency = (props) => {
     const navigate = useNavigate();
@@ -13,15 +15,14 @@ const Dependency = (props) => {
         e.preventDefault();
 
         dispatch(getRunByTag(props.tag));
-        setRun(run);
+        console.log(run._id);
 
         navigate('/tasks/' + run._id);
-
     }
 
     return <p>
         {props.tag}
-        <button onClick={showDetailsHandler}>Details</button>
+        <Button className={classes.btnDetails} onClick={showDetailsHandler}>Details</Button>
     </p>
 }
 

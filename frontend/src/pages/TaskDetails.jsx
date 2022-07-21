@@ -31,7 +31,7 @@ const TaskDetails = (props) => {
         dispatch(getRun(taskId));
 
         return () => {
-            dispatch(reset())
+            dispatch(reset());
         }
     }, []);
 
@@ -40,24 +40,24 @@ const TaskDetails = (props) => {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
 
-
-    return <section className={classes.tasks}>
-        <Card>
-            <div className={classes.head}>
-                <h1 className={classes.heading}>Task Details: {run.tag ? run.tag : '/'}</h1>
-            </div>
-            <p><strong>Status: </strong>{run.status}</p>
-            <p><strong>Created: </strong>{run.created}</p>
-            <p><strong>Updated: </strong>{run.updated}</p>
-            <h3>Arguments:</h3>
-            {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
-            <Dependencies dependencies={run.dependencies} id={run._id} />
-            <Graph />
-        </Card>
-    </section>
-
-
-    //return <h1>asd</h1>
+    if (!run) {
+        return null;
+    }
+    else {
+        return <section className={classes.tasks}>
+            <Card>
+                <div className={classes.head}>
+                    <h1 className={classes.heading}>Task Details: {run.tag ? run.tag : '/'}</h1>
+                </div>
+                <p><strong>Status: </strong>{run.status}</p>
+                <p><strong>Created: </strong>{run.created}</p>
+                <p><strong>Updated: </strong>{run.updated}</p>
+                <h3>Arguments:</h3>
+                {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
+                <Dependencies dependencies={run.dependencies} id={run._id} />
+            </Card>
+        </section>
+    }
 }
 
 export default TaskDetails;

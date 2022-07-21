@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Dashboard from './pages/Dashboard';
@@ -20,6 +20,7 @@ function App() {
         <Header />
         <div className="App">
           <Routes>
+            <Route path='*' element={<Navigate to='/tasks' replace/>} exact/>
             <Route path='/tasks/:taskId' element={<TaskDetails />} />
             <Route path='/tasks/add-task' element={<AddRun />} />
             <Route path='/tasks' element={<Dashboard />} />

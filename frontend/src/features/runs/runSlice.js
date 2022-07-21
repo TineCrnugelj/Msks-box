@@ -6,7 +6,6 @@ const initialState = {
     lockedRuns: [],
     run: null,
     filteredRuns: [],
-    runDetails: null,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -143,6 +142,7 @@ export const runSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(getRun.fulfilled, (state, action) => {
+                console.log(action.payload)
                 state.isLoading = false
                 state.isSuccess = true
                 state.run = action.payload
@@ -158,7 +158,7 @@ export const runSlice = createSlice({
             .addCase(getRunByTag.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.runDetails = action.payload
+                state.run = action.payload
             })
             .addCase(getRunByTag.rejected, (state, action) => {
                 state.isLoading = false

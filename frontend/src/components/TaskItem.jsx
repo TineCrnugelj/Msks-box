@@ -26,7 +26,6 @@ const TaskItem = (props) => {
             arguments: props.arguments,
             dependencies: props.dependencies
         }
-        dispatch(setRun(run));
 
         navigate('/tasks/' + props.id);
     }
