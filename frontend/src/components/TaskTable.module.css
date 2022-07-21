@@ -36,3 +36,8 @@ button:hover {
     text-align: left;
     background-color: #95bcf0;
 }
+
+.noTasks {
+   text-align: center;
+    margin: 2rem;
+}

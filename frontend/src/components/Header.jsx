@@ -1,4 +1,4 @@
-import { FaUser, FaHome, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa'
+import { FaUser, FaHome, FaSignInAlt, FaSignOutAlt, FaFile } from 'react-icons/fa'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
@@ -26,9 +26,13 @@ function Header() {
                             <FaHome /> Tasks
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/files'>
+                            <FaFile /> My Files
+                        </NavLink>
+                    </li>
                     {!user ? (<Fragment>
                         <li>
-
                             <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/login'>
                                 <FaSignInAlt /> Login
                             </NavLink>
@@ -40,7 +44,7 @@ function Header() {
                         </li>
                     </Fragment>) : (
                         <li>
-                            <a onClick={onLogout}>
+                            <a className={classes.logoutLink} onClick={onLogout}>
                                 <FaSignOutAlt /> Logout
                             </a>
                         </li>

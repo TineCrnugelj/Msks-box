@@ -1,12 +1,12 @@
 import { useSelector, useDispatch } from "react-redux";
 import {useParams} from "react-router-dom";
-import ArgumentTable from './ArgumentTable'
-import Dependencies from "./Dependencies";
-import Graph from './Graph';
+import ArgumentTable from '../components/ArgumentTable'
+import Dependencies from "../components/Dependencies";
+import Graph from '../components/Graph';
 import Card from '../UI/Card';
 import {useEffect, useState} from "react";
 
-import classes from '../pages/Dashboard.module.css'
+import classes from './Dashboard.module.css'
 import ClipLoader from "react-spinners/ClipLoader";
 import {getRun, reset, setRun} from "../features/runs/runSlice";
 

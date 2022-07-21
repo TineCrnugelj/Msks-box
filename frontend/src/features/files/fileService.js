@@ -13,8 +13,32 @@ const createFile = async (fileData, token) => {
     return response.data; 
 }
 
-const fileService = {
-    createFile,
+const getFiles = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.get(API_URL, config);
+
+    return response.data;
 }
 
-export default fileService
+const deleteFile = async (fileId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.delete(API_URL + fileId, config);
+
+    return response.data;
+}
+
+const fileService = {
+    createFile,
+    getFiles,
+    deleteFile,
+}
+
+export default fileService;

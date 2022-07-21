@@ -7,6 +7,7 @@ const app = express();
 const fileApi = require('./app_api/routes/files');
 const runApi = require('./app_api/routes/runs');
 const usersApi = require('./app_api/routes/users');
+const path = require('path');
 
 var swaggerJsdoc = require('swagger-jsdoc');
 var swaggerUi = require('swagger-ui-express');
@@ -40,7 +41,7 @@ const swaggerDocument = swaggerJsdoc(swaggerOptions);
 
 require('./app_api/models/db');
 
-
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("/api", (req, res, next) => {

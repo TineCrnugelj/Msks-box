@@ -8,7 +8,10 @@ import UpdateRun from "./pages/UpdateRun"
 import Header from './components/Header';
 import Register from './pages/Register';
 import Login from './pages/Login';
-import TaskDetails from "./components/TaskDetails";
+import TaskDetails from "./pages/TaskDetails";
+import Files from './pages/Files';
+import ImageFullsize from "./pages/ImageFullsize";
+import AddFile from "./pages/AddFile";
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
             <Route path='/update-run' element={<UpdateRun />} />
             <Route path='/register' element={<Register />}  />
             <Route path='/login' element={<Login />}  />
+            <Route path='/files' element={<Files />}  />
+            <Route path='/image/:imageName' element={<ImageFullsize />}  />
+            <Route path='/files/new-file' element={<AddFile />}  />
           </Routes>
         </div>
       </Router>

@@ -21,13 +21,11 @@ function Dashboard() {
     }, [user, navigate])
 
     return (
-        <Fragment>
-            <section className={classes.tasks}>
-                <Card>
-                    <TaskTable />
-                </Card>
-            </section>
-        </Fragment>
+        <section className={classes.tasks}>
+            <Card>
+                <TaskTable />
+            </Card>
+        </section>
     )
 }
 
