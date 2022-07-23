@@ -35,8 +35,7 @@ export const getRuns = createAsyncThunk('runs/getAll', async (_, thunkAPI) => {
 
 export const getRun = createAsyncThunk('runs/getOne', async (runId, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token
-        return await runService.getRun(runId, token)
+        return await runService.getRun(runId)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)

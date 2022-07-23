@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
 
 import classes from '../pages/Dashboard.module.css'
 import ClipLoader from "react-spinners/ClipLoader";
-import {getRun, reset, setRun} from "../features/runs/runSlice";
+import {getRun, reset, getRuns} from "../features/runs/runSlice";
 
 const override = {
     display: "block",
@@ -56,8 +56,7 @@ const TaskDetails = (props) => {
         </Card>
     </section>
 
-
-    //return <h1>asd</h1>
+    // return <h1>asd</h1>
 }
 
 export default TaskDetails;
