@@ -1,0 +1,17 @@
+.heading {
+    display: inline-flex;
+}
+
+.btnAddFile {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: black;
+    padding: 0.25rem 2rem;
+    border-radius: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 2rem;
+    height: 3rem;
+}

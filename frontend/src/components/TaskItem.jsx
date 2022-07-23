@@ -1,18 +1,17 @@
 import { useState } from 'react'
 import { useNavigate } from "react-router-dom"
 import classes from './TaskItem.module.css'
-import { useDispatch } from 'react-redux'
-import { deleteRun, lockRun, unlockRun, updateRun } from '../features/runs/runSlice'
+import {useDispatch, useSelector} from 'react-redux'
+import { deleteRun, lockRun, unlockRun, isLocked } from '../features/runs/runSlice'
 import { toast } from 'react-toastify'
-import { setRun } from '../features/runs/runSlice'
 import { Dropdown } from 'react-bootstrap'
 import { DropdownButton } from 'react-bootstrap'
+import helpers from '../helpers/helpers';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const TaskItem = (props) => {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
-    const [locked, setLocked] = useState(false)
+    const navigate = useNavigate();
 
     const toggleDetailsHandler = () => {
         // dispatch(showDetails())
@@ -26,21 +25,8 @@ const TaskItem = (props) => {
             arguments: props.arguments,
             dependencies: props.dependencies
         }
-        dispatch(setRun(run));
 
         navigate('/tasks/' + props.id);
-    }
-
-    const toggleLockHandler = (e) => {
-        e.preventDefault()
-        dispatch(lockRun(props.id))
-        setLocked(true)
-        toast.success('Task locked.', { autoClose: 2000 })
-    }
-
-    const toggleUnlockHandler = () => {
-        dispatch(unlockRun(props.id))
-        setLocked(false)
     }
 
     const cloneTaskHandler = () => {
@@ -55,17 +41,17 @@ const TaskItem = (props) => {
         navigate(`/update-run?action=update&id=${props.id}&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
     }
 
+
     return <tbody>
         <tr className={classes.task}>
             <td>{props.tag}</td>
             <td>{props.entrypoint}</td>
             <td>{props.status}</td>
-            <td>{props.created}</td>
-            <td>{props.updated}</td>
+            <td>{helpers.parseDate(props.created)}</td>
+            <td>{helpers.parseDate(props.updated)}</td>
             <td>
                 <DropdownButton id="dropdown-basic-button" title="Options">
                     <Dropdown.Item onClick={toggleDetailsHandler} >Details</Dropdown.Item>
-                    {locked ? (<Dropdown.Item onClick={toggleUnlockHandler} >Unlock</Dropdown.Item>) : (<Dropdown.Item onClick={toggleLockHandler} href="#/action-2">Lock</Dropdown.Item>)}
                     <Dropdown.Item onClick={cloneTaskHandler}>Clone</Dropdown.Item>
                     <Dropdown.Item onClick={deleteTaskHandler}>Delete</Dropdown.Item>
                     <Dropdown.Item onClick={updateTaskHandler}>Edit</Dropdown.Item>

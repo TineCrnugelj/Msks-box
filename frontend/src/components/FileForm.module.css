@@ -1,0 +1,132 @@
+.formContainer {
+    max-width: 60rem;
+    width: 90%;
+    margin: 2rem auto;
+    background-color: white;
+    border-radius: 12px;
+}
+
+.heading {
+    text-align: center;
+}
+
+.btnSubmit {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: black;
+    padding: 0.25rem 2rem;
+    border-radius: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 2rem;
+    height: 3rem;
+}
+
+.btnSubmit:disabled,
+.btnSubmit:disabled:hover,
+.btnSubmit:disabled:active {
+    background-color: #ccc;
+    color: black;
+    border-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btnAddArgument {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: black;
+    font-weight: bold;
+    margin-left: 1rem;
+    height: 2.5rem;
+    border-radius: 10px;
+    position: relative;
+    top: 12px;
+}
+
+.args {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    margin-left: 2rem;
+}
+
+.addRemoveButtons {
+    position: relative;
+    margin-top: -13px;
+}
+
+.argumentsGroup {
+    display: flex;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.keyValueGroup {
+    display: block;
+}
+
+.formControl label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    margin-left: 2rem;
+}
+
+.formControl input,
+.formControl select {
+    font: inherit;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 30rem;
+    max-width: 100%;
+    margin-left: 2rem;
+}
+
+.invalid input {
+    border: 1px solid #b40e0e;
+    background-color: #fddddd;
+}
+
+.invalid input:focus {
+    border-color: #ff8800;
+    background-color: #fddddd;
+}
+
+.formControlArguments {
+    display: flex;
+}
+
+.formControlArguments label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    margin-left: 2rem;
+}
+
+.formControlArguments input,
+.formControlArguments select {
+    font: inherit;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 15rem;
+    max-width: 100%;
+    margin-left: 2rem;
+}
+
+.btnSubmit {
+    margin-top: 1rem;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.errorText {
+    color: #b40e0e;
+    margin-left: 2rem;
+    margin-bottom: 1rem;
+}

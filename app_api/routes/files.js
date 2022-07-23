@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
+const {protect} = require('../middleware/auth')
+
 const ctrlFiles = require('../controllers/files');
 
-const {protect} = require('../middleware/auth');
-
-router.get('/files', ctrlFiles.getAllFiles);
+router.get('/files', protect, ctrlFiles.getAllFiles);
 
 router.post('/files', protect, ctrlFiles.upload.single('file'), ctrlFiles.postAddFile);
 
-router.delete('/files/delete/:fileId', ctrlFiles.deleteFile);
+router.get('/files/download/:fileId', protect, ctrlFiles.downloadFile);
+
+router.delete('/files/:fileId', ctrlFiles.deleteFile);
 
 module.exports = router;

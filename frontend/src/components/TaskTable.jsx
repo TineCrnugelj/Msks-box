@@ -68,12 +68,7 @@ const TaskTable = (props) => {
                    run.entrypoint.toLowerCase().includes(searchWord);
         });
 
-        if (searchWord === '') {
-            return;
-        }
-        else {
-            dispatch(setFilteredRuns(newFilter));
-        }
+        dispatch(setFilteredRuns(newFilter));
     }
 
     return (
@@ -108,6 +103,7 @@ const TaskTable = (props) => {
                 </thead>
                 {tasksList}
             </table>
+            {tasksList.length === 0 ?  <h4 className={classes.noTasks}>No tasks found</h4> : ''}
         </Fragment>
 
     )

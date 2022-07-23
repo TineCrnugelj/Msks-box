@@ -3,6 +3,7 @@ import classes from './TaskForm.module.css'
 import {useDispatch} from 'react-redux'
 import { toast } from 'react-toastify'
 import { createFile } from '../features/files/fileSlice';
+import Card from '../UI/Card'
 
 const FileForm = (props) => {
     const dispatch = useDispatch()
@@ -30,15 +31,19 @@ const FileForm = (props) => {
         setFileName(e.target.files[0].name)        
     }
 
-    return <form onSubmit={onSubmitHandler}>
-        <h1 className={classes.heading}>Upload a file</h1>
-        <div className={classes.formControl}>
-            <input type="file" name="file" id="file" onChange={onFileChange} />
-            <label htmlFor="File">{fileName}</label>
-        </div>
-        <button className={classes.btnSubmit} disabled={!fileUploaded}>Upload</button>
-    </form>
+    return <section className={classes.formContainer}>
+        <form onSubmit={onSubmitHandler}>
+            <h1 className={classes.heading}>Upload a file</h1>
+            <div className={classes.formControl}>
+                <input type="file" name="file" id="file" onChange={onFileChange} />
+                <label htmlFor="File">{fileName}</label>
+            </div>
+            <button className={classes.btnSubmit} disabled={!fileUploaded}>Upload</button>
+        </form>
+    </section>
+
+
 
 }
 
-export default FileForm
+export default FileForm;

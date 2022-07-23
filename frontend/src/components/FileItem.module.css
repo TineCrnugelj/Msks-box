@@ -1,0 +1,12 @@
+.img {
+    height: 200px;
+    width: 200px;
+}
+
+.name {
+    display: block;
+}
+
+.imgContainer {
+    display: block;
+}

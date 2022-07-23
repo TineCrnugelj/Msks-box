@@ -39,6 +39,8 @@ build/Release
 node_modules/
 jspm_packages/
 frontend/node_modules/
+public
+runs
 
 # Typescript v1 declaration files
 typings/

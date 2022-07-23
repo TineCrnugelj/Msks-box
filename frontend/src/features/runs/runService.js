@@ -28,6 +28,17 @@ const getRuns = async (token) => {
 // Get run by id
 const getRun = async (runId) => {
     const response = await axios.get(API_URL + runId);
+    console.log(response.data)
+    return response.data;
+}
+
+const isLocked = async (runId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+    const response = await axios.post(API_URL + 'isLocked/' + runId, config)
     return response.data;
 }
 
@@ -94,6 +105,7 @@ const runService = {
     unlockRun,
     deleteRun,
     updateRun,
+    isLocked,
     getRunByTag,
 }
 

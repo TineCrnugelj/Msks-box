@@ -213,12 +213,32 @@ const postAddRun = (req, res) => {
     return res.status(201).json(newRunMeta);
 };
 
+const isLocked = (req, res) => {
+    const taskId = req.params.taskId;
+    lockfile.check(RUNS_DIR + '/' + taskId)
+        .then((isLocked) => {
+            if (isLocked) {
+                res.status(200).json({locked: true});
+            }
+            else {
+                res.status(200).json({locked: false});
+            }
+        })
+        .catch(err => {
+            return res.status(400).json(err)
+        })
+}
+
 const lockRun = (req, res) => {
     const taskId = req.params.taskId;
-    lockfile.lock(RUNS_DIR + '/' + taskId)
+    const taskToLock = RUNS_DIR + '/' + taskId;
+    lockfile.lock(taskToLock)
         .then(() => {
-            // do something with the file
-            return res.status(200).json({msg: `Task ${taskId} locked.`})
+            const timeout = setTimeout(() => {
+                lockfile.unlock(taskToLock);
+            }, 3000);
+            res.status(200).json({id: taskId});
+
         })
         .catch(err => {
             return res.status(400).json(err)
@@ -232,7 +252,7 @@ const unlockRun = (req, res) => {
             if (isLocked) {
                 lockfile.unlock(RUNS_DIR + '/' + taskId)
                 .then(() => {
-                    return res.status(200).json({msg: `Task ${taskId} unlocked.`})
+                    return res.status(200).json({id: taskId});
                 })
                 .catch(err => console.log(err))
             }
@@ -255,4 +275,5 @@ module.exports = {
     unlockRun,
     putUpdateRun,
     findByTag,
+    isLocked,
 }
