@@ -7,7 +7,7 @@ const ctrlFiles = require('../controllers/files');
 
 router.get('/files', protect, ctrlFiles.getAllFiles);
 
-router.post('/files', protect, ctrlFiles.upload.single('file'), ctrlFiles.postAddFile);
+router.post('/files', protect, ctrlFiles.upload.array('files', 10), ctrlFiles.postAddFile);
 
 router.get('/files/download/:fileId', protect, ctrlFiles.downloadFile);
 

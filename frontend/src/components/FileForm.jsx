@@ -7,7 +7,7 @@ import Card from '../UI/Card'
 
 const FileForm = (props) => {
     const dispatch = useDispatch()
-    const [file, setFile] = useState();
+    const [files, setFiles] = useState();
     const [fileName, setFileName] = useState('Choose file')
 
     let [fileUploaded, setFileUploaded] = useState(false);
@@ -15,27 +15,37 @@ const FileForm = (props) => {
     const onSubmitHandler = async e => {
         e.preventDefault()
         
-        const formData = new FormData()
-        formData.append('file', file)
+        const formData = new FormData();
+
+        for (let i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+
+        // formData.append('file', files)
         
         dispatch(createFile(formData))
 
         setFileName('')
         setFileUploaded(false)
-        toast.success('File uploaded successfully!')
+        toast.success('File uploaded successfully!', {autoClose: 1500});
     }
 
     const onFileChange = (e) => {
         setFileUploaded(true)
-        setFile(e.target.files[0])
-        setFileName(e.target.files[0].name)        
+        setFiles(e.target.files)
+
+        let fileNames = '';
+        for (let file of e.target.files) {
+            fileNames += file.name + ' ';
+        }
+        setFileName(fileNames);
     }
 
     return <section className={classes.formContainer}>
         <form onSubmit={onSubmitHandler}>
             <h1 className={classes.heading}>Upload a file</h1>
             <div className={classes.formControl}>
-                <input type="file" name="file" id="file" onChange={onFileChange} />
+                <input type="file" name="file" id="file" onChange={onFileChange} multiple />
                 <label htmlFor="File">{fileName}</label>
             </div>
             <button className={classes.btnSubmit} disabled={!fileUploaded}>Upload</button>
