@@ -1,6 +1,7 @@
 const fs = require('fs');
 const multer = require('multer');
 const download = require('download');
+const path = require('path');
 
 const File = require('../models/File');
 
@@ -53,7 +54,7 @@ const downloadFile = async (req, res) => {
 
     const filePath = file.metadataPath;
     res.download(filePath);
-    res.status(200).json({message: 'File Downloaded'});
+    console.log(res);
 }
 
 const deleteFile = (req, res) => {

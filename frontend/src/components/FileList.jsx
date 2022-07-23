@@ -43,7 +43,7 @@ const FileList = () => {
             <h1>My Files</h1>
             <button className={classes.btnAddFile} onClick={redirectHandler}>+ New file</button>
         </div>
-        <Table striped>
+        <Table>
             <thead>
             <tr>
                 <th>Name</th>

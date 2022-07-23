@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {useParams} from "react-router-dom";
 import ArgumentTable from '../components/ArgumentTable'
 import Dependencies from "../components/Dependencies";
-import Graph from '../components/Graph';
+import helpers from  '../helpers/helpers';
 import Card from '../UI/Card';
 import {useEffect, useState} from "react";
 
@@ -50,8 +50,8 @@ const TaskDetails = (props) => {
                     <h1 className={classes.heading}>Task Details: {run.tag ? run.tag : '/'}</h1>
                 </div>
                 <p><strong>Status: </strong>{run.status}</p>
-                <p><strong>Created: </strong>{run.created}</p>
-                <p><strong>Updated: </strong>{run.updated}</p>
+                <p><strong>Created: </strong>{helpers.parseDate(run.created)}</p>
+                <p><strong>Updated: </strong>{helpers.parseDate(run.updated)}</p>
                 <h3>Arguments:</h3>
                 {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
                 <Dependencies dependencies={run.dependencies} id={run._id} />

@@ -2,7 +2,8 @@ import Button from 'react-bootstrap/Button';
 import classes from './FileItem.module.css';
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {deleteFile} from "../features/files/fileSlice";
+import {deleteFile, downloadFile} from "../features/files/fileSlice";
+import TaskForm from "./TaskForm.jsx";
 
 const FileItem = (props) => {
     const navigate = useNavigate();
@@ -19,6 +20,10 @@ const FileItem = (props) => {
         dispatch(deleteFile(props.id));
     }
 
+    const downloadHandler = () => {
+        dispatch(downloadFile(props.id));
+    }
+
     return <tr>
         <td className={classes.name}>
             <p>{imageName}</p>
@@ -30,8 +35,7 @@ const FileItem = (props) => {
         </td> {/* TODO fix for other path types */}
         <td>{sizeInMB} MB</td>
         <td>
-            <Button variant='primary'>Download</Button>{' '}
-            <Button onClick={deleteFileHandler} variant='primary'>Delete</Button>{' '}
+            <a href="/1658568214120-R-4916933-1379403200-4826.jpg" onClick={downloadHandler} download>Download</a>
         </td>
     </tr>
 }

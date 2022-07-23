@@ -23,6 +23,8 @@ router.put('/tasks/:taskId', protect, ctrlRuns.putUpdateRun);
 
 router.get('/tasks', protect, ctrlRuns.getAllRuns);
 
+router.get('/tasks/isLocked/:taskId', protect, ctrlRuns.isLocked);
+
 router.delete('/tasks/:taskId', protect, ctrlRuns.deleteRun);
 
 module.exports = router;

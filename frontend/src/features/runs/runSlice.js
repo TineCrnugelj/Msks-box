@@ -4,6 +4,7 @@ import runService from "./runService";
 const initialState = {
     runs: [],
     lockedRuns: [],
+    isLocked: false,
     run: null,
     filteredRuns: [],
     isError: false,
@@ -86,6 +87,16 @@ export const getRunByTag = createAsyncThunk('runs/getRunByTag', async (tag, thun
     try {
         const token = thunkAPI.getState().auth.user.token;
         return await runService.getRunByTag(tag, token);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
+export const isLocked = createAsyncThunk('runs/isLocked', async (id, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        return await runService.isLocked(id, token);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -187,6 +198,19 @@ export const runSlice = createSlice({
                 state.runs = state.runs.filter((run) => run._id !== action.payload.id)
             })
             .addCase(deleteRun.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
+            })
+            .addCase(isLocked.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(isLocked.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+                state.isLocked = true;
+            })
+            .addCase(isLocked.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
