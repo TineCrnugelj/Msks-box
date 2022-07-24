@@ -17,7 +17,7 @@ router.post('/tasks/lock/:taskId', ctrlRuns.lockRun);
 
 router.post('/tasks/unlock/:taskId', ctrlRuns.unlockRun);
 
-router.get('/tasks/:taskId', ctrlRuns.getRun);
+router.get('/tasks/:hash', ctrlRuns.getRun);
 
 router.put('/tasks/:taskId', protect, ctrlRuns.putUpdateRun);
 

@@ -8,7 +8,7 @@ const fileStorageEngine = multer.diskStorage({
        cb(null, 'public');
    },
     filename: (req, file, cb) => {
-       cb(null, file.originalname + '-' + Date.now());
+       cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
@@ -25,7 +25,6 @@ const getAllFiles = (req, res) => {
 
 const postAddFile = (req, res) => {
     const files = req.files;
-    console.log(files);
     for (let file of files) {
         const newFile = File.create({
             metadataPath: file.path,
@@ -41,7 +40,6 @@ const downloadFile = async (req, res) => {
 
     const filePath = file.metadataPath;
     res.download(filePath);
-    console.log(res);
 }
 
 const deleteFile = (req, res) => {

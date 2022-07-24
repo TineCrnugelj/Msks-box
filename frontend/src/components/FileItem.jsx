@@ -9,7 +9,7 @@ const FileItem = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const sizeInMB = (props.size / 1000000).toFixed(2);
-    const isImage = props.name.slice(-3) === 'jpg' || props.name.slice(-3) === 'png' || props.name.slice(-4) === 'jpeg';
+    const isImage = props.name.includes('jpg') || props.name.includes('png') || props.name.includes('jpeg');
     const imageName = props.name.split('\\')[1];
 
     const viewFullSizeHandler = () => {
@@ -35,7 +35,7 @@ const FileItem = (props) => {
         </td> {/* TODO fix for other path types */}
         <td>{sizeInMB} MB</td>
         <td>
-            <a href="/1658568214120-R-4916933-1379403200-4826.jpg" onClick={downloadHandler} download>Download</a>
+            <a href={"1658406140226-Jun21_4b.jpg"} onClick={downloadHandler} download={"1658406140226-Jun21_4b.jpg"}>Download</a>
         </td>
     </tr>
 }

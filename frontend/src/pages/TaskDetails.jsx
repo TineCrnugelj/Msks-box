@@ -8,7 +8,7 @@ import {useEffect, useState} from "react";
 
 import classes from './Dashboard.module.css'
 import ClipLoader from "react-spinners/ClipLoader";
-import {getRun, reset, setRun} from "../features/runs/runSlice";
+import {getRun, reset} from "../features/runs/runSlice";
 
 const override = {
     display: "block",
@@ -18,7 +18,7 @@ const override = {
 
 const TaskDetails = (props) => {
     const dispatch = useDispatch();
-    const { taskId } = useParams();
+    const { hash } = useParams();
     let [color] = useState("#044599");
 
     const run  = useSelector(state => state.runs.run);
@@ -28,12 +28,12 @@ const TaskDetails = (props) => {
         if (isError) {
             console.log(message)
         }
-        dispatch(getRun(taskId));
+        dispatch(getRun(hash));
 
         return () => {
             dispatch(reset());
         }
-    }, []);
+    }, [hash]);
 
 
     if (isLoading) {
@@ -44,6 +44,7 @@ const TaskDetails = (props) => {
         return null;
     }
     else {
+        console.log(run);
         return <section className={classes.tasks}>
             <Card>
                 <div className={classes.head}>

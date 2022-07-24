@@ -42,7 +42,7 @@ const TaskTable = (props) => {
 
     const tasksList = filteredRuns.map(task => (
         <TaskItem
-            key={Math.random()}
+            key={task._id}
             source={task.repository}
             id={task._id}
             tag={task.tag}
@@ -52,6 +52,7 @@ const TaskTable = (props) => {
             updated={task.updated}
             arguments={task.arguments}
             dependencies={task.dependencies}
+            hash={task.hash}
         />
     ));
 

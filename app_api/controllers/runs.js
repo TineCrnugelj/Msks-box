@@ -47,12 +47,11 @@ const getAllRuns = (req, res) => {
 };
 
 const getRun = (req, res) => {
-    const id = req.params.taskId;
-    if (!id) {
-        return res.status(404).json({message: 'Id not provided'});
+    const hash = req.params.hash;
+    if (!hash) {
+        return res.status(404).json({message: 'Hash not provided'});
     }
-    Run.findById({_id: id}).then((run) => {
-
+    Run.findOne({hash: hash}).then((run) => {
         return res.status(200).json(run);  
     })
 }
@@ -172,7 +171,15 @@ const putUpdateRun = async (req, res) => {
     }) 
 }
 
-const postAddRun = (req, res) => {
+const calculateHash = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+}
+
+const postAddRun = async (req, res) => {
     const newRun = {
        source: req.body.source,
        entrypoint: req.body.entrypoint,
@@ -190,10 +197,13 @@ const postAddRun = (req, res) => {
     for (let arg of args) {
         const value = arg.split('=')[1];
         if (value.includes('@')) {
-            const dependency = value.substring(value.indexOf('@') + 1);
-            dependencies.push(dependency);
+            const dependencyTag = value.substring(value.indexOf('@') + 1);
+            const run = await Run.findOne({tag: dependencyTag});
+            dependencies.push(run.hash);
         }
     }
+
+    const hash = calculateHash(req.body.arguments + env.commit);
 
     const newRunMeta = new Run({
         user: newRun.user,
@@ -205,7 +215,8 @@ const postAddRun = (req, res) => {
         created: Date.now(),
         updated: Date.now(), 
         tag: newRun.tag,
-        dependencies: dependencies
+        dependencies: dependencies,
+        hash: hash
     });
     newRunMeta.save();
 

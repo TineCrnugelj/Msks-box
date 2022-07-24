@@ -28,7 +28,6 @@ const getRuns = async (token) => {
 // Get run by id
 const getRun = async (runId) => {
     const response = await axios.get(API_URL + runId);
-    console.log(response.data)
     return response.data;
 }
 

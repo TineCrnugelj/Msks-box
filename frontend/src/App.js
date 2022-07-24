@@ -20,8 +20,8 @@ function App() {
         <Header />
         <div className="App">
           <Routes>
-            <Route path='*' element={<Navigate to='/tasks' replace/>} exact/>
-            <Route path='/tasks/:taskId' element={<TaskDetails />} />
+            <Route path='/' element={<Navigate to='/tasks' replace/>} exact/>
+            <Route path='/tasks/:hash' element={<TaskDetails />} />
             <Route path='/tasks/add-task' element={<AddRun />} />
             <Route path='/tasks' element={<Dashboard />} />
             <Route path='/update-run' element={<UpdateRun />} />

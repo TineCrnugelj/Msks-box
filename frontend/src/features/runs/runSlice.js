@@ -153,7 +153,6 @@ export const runSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(getRun.fulfilled, (state, action) => {
-                console.log(action.payload)
                 state.isLoading = false
                 state.isSuccess = true
                 state.run = action.payload
@@ -195,6 +194,7 @@ export const runSlice = createSlice({
             .addCase(deleteRun.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
+                state.filteredRuns = state.filteredRuns.filter((run) => run._id !== action.payload.id)
                 state.runs = state.runs.filter((run) => run._id !== action.payload.id)
             })
             .addCase(deleteRun.rejected, (state, action) => {

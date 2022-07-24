@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getRunByTag} from "../features/runs/runSlice";
+import {getRun} from "../features/runs/runSlice";
 import Button from 'react-bootstrap/Button';
 
 import classes from "./Dependency.module.css";
@@ -9,15 +9,12 @@ const Dependency = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const run = useSelector(state => state.runs.runDetails);
-
     const showDetailsHandler = (e) => {
         e.preventDefault();
 
-        dispatch(getRunByTag(props.tag));
-        console.log(run._id);
+        dispatch(getRun(props.tag));
 
-        navigate('/tasks/' + run._id);
+        navigate('/tasks/' + props.tag);
     }
 
     return <p>

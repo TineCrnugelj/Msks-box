@@ -24,7 +24,6 @@
 .header {
     display: flex;
     margin-bottom: 2rem;
-    align-items: center;
 }
 
 button:hover {

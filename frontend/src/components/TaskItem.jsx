@@ -14,19 +14,7 @@ const TaskItem = (props) => {
     const navigate = useNavigate();
 
     const toggleDetailsHandler = () => {
-        // dispatch(showDetails())
-
-        const run = {
-            tag: props.tag,
-            entrypoint: props.entrypoint,
-            status: props.status,
-            created: props.created,
-            updated: props.updated,
-            arguments: props.arguments,
-            dependencies: props.dependencies
-        }
-
-        navigate('/tasks/' + props.id);
+        navigate('/tasks/' + props.hash);
     }
 
     const cloneTaskHandler = () => {
