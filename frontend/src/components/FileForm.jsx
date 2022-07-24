@@ -3,9 +3,8 @@ import classes from './TaskForm.module.css'
 import {useDispatch} from 'react-redux'
 import { toast } from 'react-toastify'
 import { createFile } from '../features/files/fileSlice';
-import Card from '../UI/Card'
 
-const FileForm = (props) => {
+const FileForm = () => {
     const dispatch = useDispatch()
     const [files, setFiles] = useState();
     const [fileName, setFileName] = useState('Choose file')
@@ -20,9 +19,22 @@ const FileForm = (props) => {
         for (let i = 0; i < files.length; i++) {
             formData.append('files', files[i]);
         }
+        /*
+        const options = {
+            onUploadProgress: (progressEvent) => {
+                const {loaded, total} = progressEvent;
+                let percent = Math.floor((loaded * 100) / total);
+                console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+            }
+        }
 
-        // formData.append('file', files)
-        
+        const data = {
+            formData,
+            options
+        }
+
+         */
+
         dispatch(createFile(formData))
 
         setFileName('')
