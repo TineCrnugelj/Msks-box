@@ -4,16 +4,18 @@ import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteFile, downloadFile} from "../features/files/fileSlice";
 import TaskForm from "./TaskForm.jsx";
+import Axios from "axios";
+import FileDownload from 'js-file-download'
 
 const FileItem = (props) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const sizeInMB = (props.size / 1000000).toFixed(2);
     const isImage = props.name.includes('jpg') || props.name.includes('png') || props.name.includes('jpeg');
-    const imageName = props.name.split('\\')[1];
+    const fileName = props.name.split('\\')[1];
 
     const viewFullSizeHandler = () => {
-        navigate('/image/' + imageName);
+        navigate('/image/' + fileName);
     }
 
     const deleteFileHandler = () => {
@@ -22,20 +24,29 @@ const FileItem = (props) => {
 
     const downloadHandler = () => {
         dispatch(downloadFile(props.id));
+
+        Axios({
+            url: 'http://localhost:3000/' + fileName,
+            method: 'GET',
+            responseType: 'blob'
+        })
+            .then((res) => {
+                FileDownload(res.data, fileName);
+            })
     }
 
     return <tr>
         <td className={classes.name}>
-            <p>{imageName}</p>
+            <p>{fileName}</p>
             {isImage ?
                 <div className={classes.imgContainer}>
-                    <img className={classes.img} src={imageName} alt={props.name} />
+                    <img className={classes.img} src={fileName} alt={props.name} />
                 </div>
                 : ''}
         </td> {/* TODO fix for other path types */}
         <td>{sizeInMB} MB</td>
         <td>
-            <a href={"1658406140226-Jun21_4b.jpg"} onClick={downloadHandler} download={"1658406140226-Jun21_4b.jpg"}>Download</a>
+            <Button variant='primary' onClick={downloadHandler}>Download</Button>
         </td>
     </tr>
 }

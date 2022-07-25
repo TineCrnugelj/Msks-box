@@ -6,8 +6,8 @@ const Environment = require('../classes/Environment.js');
 const fs = require('fs');
 const asyncHandler = require('express-async-handler')
 
-
 const RUNS_DIR = 'runs';
+const LOCK_TIME = 10000;
 
 const saveRunToServer = (newRunMeta) => {
     const runDir = RUNS_DIR + '/' + newRunMeta.id;
@@ -245,9 +245,11 @@ const lockRun = (req, res) => {
     const taskToLock = RUNS_DIR + '/' + taskId;
     lockfile.lock(taskToLock)
         .then(() => {
+            console.log('First lock');
             const timeout = setTimeout(() => {
                 lockfile.unlock(taskToLock);
-            }, 3000);
+                console.log('First unlock');
+            }, LOCK_TIME);
             res.status(200).json({id: taskId});
 
         })

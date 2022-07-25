@@ -39,6 +39,7 @@ const downloadFile = async (req, res) => {
     const file = await File.findById(fileId);
 
     const filePath = file.metadataPath;
+    console.log(filePath);
     res.download(filePath);
 }
 
@@ -62,10 +63,16 @@ const deleteFile = (req, res) => {
     }
 };
 
+const deleteAll = (req, res) => {
+    File.deleteMany({});
+    res.status(200).json({msg: 'Deleted all'});
+}
+
 module.exports = {
     getAllFiles,
     postAddFile,
     deleteFile,
+    deleteAll,
     upload,
     downloadFile,
 }

@@ -79,6 +79,11 @@
     margin-left: 2rem;
 }
 
+.progressBar {
+    width: 30rem;
+    margin-left: 2rem;
+}
+
 .invalid input {
     border: 1px solid #b40e0e;
     background-color: #fddddd;

@@ -10,10 +10,9 @@ const initialState = {
     message: ''
 }
 
-export const createFile = createAsyncThunk('files/create', async (fileData, thunkAPI) => {
+export const createFile = createAsyncThunk('files/create', async (data, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token
-        return await fileService.createFile(fileData, token)
+        return await fileService.createFile(data.formData, data.options)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -108,7 +107,6 @@ export const fileSlice = createSlice({
             .addCase(downloadFile.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                console.log(action.payload);
             })
             .addCase(downloadFile.rejected, (state, action) => {
                 state.isLoading = false
