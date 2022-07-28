@@ -46,7 +46,8 @@ const FileItem = (props) => {
         </td> {/* TODO fix for other path types */}
         <td>{sizeInMB} MB</td>
         <td>
-            <Button variant='primary' onClick={downloadHandler}>Download</Button>
+            <Button variant='primary' onClick={downloadHandler}>Download</Button>{' '}
+            <Button variant='primary' onClick={deleteFileHandler}>Delete</Button>
         </td>
     </tr>
 }

@@ -3,11 +3,29 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
 import { getRuns, reset, setFilteredRuns } from "../features/runs/runSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
-import TaskItem from "./TaskItem";
-import Searchbar from "./Searchbar";
-
+import Actions from "./Actions";
 import classes from './TaskTable.module.css'
 import {MDBCol} from "mdbreact";
+
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import Searchbar from "./Searchbar";
+
+const columns = [
+    { id: 'tag', label: 'Tag', minWidth: 150 },
+    { id: 'entrypoint', label: 'Entrypoint', minWidth: 170 },
+    { id: 'status', label: 'Status', minWidth: 140 },
+    { id: 'created', label: 'Created', minWidth: 170 },
+    { id: 'updated', label: 'Updated', minWidth: 170 },
+    { id: 'actions', label: 'Actions', minWidth: 130 },
+];
 
 const override = {
     display: "block",
@@ -15,14 +33,34 @@ const override = {
     borderColor: "#044599",
 };
 
-const TaskTable = (props) => {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: '#044599',
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
+
+const TaskTable = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     let [color] = useState("#044599");
-    const [searchQuery, setSearchQuery] = useState('');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
     let { runs, isLoading, isError, message } = useSelector(state => state.runs);
     let filteredRuns = useSelector(state => state.runs.filteredRuns);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
 
     useEffect(() => {
         if (isError) {
@@ -41,7 +79,7 @@ const TaskTable = (props) => {
     }
 
     const tasksList = filteredRuns.map(task => (
-        <TaskItem
+        <Actions
             key={task._id}
             source={task.repository}
             id={task._id}
@@ -60,9 +98,8 @@ const TaskTable = (props) => {
         navigate('/tasks/add-task');
     }
 
-    const searchTasks = (e) => {
-        setSearchQuery(e.target.value);
-        const searchWord = e.target.value.toLowerCase();
+    const searchTasks = (searchQuery) => {
+        const searchWord = searchQuery.toLowerCase();
         const newFilter = runs.filter((run) => {
             return run.tag.toLowerCase().includes(searchWord) ||
                    run.status.toLowerCase().includes(searchWord) ||
@@ -77,33 +114,77 @@ const TaskTable = (props) => {
             <div className={classes.header}>
                 <h1>Tasks ({tasksList.length})</h1>
                 <button className={classes.btnAddRun} onClick={redirectHandler}>+ Add task</button>
-                <MDBCol className={classes.searchBar} md="2">
-                    <div className="input-group md-form form-sm form-1 pl-0">
-                        <input
-                            onChange={searchTasks}
-                            className="form-control my-0 py-1"
-                            type="text"
-                            placeholder="Search"
-                            aria-label="Search"
-                            value={searchQuery}
-                        />
-                    </div>
-                </MDBCol>
+                <Searchbar onQueryChange={searchTasks} />
             </div>
 
-            <table className={classes.table}>
-                <thead>
-                    <tr>
-                        <th className={classes.th}>Tag</th>
-                        <th className={classes.th}>EntryPoint</th>
-                        <th className={classes.th}>Status</th>
-                        <th className={classes.th}>Created</th>
-                        <th className={classes.th}>Updated</th>
-                        <th className={classes.th}>Actions</th>
-                    </tr>
-                </thead>
-                {tasksList}
-            </table>
+            <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                                {columns.map((column) => (
+                                    <StyledTableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{ minWidth: column.minWidth }}
+                                    >
+                                        {column.label}
+                                    </StyledTableCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {filteredRuns
+                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map((task) => {
+                                    return (
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
+                                            <TableCell key={task.id} align={task.align}>
+                                                {task.tag}
+                                            </TableCell>
+                                            <TableCell key={task.id} align={task.align}>
+                                                {task.entrypoint}
+                                            </TableCell>
+                                            <TableCell key={task.id} align={task.align}>
+                                                {task.status}
+                                            </TableCell>
+                                            <TableCell key={task.id} align={task.align}>
+                                                {task.created}
+                                            </TableCell>
+                                            <TableCell key={task.id} align={task.align}>
+                                                {task.updated}
+                                            </TableCell>
+                                            <TableCell key={task.id} align={task.align}>
+                                                <Actions
+                                                    source={task.repository}
+                                                    id={task._id}
+                                                    tag={task.tag}
+                                                    entrypoint={task.entrypoint}
+                                                    status={task.status}
+                                                    created={task.created}
+                                                    updated={task.updated}
+                                                    arguments={task.arguments}
+                                                    dependencies={task.dependencies}
+                                                    hash={task.hash}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <TablePagination
+                    rowsPerPageOptions={[10, 25, 100]}
+                    component="div"
+                    count={filteredRuns.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+            </Paper>
+
             {tasksList.length === 0 ?  <h4 className={classes.noTasks}>No tasks found</h4> : ''}
         </Fragment>
 

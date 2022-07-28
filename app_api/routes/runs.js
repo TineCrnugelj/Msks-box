@@ -13,9 +13,9 @@ router.post('/tasks/reset/:taskId', ctrlRuns.postResetRun);
 
 router.post('/tasks/status/:rutaskIdnId/:status', ctrlRuns.postStatus);
 
-router.post('/tasks/lock/:taskId', ctrlRuns.lockRun);
+router.post('/tasks/:taskId/lock', ctrlRuns.lockRun);
 
-router.post('/tasks/unlock/:taskId', ctrlRuns.unlockRun);
+router.post('/tasks/:taskId/unlock', ctrlRuns.unlockRun);
 
 router.get('/tasks/:hash', ctrlRuns.getRun);
 

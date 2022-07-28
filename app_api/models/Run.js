@@ -464,7 +464,7 @@ const mongoose = require('mongoose');
 
 /**
  * @swagger
- *  /tasks/lock/{taskId}:
+ *  /tasks/{taskId}/lock:
  *   post:
  *    summary: Lock a task
  *    tags: [Tasks]
@@ -500,7 +500,7 @@ const mongoose = require('mongoose');
 
 /**
  * @swagger
- *  /tasks/unlock/{taskId}:
+ *  /tasks/{taskId}/unlock:
  *   post:
  *    summary: Unlock a task
  *    tags: [Tasks]

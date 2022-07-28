@@ -1,5 +1,4 @@
 const Run = require('../models/Run');
-const User = require('../models/User');
 
 const lockfile = require('proper-lockfile');
 const Environment = require('../classes/Environment.js');
@@ -93,7 +92,7 @@ const postResetRun = (req, res) => {
     const remove = req.query.remove;
 
     lockfile.lock(RUNS_DIR)
-        .then((release) => {
+        .then(() => {
             if (remove) {
                 deleteRun(req, res);
             }
