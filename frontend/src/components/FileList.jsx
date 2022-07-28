@@ -43,7 +43,7 @@ const FileList = () => {
             <h1>My Files</h1>
             <button className={classes.btnAddFile} onClick={redirectHandler}>+ New file</button>
         </div>
-        <Table>
+        {filesList.length > 0 ? (<Table>
             <thead>
             <tr>
                 <th>Name</th>
@@ -52,9 +52,10 @@ const FileList = () => {
             </tr>
             </thead>
             <tbody>
-                {filesList}
+            {filesList}
             </tbody>
-        </Table>
+        </Table>) : <p>No files</p>}
+
     </Fragment>
 }
 
