@@ -1,6 +1,6 @@
 import classes from "./Dashboard.module.css";
 import Card from "../UI/Card";
-import FileList from "../components/FileList";
+import FileList from "../components/Files/FileList";
 import React from "react";
 
 const Files = () => {

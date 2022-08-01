@@ -2,10 +2,11 @@ import Button from 'react-bootstrap/Button';
 import classes from './FileItem.module.css';
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
-import {deleteFile, downloadFile} from "../features/files/fileSlice";
-import TaskForm from "./TaskForm.jsx";
+import {deleteFile, downloadFile} from "../../features/files/fileSlice";
+import {NavLink} from "react-router-dom";
 import Axios from "axios";
 import FileDownload from 'js-file-download'
+import {Fragment} from "react";
 
 const FileItem = (props) => {
     const navigate = useNavigate();
@@ -39,9 +40,11 @@ const FileItem = (props) => {
         <td className={classes.name}>
             <p>{fileName}</p>
             {isImage ?
-                <div className={classes.imgContainer}>
-                    <img className={classes.img} src={fileName} alt={props.name} />
-                </div>
+                <Fragment>
+                    <div className={classes.imgContainer}>
+                        <img className={classes.img} src={fileName} alt={props.name} />
+                    </div>
+                </Fragment>
                 : ''}
         </td> {/* TODO fix for other path types */}
         <td>{sizeInMB} MB</td>

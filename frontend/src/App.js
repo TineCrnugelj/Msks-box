@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Dashboard from './pages/Dashboard';
 import AddRun from "./pages/AddRun"
 import UpdateRun from "./pages/UpdateRun"
-import Header from './components/Header';
+import Header from './UI/Header';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import TaskDetails from "./pages/TaskDetails";
@@ -17,7 +17,7 @@ function App() {
   return (
     <Fragment>
       <Router>
-        <Header />
+        <Header/>
         <div className="App">
           <Routes>
             <Route path='/' element={<Navigate to='/tasks' replace/>} exact/>

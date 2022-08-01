@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux'
-import useInput from '../hooks/use-input';
-import { createRun } from '../features/runs/runSlice'
+import useInput from '../../hooks/use-input';
+import { createRun } from '../../features/runs/runSlice'
 import { useNavigate } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
@@ -107,7 +107,7 @@ const TaskForm = (props) => {
     const entrypointClasses = entrypointInputHasError ? `${classes.formControl} ${classes.invalid}` : `${classes.formControl}`;
 
     return <form onSubmit={submitFormHandler}>
-        <h1 className={classes.heading}>Add a run</h1>
+        <h1 className={classes.heading}>Add a task</h1>
         <div className={sourceClasses}>
             <label htmlFor="source">Source</label>
             <input type="text" id='source' value={enteredSource} onChange={sourceChangedHandler} onBlur={sourceBlurHandler} />

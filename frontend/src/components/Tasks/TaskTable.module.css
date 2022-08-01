@@ -3,6 +3,10 @@
     table-layout: fixed;
 }
 
+.pagination p {
+    margin-top: auto;
+}
+
 .btnAddRun {
     font: inherit;
     cursor: pointer;

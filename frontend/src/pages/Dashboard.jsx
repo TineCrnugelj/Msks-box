@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import classes from './Dashboard.module.css'
 import Card from '../UI/Card'
-import TaskTable from '../components/TaskTable'
+import TaskTable from '../components/Tasks/TaskTable'
 
 function Dashboard() {
     const navigate = useNavigate()

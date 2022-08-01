@@ -1,11 +1,10 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { getRuns, reset, setFilteredRuns } from "../features/runs/runSlice";
+import { getRuns, reset, setFilteredRuns } from "../../features/runs/runSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
 import Actions from "./Actions";
 import classes from './TaskTable.module.css'
-import {MDBCol} from "mdbreact";
 
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -119,7 +118,7 @@ const TaskTable = () => {
 
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer sx={{ maxHeight: 440 }}>
-                    <Table stickyHeader aria-label="sticky table">
+                    <Table role='table' stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
                                 {columns.map((column) => (
@@ -138,24 +137,25 @@ const TaskTable = () => {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((task) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={task.id}>
-                                            <TableCell key={task.id} align={task.align}>
+                                        <TableRow hover role='table' tabIndex={-1} key={task.id}>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.tag}
                                             </TableCell>
-                                            <TableCell key={task.id} align={task.align}>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.entrypoint}
                                             </TableCell>
-                                            <TableCell key={task.id} align={task.align}>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.status}
                                             </TableCell>
-                                            <TableCell key={task.id} align={task.align}>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.created}
                                             </TableCell>
-                                            <TableCell key={task.id} align={task.align}>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.updated}
                                             </TableCell>
-                                            <TableCell key={task.id} align={task.align}>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 <Actions
+                                                    key={task._id}
                                                     source={task.repository}
                                                     id={task._id}
                                                     tag={task.tag}
@@ -177,6 +177,7 @@ const TaskTable = () => {
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
+                    className={classes.pagination}
                     count={filteredRuns.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
@@ -184,7 +185,6 @@ const TaskTable = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </Paper>
-
             {tasksList.length === 0 ?  <h4 className={classes.noTasks}>No tasks found</h4> : ''}
         </Fragment>
 

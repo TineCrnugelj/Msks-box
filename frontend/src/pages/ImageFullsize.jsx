@@ -3,9 +3,9 @@ import {useParams} from "react-router-dom";
 const ImageFullsize = () => {
     const { imageName } = useParams();
 
-    console.log(imageName);
+    console.log(process.env);
 
-    return <img src={imageName} alt={imageName} />
+    return <img src={process.env.PUBLIC_URL + imageName} alt={imageName} />
 }
 
 export default ImageFullsize;

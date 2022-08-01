@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import {useDispatch} from 'react-redux'
-import { deleteRun } from '../features/runs/runSlice'
+import { deleteRun } from '../../features/runs/runSlice'
 import { Dropdown } from 'react-bootstrap'
 import { DropdownButton } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';

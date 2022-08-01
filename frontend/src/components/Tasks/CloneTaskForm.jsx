@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import { createRun, updateRun } from '../features/runs/runSlice'
+import { createRun, updateRun } from '../../features/runs/runSlice'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';

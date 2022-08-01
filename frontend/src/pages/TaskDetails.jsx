@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import {useParams} from "react-router-dom";
-import ArgumentTable from '../components/ArgumentTable'
-import Dependencies from "../components/Dependencies";
+import ArgumentTable from '../components/Tasks/ArgumentTable'
+import Dependencies from "../components/Tasks/Dependencies";
 import helpers from  '../helpers/helpers';
 import Card from '../UI/Card';
 import {useEffect, useState} from "react";
@@ -44,7 +44,6 @@ const TaskDetails = (props) => {
         return null;
     }
     else {
-        console.log(run);
         return <section className={classes.tasks}>
             <Card>
                 <div className={classes.head}>

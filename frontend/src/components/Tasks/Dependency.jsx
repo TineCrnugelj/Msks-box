@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {getRun} from "../features/runs/runSlice";
+import {getRun} from "../../features/runs/runSlice";
 import Button from 'react-bootstrap/Button';
 
 import classes from "./Dependency.module.css";

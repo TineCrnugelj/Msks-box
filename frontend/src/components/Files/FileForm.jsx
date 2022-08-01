@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import classes from './TaskForm.module.css'
+import classes from '../Tasks/TaskForm.module.css'
 import {useDispatch} from 'react-redux'
 import { toast } from 'react-toastify'
-import { createFile } from '../features/files/fileSlice';
+import { createFile } from '../../features/files/fileSlice';
 import ProgressBar from "react-bootstrap/ProgressBar";
+import {useNavigate} from "react-router-dom";
 
 const FileForm = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [files, setFiles] = useState();
     const [fileName, setFileName] = useState('Choose file')
 
@@ -46,8 +48,10 @@ const FileForm = () => {
 
         dispatch(createFile(data))
 
-        setFileName('')
-        setFileUploaded(false)
+        setFileName('');
+        setFileUploaded(false);
+
+        navigate('/files');
     }
 
     const onFileChange = (e) => {

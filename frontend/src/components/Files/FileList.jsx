@@ -1,16 +1,24 @@
 import classes from './FileList.module.css'
 import {useSelector, useDispatch} from "react-redux";
 import {Fragment, useEffect} from "react";
-import {getFiles, reset} from "../features/files/fileSlice";
+import {getFiles, reset} from "../../features/files/fileSlice";
 import Table from 'react-bootstrap/Table';
 import FileItem from './FileItem';
-import Button from 'react-bootstrap/Button';
 import {useNavigate} from "react-router-dom";
+import ClipLoader from 'react-spinners/ClipLoader'
+import {useState} from "react";
+
+const override = {
+    display: "block",
+    margin: "0 auto",
+    borderColor: "#044599",
+};
 
 const FileList = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {files, isLoading, isError, message} = useSelector(state => state.files);
+    let [color] = useState("#044599");
 
     useEffect(() => {
         if (isError) {
@@ -36,6 +44,10 @@ const FileList = () => {
 
     const redirectHandler = () => {
         navigate('/files/new-file');
+    }
+
+    if (isLoading) {
+        return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
 
     return <Fragment>
