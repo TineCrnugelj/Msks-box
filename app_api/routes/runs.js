@@ -3,15 +3,11 @@ const router = express.Router();
 
 const ctrlRuns = require('../controllers/runs');
 
-const {protect} = require('../middleware/auth')
+const {protect} = require('../middleware/auth');
 
 router.get('/tasks/find', protect, ctrlRuns.findByTag);
 
 router.post('/tasks', protect, ctrlRuns.postAddRun);
-
-router.post('/tasks/reset/:taskId', ctrlRuns.postResetRun);
-
-router.post('/tasks/status/:rutaskIdnId/:status', ctrlRuns.postStatus);
 
 router.post('/tasks/:taskId/lock', ctrlRuns.lockRun);
 

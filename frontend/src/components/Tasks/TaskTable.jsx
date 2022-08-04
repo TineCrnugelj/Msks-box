@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { getRuns, reset, setFilteredRuns } from "../../features/runs/runSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
 import Actions from "./Actions";
+import ReactTimeAgo from "react-time-ago";
+import TimeAgo from 'javascript-time-ago';
 import classes from './TaskTable.module.css'
 
 import { styled } from '@mui/material/styles';
+import en from 'javascript-time-ago/locale/en.json'
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,6 +19,8 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Searchbar from "./Searchbar";
+
+TimeAgo.addLocale(en)
 
 const columns = [
     { id: 'tag', label: 'Tag', minWidth: 150 },
@@ -148,10 +153,10 @@ const TaskTable = () => {
                                                 {task.status}
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
-                                                {task.created}
+                                                <ReactTimeAgo date={new Date(task.created)} locale='en' />
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
-                                                {task.updated}
+                                                <ReactTimeAgo date={new Date(task.updated)} locale='en' />
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
                                                 <Actions

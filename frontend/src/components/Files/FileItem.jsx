@@ -3,20 +3,18 @@ import classes from './FileItem.module.css';
 import {useNavigate} from "react-router-dom";
 import {useDispatch} from "react-redux";
 import {deleteFile, downloadFile} from "../../features/files/fileSlice";
-import {NavLink} from "react-router-dom";
 import Axios from "axios";
 import FileDownload from 'js-file-download'
 import {Fragment} from "react";
 
 const FileItem = (props) => {
-    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const sizeInMB = (props.size / 1000000).toFixed(2);
+    let sizeInMB = (props.size / 1000000).toFixed(2);
     const isImage = props.name.includes('jpg') || props.name.includes('png') || props.name.includes('jpeg');
-    const fileName = props.name.split('\\')[1];
+    const fileName = props.name.split('/')[1];
 
-    const viewFullSizeHandler = () => {
-        navigate('/image/' + fileName);
+    if (sizeInMB.toString() === '0.00') {
+        sizeInMB = '0.01';
     }
 
     const deleteFileHandler = () => {

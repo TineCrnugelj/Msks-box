@@ -2,13 +2,18 @@ import { useSelector, useDispatch } from "react-redux";
 import {useParams} from "react-router-dom";
 import ArgumentTable from '../components/Tasks/ArgumentTable'
 import Dependencies from "../components/Tasks/Dependencies";
+import ReactTimeAgo from "react-time-ago";
+import TimeAgo from "javascript-time-ago";
 import helpers from  '../helpers/helpers';
 import Card from '../UI/Card';
 import {useEffect, useState} from "react";
 
+import en from 'javascript-time-ago/locale/en.json'
 import classes from './Dashboard.module.css'
 import ClipLoader from "react-spinners/ClipLoader";
 import {getRun, reset} from "../features/runs/runSlice";
+
+TimeAgo.addLocale(en);
 
 const override = {
     display: "block",
@@ -50,8 +55,8 @@ const TaskDetails = (props) => {
                     <h1 className={classes.heading}>Task Details: {run.tag ? run.tag : '/'}</h1>
                 </div>
                 <p><strong>Status: </strong>{run.status}</p>
-                <p><strong>Created: </strong>{helpers.parseDate(run.created)}</p>
-                <p><strong>Updated: </strong>{helpers.parseDate(run.updated)}</p>
+                <p><strong>Created: </strong><ReactTimeAgo locale='en' date={new Date(run.created)} /></p>
+                <p><strong>Updated: </strong><ReactTimeAgo locale='en' date={new Date(run.updated)} /></p>
                 <h3>Arguments:</h3>
                 {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
                 <Dependencies dependencies={run.dependencies} id={run._id} />
