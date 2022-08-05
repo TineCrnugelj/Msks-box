@@ -12,7 +12,7 @@ const CloneTaskForm = (props) => {
 
     const [source, setSource] = useState(searchParams.get('source'))
     const [entrypoint, setEntrypoint] = useState(searchParams.get('entrypoint'))
-    const [tag, setTag] = useState(searchParams.get('tag'))
+    const [tag, setTag] = useState('');
     const [action] = useState(searchParams.get('action'));
 
     let [numOfArgs, setNumOfArgs] = useState(searchParams.get('arguments').split(',').length);
@@ -44,7 +44,7 @@ const CloneTaskForm = (props) => {
         setTag(e.target.value)
     }
 
-    formIsValid = source !== '' && entrypoint !== '' && numOfArgs > 0
+    formIsValid = source !== '' && entrypoint !== '' && numOfArgs > 0 && tag !== '';
 
     const submitFormHandler = (event) => {
         event.preventDefault();

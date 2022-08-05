@@ -30,6 +30,7 @@
     "react-spinners": "^0.13.2",
     "react-time-ago": "^7.2.1",
     "react-toastify": "^9.0.5",
+    "react-transition-group": "^4.4.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
