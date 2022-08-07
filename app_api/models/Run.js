@@ -547,6 +547,7 @@ const runSchema = new mongoose.Schema({
     tag: {type: String, unique: true},
     dependencies: [{type: Number}],
     hash: {type: Number},
+    locked: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('Run', runSchema, 'Run');  

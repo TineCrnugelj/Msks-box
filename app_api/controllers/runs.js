@@ -8,6 +8,18 @@ const asyncHandler = require('express-async-handler')
 const RUNS_DIR = 'runs';
 const LOCK_TIME = 10000;
 
+const saveRunToServer = (newRunMeta) => {
+    const runDir = RUNS_DIR + '/' + newRunMeta.id;
+    fs.mkdir(runDir, err => {
+        if (err) console.log(err);
+    });
+    const jsonMeta = JSON.stringify(newRunMeta);
+
+    fs.writeFile(`${runDir}/meta.json`, jsonMeta, 'utf-8', err => {
+        if (err) console.log(err);
+    });
+}
+
 const getAllRuns = (req, res) => {
     const searchQuery = req.query.query;
     if (!searchQuery) {
@@ -178,39 +190,38 @@ const isLocked = (req, res) => {
         })
 }
 
-const lockRun = (req, res) => {
+const lockRun = async (req, res) => {
     const taskId = req.params.taskId;
-    const taskToLock = RUNS_DIR + '/' + taskId;
-    lockfile.lock(taskToLock)
-        .then(() => {
-            console.log('First lock');
-            const timeout = setTimeout(() => {
-                lockfile.unlock(taskToLock);
-                console.log('First unlock');
-            }, LOCK_TIME);
-            res.status(200).json({id: taskId});
+    const taskToLock = await Run.findById(taskId);
 
-        })
-        .catch(err => {
-            return res.status(400).json(err)
-        })
+    if (taskToLock.locked) {
+        return res.status(200).json({msg: `Task ${taskId} already locked.`});
+    }
+
+    taskToLock.locked = true;
+    taskToLock.save();
+    console.log('locked');
+
+    setTimeout(() => {
+        taskToLock.locked = false;
+        taskToLock.save();
+        console.log('unlocked');
+    }, LOCK_TIME);
+
+    res.status(200).json({msg: `Task ${taskId} locked for ${LOCK_TIME / 1000} seconds.`});
 }
 
-const unlockRun = (req, res) => {
+const unlockRun = async (req, res) => {
     const taskId = req.params.taskId 
-    lockfile.check(RUNS_DIR + '/' + taskId)
-        .then((isLocked) => {
-            if (isLocked) {
-                lockfile.unlock(RUNS_DIR + '/' + taskId)
-                .then(() => {
-                    return res.status(200).json({id: taskId});
-                })
-                .catch(err => console.log(err))
-            }
-            else {
-                return res.status(400).json({msg: 'Task is not locked'})
-            }
-        })
+    const taskToUnlock = await Run.findById(taskId);
+
+    if (!taskToUnlock.locked) {
+        return res.status(200).json({msg: 'Task not locked.'});
+    }
+
+    taskToUnlock.locked = false;
+    taskToUnlock.save();
+    res.status(200).json({msg: `Task ${taskId} unlocked.`});
 }
     
 
