@@ -4,9 +4,9 @@ const multer = require('multer');
 const File = require('../models/File');
 
 const fileStorageEngine = multer.diskStorage({
-   destination: (req, file, cb) => {
+    destination: (req, file, cb) => {
        cb(null, 'public');
-   },
+    },
     filename: (req, file, cb) => {
        cb(null, Date.now() + '-' + file.originalname);
     }
@@ -39,7 +39,6 @@ const downloadFile = async (req, res) => {
     const file = await File.findById(fileId);
 
     const filePath = file.metadataPath;
-    console.log(filePath);
     res.download(filePath);
 }
 
@@ -54,7 +53,6 @@ const deleteFile = (req, res) => {
             if (error) {
                 return res.status(500).json(error);
             }
-
             res.status(200).json({id: fileId});
         });
     }

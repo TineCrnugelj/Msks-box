@@ -537,7 +537,7 @@ const mongoose = require('mongoose');
 const runSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     repository: {type: String, required: true},
-    commit: {type: String},
+    commit: {type: String, default: 'master'},
     entrypoint: {type: String, required: true},
     arguments: [{type: String, required: true}],
     status: {type: String},

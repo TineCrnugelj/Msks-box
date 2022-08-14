@@ -1,6 +1,6 @@
 import classes from './FileList.module.css'
 import {useSelector, useDispatch} from "react-redux";
-import {Fragment, useEffect} from "react";
+import {Fragment, useEffect, useMemo} from "react";
 import {getFiles, reset} from "../../features/files/fileSlice";
 import Table from 'react-bootstrap/Table';
 import FileItem from './FileItem';
@@ -60,7 +60,6 @@ const FileList = () => {
             <tr>
                 <th>Name</th>
                 <th>Size</th>
-                <th>Actions</th>
             </tr>
             </thead>
             <tbody>

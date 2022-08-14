@@ -6,7 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
 
-const CloneTaskForm = (props) => {
+const CloneTaskForm = () => {
     const dispatch = useDispatch();
     let [searchParams] = useSearchParams()
 
@@ -19,6 +19,7 @@ const CloneTaskForm = (props) => {
     let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
 
     useEffect(() => {
+        action === 'update' ? setTag(searchParams.get('tag')) : setTag('');
         const args = searchParams.get('arguments').split(',')
         const argElements = []
         for (let i = 1; i <= numOfArgs; i++) {
@@ -128,8 +129,10 @@ const CloneTaskForm = (props) => {
         </div>
         <div className={classes.argumentsGroup}>
             <h3 className={classes.args}>Arguments</h3>
-            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
-            <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
+            <div className={classes.addRemoveButtons}>
+                <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
+                <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
+            </div>
         </div>
 
         {children}

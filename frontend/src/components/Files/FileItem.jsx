@@ -1,37 +1,53 @@
 import Button from 'react-bootstrap/Button';
 import classes from './FileItem.module.css';
-import {useNavigate} from "react-router-dom";
+import { FaDownload } from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {deleteFile, downloadFile} from "../../features/files/fileSlice";
 import Axios from "axios";
 import FileDownload from 'js-file-download'
-import {Fragment} from "react";
+import {Fragment, useMemo} from "react";
 
-const FileItem = (props) => {
+const API_URL = 'http://localhost:3000/';
+
+const FileItem = ({id, name, size}) => {
     const dispatch = useDispatch();
-    let sizeInMB = (props.size / 1000000).toFixed(2);
-    const isImage = props.name.includes('jpg') || props.name.includes('png') || props.name.includes('jpeg');
-    const fileName = props.name.split('/')[1];
+    let sizeInMB = (size / 1000000).toFixed(2);
+    const os = useMemo(() => {
+        if (window.navigator.appVersion.indexOf('Win') !== -1) {
+            return 'Windows';
+        }
+        if (window.navigator.appVersion.indexOf('Linux') !== -1) {
+            return 'Linux';
+        }
+    })
+    const isImage = useMemo(() => {
+        const imageName = name.toLowerCase();
+        if (imageName.includes('jpg') || imageName.includes('png') || imageName.includes('jpeg')) {
+            return true;
+        }
+        return false;
+    }, [name]);
+    const fileName = os === 'Windows' ? name.split('\\')[1] : name.split('/');
 
     if (sizeInMB.toString() === '0.00') {
         sizeInMB = '0.01';
     }
 
     const deleteFileHandler = () => {
-        dispatch(deleteFile(props.id));
+        dispatch(deleteFile(id));
     }
 
     const downloadHandler = () => {
-        dispatch(downloadFile(props.id));
+        dispatch(downloadFile(id));
 
         Axios({
-            url: 'http://localhost:3000/' + fileName,
+            url: API_URL + fileName,
             method: 'GET',
             responseType: 'blob'
         })
-            .then((res) => {
-                FileDownload(res.data, fileName);
-            })
+        .then((res) => {
+            FileDownload(res.data, fileName);
+        })
     }
 
     return <tr>
@@ -40,7 +56,7 @@ const FileItem = (props) => {
             {isImage ?
                 <Fragment>
                     <div className={classes.imgContainer}>
-                        <img className={classes.img} src={fileName} alt={props.name} />
+                        <img className={classes.img} src={fileName} alt={name} />
                     </div>
                 </Fragment>
                 : ''}
@@ -48,7 +64,6 @@ const FileItem = (props) => {
         <td>{sizeInMB} MB</td>
         <td>
             <Button variant='primary' onClick={downloadHandler}>Download</Button>{' '}
-            <Button variant='primary' onClick={deleteFileHandler}>Delete</Button>
         </td>
     </tr>
 }
