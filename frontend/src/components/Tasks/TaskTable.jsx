@@ -76,7 +76,7 @@ const TaskTable = () => {
         return () => {
             dispatch(reset())
         }
-    }, []);
+    }, [dispatch, isError, message]);
 
     if (isLoading) {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
@@ -142,7 +142,7 @@ const TaskTable = () => {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((task) => {
                                     return (
-                                        <TableRow hover role='table' tabIndex={-1} key={task.id}>
+                                        <TableRow hover role='table' tabIndex={-1} key={task._id}>
                                             <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.tag}
                                             </TableCell>

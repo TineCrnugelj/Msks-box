@@ -4,7 +4,6 @@ import ArgumentTable from '../components/Tasks/ArgumentTable'
 import Dependencies from "../components/Tasks/Dependencies";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";
-import helpers from  '../helpers/helpers';
 import Card from '../UI/Card';
 import {useEffect, useState} from "react";
 
@@ -38,7 +37,7 @@ const TaskDetails = () => {
         return () => {
             dispatch(reset());
         }
-    }, [hash]);
+    }, [hash, dispatch, isError, message]);
 
 
     if (isLoading) {

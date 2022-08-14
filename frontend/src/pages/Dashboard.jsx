@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -10,7 +10,6 @@ import TaskTable from '../components/Tasks/TaskTable'
 
 function Dashboard() {
     const navigate = useNavigate()
-    const showDetails = useSelector(state => state.details.showDetails)
     const { user } = useSelector(state => state.auth)
 
 

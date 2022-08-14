@@ -1,6 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import classes from './FileItem.module.css';
-import { FaDownload } from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {deleteFile, downloadFile} from "../../features/files/fileSlice";
 import Axios from "axios";
@@ -22,16 +21,15 @@ const FileItem = ({id, name, size}) => {
     })
     const isImage = useMemo(() => {
         const imageName = name.toLowerCase();
-        if (imageName.includes('jpg') || imageName.includes('png') || imageName.includes('jpeg')) {
-            return true;
-        }
-        return false;
+        return imageName.includes('jpg') || imageName.includes('png') || imageName.includes('jpeg');
     }, [name]);
-    const fileName = os === 'Windows' ? name.split('\\')[1] : name.split('/');
+    const fileName = os === 'Windows' ? name.split('\\')[1] : name.split('/')[1];
 
     if (sizeInMB.toString() === '0.00') {
         sizeInMB = '0.01';
     }
+
+    console.log(isImage);
 
     const deleteFileHandler = () => {
         dispatch(deleteFile(id));
