@@ -11,9 +11,7 @@ const Dependency = (props) => {
 
     const showDetailsHandler = (e) => {
         e.preventDefault();
-
         dispatch(getRun(props.tag));
-
         navigate('/tasks/' + props.tag);
     }
 

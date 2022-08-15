@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
 import { createRun, updateRun } from '../../features/runs/runSlice'
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import {parseArguments} from "../../helpers/helpers"
 
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
@@ -20,15 +21,9 @@ const CloneTaskForm = () => {
 
     useEffect(() => {
         action === 'update' ? setTag(searchParams.get('tag')) : setTag('');
-        const args = searchParams.get('arguments').split(',')
-        const argElements = []
-        for (let i = 1; i <= numOfArgs; i++) { // export to function
-            const keyValue = args[i - 1].split('=')
-            const key = keyValue[0].replace(/\W@:./g, '')
-            const value = keyValue[1].replace(/\W@:./g, '')
-            argElements.push(<ArgumentPair key1={key} value={value} index={i} key={Math.random()} />)
-        }
-        setChildren(argElements)
+        const args = searchParams.get('arguments').split(',');
+        const parsedArguments = parseArguments(args, numOfArgs);
+        setChildren(parsedArguments);
     }, [])
 
     let formIsValid = false;
