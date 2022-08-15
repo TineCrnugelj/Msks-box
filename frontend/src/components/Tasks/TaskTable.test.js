@@ -1,4 +1,4 @@
-import {render, screen} from '@testing-library/react';
+import {getByText, render, screen} from '@testing-library/react';
 import TaskForm from "./TaskForm";
 import {Router} from 'react-router-dom'
 import {Provider} from "react-redux";
@@ -12,12 +12,14 @@ describe('Async component', () => {
         render(
             <Provider store={store}>
                 <Router location={history.location} navigator={history}>
+                    act(() => {
                     <TaskTable />
+                })
                 </Router>
             </Provider>
-        )
+        );
 
-        const gridCellElements = await screen.findAllByRole('cell', {timeout: 3000});
-        expect(gridCellElements).not.toHaveLength(0);
+        const heading = await screen.getByText('Tasks', {exact: false});
+        expect(heading).toBeInTheDocument();
     });
 });

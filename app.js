@@ -16,9 +16,9 @@ var swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
     info: {
-      title: "Sistem za spremljanje in analizo eksperimentov",
+      title: "Msks-box",
       version: "1.0.0",
-      description: "Sistem za spremljanje in analizo eksperimentov REST API"
+      description: "Msks-box REST API"
     },
     license: {
       name: "GNU LGPLv3",

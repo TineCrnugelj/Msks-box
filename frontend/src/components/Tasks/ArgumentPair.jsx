@@ -21,11 +21,7 @@ const ArgumentPair = (props) => {
             <label htmlFor="value">Value</label>
             <input value={value} onChange={valueChangedHandler} type="text" id={'value' + props.index} />
         </div>
-
     </div>
-
-
-
 }
 
 export default ArgumentPair;
