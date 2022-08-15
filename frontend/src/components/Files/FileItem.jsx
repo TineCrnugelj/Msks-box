@@ -29,8 +29,6 @@ const FileItem = ({id, name, size}) => {
         sizeInMB = '0.01';
     }
 
-    console.log(isImage);
-
     const deleteFileHandler = () => {
         dispatch(deleteFile(id));
     }
@@ -58,7 +56,7 @@ const FileItem = ({id, name, size}) => {
                     </div>
                 </Fragment>
                 : ''}
-        </td> {/* TODO fix for other path types */}
+        </td>
         <td>{sizeInMB} MB</td>
         <td>
             <Button variant='primary' onClick={downloadHandler}>Download</Button>{' '}

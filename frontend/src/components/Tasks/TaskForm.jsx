@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
 
-const TaskForm = (props) => {
+const TaskForm = () => {
     const dispatch = useDispatch();
     let [numOfArgs, setNumOfArgs] = useState(1);
     let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);

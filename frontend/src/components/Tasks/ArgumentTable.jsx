@@ -38,7 +38,6 @@ const ArgumentTable = (props) => {
     values.push(splitted[1])
   }
 
-
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='arguments'>

@@ -22,7 +22,7 @@ const CloneTaskForm = () => {
         action === 'update' ? setTag(searchParams.get('tag')) : setTag('');
         const args = searchParams.get('arguments').split(',')
         const argElements = []
-        for (let i = 1; i <= numOfArgs; i++) {
+        for (let i = 1; i <= numOfArgs; i++) { // export to function
             const keyValue = args[i - 1].split('=')
             const key = keyValue[0].replace(/\W@:./g, '')
             const value = keyValue[1].replace(/\W@:./g, '')
@@ -77,8 +77,6 @@ const CloneTaskForm = () => {
             arguments: args,
             dependencies: dependencies
         }
-
-        console.log(run)
 
         if (action === 'clone') { // FIX THIS
             dispatch(createRun(run));
