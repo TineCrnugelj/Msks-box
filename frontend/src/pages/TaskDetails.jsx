@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import {useParams} from "react-router-dom";
-import ArgumentTable from '../components/Tasks/ArgumentTable'
-import Dependencies from "../components/Tasks/Dependencies";
+import ArgumentTable from '../components/tasks/ArgumentTable'
+import Dependencies from "../components/tasks/Dependencies";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";
 import Card from '../UI/Card';
@@ -37,8 +37,7 @@ const TaskDetails = () => {
         return () => {
             dispatch(reset());
         }
-    }, [hash, dispatch, isError, message]);
-
+    }, []);
 
     if (isLoading) {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />

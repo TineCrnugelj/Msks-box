@@ -76,7 +76,7 @@ const TaskTable = () => {
         return () => {
             dispatch(reset())
         }
-    }, [dispatch, isError, message]);
+    }, []);
 
     if (isLoading) {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />

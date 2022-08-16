@@ -9,20 +9,20 @@ else if (process.env.NODE_ENV === 'docker')
 mongoose.connect(dbURI);
 
 mongoose.connection.on("connected", () => {
-    console.log(`Mongoose je povezan na ${dbURI}.`);
+    console.log(`Mongoose connected at ${dbURI}.`);
 });
 
 mongoose.connection.on("error", (napaka) => {
-    console.log("Mongoose napaka pri povezavi: ", napaka);
+    console.log("Mongoose error connecting: ", napaka);
 });
 
 mongoose.connection.on("disconnected", () => {
-    console.log("Mongoose ni povezan.");
+    console.log("Mongoose not connected.");
 });
 
 const pravilnaUstavitev = (sporocilo, povratniKlic) => {
     mongoose.connection.close(() => {
-        console.log(`Mongoose je zaprl povezavo preko '${sporocilo}'.`);
+        console.log(`Mongoose closed connection '${sporocilo}'.`);
         povratniKlic();
     });
 };

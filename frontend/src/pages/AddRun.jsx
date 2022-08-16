@@ -1,6 +1,6 @@
 
 import classes from './AddRun.module.css';
-import TaskForm from '../components/Tasks/TaskForm';
+import TaskForm from '../components/tasks/TaskForm';
 
 const AddRun = (props) => {
     return <section className={classes.formContainer}>

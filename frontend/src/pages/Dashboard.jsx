@@ -6,12 +6,11 @@ import { useSelector } from 'react-redux'
 
 import classes from './Dashboard.module.css'
 import Card from '../UI/Card'
-import TaskTable from '../components/Tasks/TaskTable'
+import TaskTable from '../components/tasks/TaskTable'
 
 function Dashboard() {
     const navigate = useNavigate()
     const { user } = useSelector(state => state.auth)
-
 
     useEffect(() => {
         if (!user) {
@@ -28,4 +27,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard
+export default Dashboard;

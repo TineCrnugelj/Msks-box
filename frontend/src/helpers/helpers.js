@@ -1,4 +1,4 @@
-import ArgumentPair from "../components/Tasks/ArgumentPair";
+import ArgumentPair from "../components/tasks/ArgumentPair";
 
 export function parseArguments(args, numOfArgs) {
     const argElements = []

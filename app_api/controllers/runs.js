@@ -21,28 +21,14 @@ const saveRunToServer = (newRunMeta) => {
 }
 
 const getAllRuns = (req, res) => {
-    const searchQuery = req.query.query;
-    if (!searchQuery) {
-        Run.find({user: req.user.id})
-            .then(runs => {
-                if (!runs) {
-                    return res.status(404).json({message: 'No runs found!'});
-                }
-                return res.status(200).json(runs);
-            })
-            .catch(err => console.log(err));
-    }
-    else {
-        Run.find({user: req.user.id, tag: searchQuery})
-            .then(runs => {
-                if (!runs) {
-                    return res.status(404).json({message: 'No runs found!'});
-                }
-                return res.status(200).json(runs);
-            })
-            .catch(err => console.log(err));
-    }
-
+    Run.find({user: req.user.id})
+        .then(runs => {
+            if (!runs) {
+                return res.status(404).json({message: 'No runs found!'});
+            }
+            return res.status(200).json(runs);
+        })
+        .catch(err => console.log(err));
 };
 
 const getRun = (req, res) => {
