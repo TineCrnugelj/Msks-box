@@ -11,6 +11,10 @@
     margin-top: 1rem;
 }
 
+.noAccount {
+    display: inline-flex;
+}
+
 .container label {
     font-weight: bold;
     margin-bottom: 0.5rem;

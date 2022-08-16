@@ -39,7 +39,7 @@ function Header() {
                         </li>
                         <li>
                             <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/register'>
-                                <FaUser /> Register
+                                <FaUser />Register
                             </NavLink>
                         </li>
                     </Fragment>) : (
@@ -49,7 +49,6 @@ function Header() {
                             </a>
                         </li>
                     )}
-
                 </ul>
             </nav>
         </header>

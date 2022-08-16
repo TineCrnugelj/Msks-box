@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from "react";
 import { FaSignInAlt } from 'react-icons/fa'
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
 import ClipLoader from 'react-spinners/ClipLoader'
@@ -71,6 +71,10 @@ const Login = (props) => {
                     <FaSignInAlt /> Login
                 </h1>
                 <p>Please log in</p>
+                <div className={classes.noAccount}>
+                    <p>Don't have an account? Register&nbsp;</p>
+                    <NavLink to={'/register'}>here</NavLink>
+                </div>
             </div>
 
             <form onSubmit={onSubmit}>
