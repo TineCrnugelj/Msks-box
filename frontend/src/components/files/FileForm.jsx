@@ -50,8 +50,6 @@ const FileForm = () => {
 
         setFileName('');
         setFileUploaded(false);
-
-        navigate('/files');
     }
 
     const onFileChange = (e) => {
