@@ -5,10 +5,12 @@ import { toast } from 'react-toastify'
 import { createFile } from '../../features/files/fileSlice';
 import ProgressBar from "react-bootstrap/ProgressBar";
 import {useNavigate} from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 const FileForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { taskId } = useParams();
     const [files, setFiles] = useState();
     const [fileName, setFileName] = useState('Choose file')
 
@@ -43,7 +45,8 @@ const FileForm = () => {
 
         const data = {
             formData,
-            options
+            options,
+            taskId
         }
 
         dispatch(createFile(data))

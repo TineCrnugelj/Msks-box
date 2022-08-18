@@ -29,7 +29,7 @@ function App() {
             <Route path='/login' element={<Login />}  />
             <Route path='/files' element={<Files />}  />
             <Route path='/image/:imageName' element={<ImageFullsize />}  />
-            <Route path='/files/new-file' element={<AddFile />}  />
+            <Route path='/tasks/:taskId/add-new-files' element={<AddFile />}  />
           </Routes>
         </div>
       </Router>

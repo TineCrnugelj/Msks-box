@@ -12,17 +12,16 @@ const initialState = {
 
 export const createFile = createAsyncThunk('files/create', async (data, thunkAPI) => {
     try {
-        return await fileService.createFile(data.formData, data.options)
+        return await fileService.createFile(data.formData, data.options, data.taskId)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const getFiles = createAsyncThunk('files/getFiles', async (_, thunkAPI) => {
+export const getFiles = createAsyncThunk('files/getFiles', async (taskId, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token
-        return await fileService.getFiles(token)
+        return await fileService.getFiles(taskId)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)

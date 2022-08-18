@@ -23,6 +23,7 @@ const FileItem = ({id, name, size}) => {
         const imageName = name.toLowerCase();
         return imageName.includes('jpg') || imageName.includes('png') || imageName.includes('jpeg');
     }, [name]);
+
     const fileName = os === 'Windows' ? name.split('\\')[1] : name.split('/')[1];
 
     if (sizeInMB.toString() === '0.00') {
@@ -52,7 +53,7 @@ const FileItem = ({id, name, size}) => {
             {isImage ?
                 <Fragment>
                     <div className={classes.imgContainer}>
-                        <img className={classes.img} src={fileName} alt={name} />
+                        <img className={classes.img} src={'/' + fileName} alt={fileName} />
                     </div>
                 </Fragment>
                 : ''}

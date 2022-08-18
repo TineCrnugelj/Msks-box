@@ -2,8 +2,11 @@ const Run = require('../models/Run');
 
 const lockfile = require('proper-lockfile');
 const Environment = require('../classes/Environment.js');
-const fs = require('fs');
 const asyncHandler = require('express-async-handler')
+const File = require("../models/File");
+const multer = require("multer");
+const {parseLogFile} = require("../helpers/helpers");
+const fs = require("fs");
 
 const RUNS_DIR = 'runs';
 const LOCK_TIME = 10000;
@@ -14,11 +17,24 @@ const saveRunToServer = (newRunMeta) => {
         if (err) console.log(err);
     });
     const jsonMeta = JSON.stringify(newRunMeta);
-
     fs.writeFile(`${runDir}/meta.json`, jsonMeta, 'utf-8', err => {
         if (err) console.log(err);
     });
+    fs.writeFile(`${runDir}/log.txt`, '', 'utf-8', err => {
+        if (err) console.log(err);
+    });
 }
+
+const fileStorageEngine = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({storage: fileStorageEngine});
 
 const getAllRuns = (req, res) => {
     Run.find({user: req.user.id})
@@ -157,6 +173,8 @@ const postAddRun = async (req, res) => {
     });
     newRunMeta.save();
 
+
+    saveRunToServer(newRunMeta);
     return res.status(201).json(newRunMeta);
 };
 
@@ -209,8 +227,46 @@ const unlockRun = async (req, res) => {
     taskToUnlock.save();
     res.status(200).json({msg: `Task ${taskId} unlocked.`});
 }
-    
 
+
+const uploadFiles = async (req, res) => {
+    const files = req.files;
+    const taskId = req.params.taskId;
+
+    const task = await Run.findById(taskId);
+
+    for (let file of files) {
+        const newFile = File.create({
+            task: task.id,
+            metadataPath: file.path,
+            size: file.size
+        });
+    }
+    res.status(200).json({msg: 'Files uploaded'});
+};
+
+const getUploadedFiles = async (req, res) => {
+    File.find({task: req.params.taskId})
+        .then(files => {
+            res.status(200).json(files);
+        })
+        .catch(err => res.status(400).json(err));
+};
+
+const postLogData = (req, res) => {
+    const logData = req.body.logData;
+    const taskId = req.params.taskId;
+
+    fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, logData, err => console.log(err));
+
+    res.status(200).json(logData);
+};
+
+const getDataToPlot = async (req, res) => {
+    const taskId = req.params.taskId;
+    const dataToPlot = await parseLogFile(`${RUNS_DIR}/${taskId}/log.txt`);
+    res.status(200).json(dataToPlot);
+};
 
 module.exports = {
     postAddRun,
@@ -222,4 +278,9 @@ module.exports = {
     putUpdateRun,
     findByTag,
     isLocked,
+    upload,
+    uploadFiles,
+    getUploadedFiles,
+    postLogData,
+    getDataToPlot,
 }

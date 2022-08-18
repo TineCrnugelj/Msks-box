@@ -23,4 +23,12 @@ router.get('/tasks/isLocked/:taskId', protect, ctrlRuns.isLocked);
 
 router.delete('/tasks/:taskId', protect, ctrlRuns.deleteRun);
 
+router.post('/tasks/:taskId/files', ctrlRuns.upload.array('files', 10), ctrlRuns.uploadFiles);
+
+router.get('/tasks/:taskId/files', ctrlRuns.getUploadedFiles);
+
+router.post('/tasks/:taskId/log', ctrlRuns.postLogData);
+
+router.get('/tasks/:taskId/dataToPlot', ctrlRuns.getDataToPlot);
+
 module.exports = router;

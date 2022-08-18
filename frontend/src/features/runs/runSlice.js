@@ -10,7 +10,12 @@ const initialState = {
     isError: false,
     isSuccess: false,
     isLoading: false,
-    message: ''
+    isErrorPlots: false,
+    isSuccessPlots: false,
+    isLoadingPlots: false,
+    message: '',
+    messagePlots: '',
+    dataToPlot: {}
 }
 
 export const createRun = createAsyncThunk('runs/create', async (runData, thunkAPI) => {
@@ -47,16 +52,6 @@ export const lockRun = createAsyncThunk('runs/lock', async (runId, thunkAPI) => 
     try {
         const token = thunkAPI.getState().auth.user.token
         return await runService.lockRun(runId, token)
-    } catch (error) {
-        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-        return thunkAPI.rejectWithValue(message)
-    }
-});
-
-export const unlockRun = createAsyncThunk('runs/unlock', async (runId, thunkAPI) => {
-    try {
-        const token = thunkAPI.getState().auth.user.token
-        return await runService.unlockRun(runId, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
@@ -103,6 +98,15 @@ export const isLocked = createAsyncThunk('runs/isLocked', async (id, thunkAPI) =
     }
 });
 
+export const getDataToPlot = createAsyncThunk('runs/getData', async (taskId, thunkAPI) => {
+    try {
+        return await runService.getDataToPlot(taskId);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
 export const runSlice = createSlice({
     name: 'runs',
     initialState,
@@ -113,8 +117,11 @@ export const runSlice = createSlice({
             state.isSuccess = false
             state.message = ''
         },
-        setRun: (state, action) => {
-            state.run = action.payload
+        resetPlots: (state) => {
+            state.isLoadingPlots = false
+            state.isErrorPlots = false
+            state.isSuccessPlots = false
+            state.messagePlots = ''
         },
         setFilteredRuns: (state, action) => {
             state.filteredRuns = action.payload
@@ -215,10 +222,22 @@ export const runSlice = createSlice({
                 state.isError = true
                 state.message = action.payload
             })
+            .addCase(getDataToPlot.pending, (state) => {
+                state.isLoadingPlots = true
+            })
+            .addCase(getDataToPlot.fulfilled, (state, action) => {
+                state.isLoadingPlots = false
+                state.isSuccessPlots = true
+                state.dataToPlot = action.payload;
+            })
+            .addCase(getDataToPlot.rejected, (state, action) => {
+                state.isLoadingPlots = false
+                state.isErrorPlots = true
+                state.messagePlots = action.payload
+            })
     }
 })
 
-export const {reset} = runSlice.actions
-export const {setRun} = runSlice.actions
+export const {reset, resetPlots} = runSlice.actions
 export const {setFilteredRuns} = runSlice.actions
 export default runSlice.reducer

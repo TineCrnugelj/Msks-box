@@ -1,20 +1,14 @@
 import axios from 'axios'
 
-const API_URL = '/api/files/'
+const API_URL = '/api/tasks/'
 
-const createFile = async (fileData, options) => {
-    const response = await axios.post(API_URL, fileData, options)
-    console.log(response.data);
+const createFile = async (fileData, options, taskId) => {
+    const response = await axios.post(API_URL + taskId + '/files', fileData, options)
     return response.data; 
 }
 
-const getFiles = async (token) => {
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-    const response = await axios.get(API_URL, config);
+const getFiles = async (taskId) => {
+    const response = await axios.get(API_URL + taskId + '/files');
 
     return response.data;
 }

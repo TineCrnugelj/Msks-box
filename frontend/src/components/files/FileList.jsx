@@ -14,7 +14,7 @@ const override = {
     borderColor: "#044599",
 };
 
-const FileList = () => {
+const FileList = ({id}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {files, isLoading, isError, message} = useSelector(state => state.files);
@@ -25,7 +25,7 @@ const FileList = () => {
             console.log(message);
         }
 
-        dispatch(getFiles());
+        dispatch(getFiles(id));
 
         return () => {
             dispatch(reset());
@@ -43,7 +43,7 @@ const FileList = () => {
     ));
 
     const redirectHandler = () => {
-        navigate('/files/new-file');
+        navigate(`/tasks/${id}/add-new-files`);
     }
 
     if (isLoading) {
@@ -52,7 +52,7 @@ const FileList = () => {
 
     return <Fragment>
         <div className={classes.heading}>
-            <h1>My Files</h1>
+            <h1>Related files</h1>
             <button className={classes.btnAddFile} onClick={redirectHandler}>+ New file</button>
         </div>
         {filesList.length > 0 ? (<Table>
