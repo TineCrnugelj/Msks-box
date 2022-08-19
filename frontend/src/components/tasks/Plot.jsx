@@ -1,7 +1,10 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import {Fragment, useMemo} from "react";
+import {Fragment, useMemo, useState} from "react";
+import Button from 'react-bootstrap/Button';
+import classes from './Plot.module.css'
 
 const Plot = ({title, data}) => {
+    const [hidden, setHidden] = useState(false);
 
     const reMappedData = useMemo(() => {
         const newData = [];
@@ -15,30 +18,37 @@ const Plot = ({title, data}) => {
         return newData;
     }, []);
 
-    console.log(reMappedData);
+    const hideChartHandler = () => {
+        setHidden(prevState => !prevState);
+    }
 
     return <Fragment>
-        <h3>{title}</h3>
-        <ResponsiveContainer width={'25%'} aspect={1}>
-            <LineChart
-                width={500}
-                height={300}
-                data={reMappedData}
-                margin={{
-                    top: 5,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="step" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey={title} stroke="#044599" />
-            </LineChart>
-        </ResponsiveContainer>
+        <div className={classes.heading}>
+            <h3>{title}</h3>
+            <Button className={classes.btnHide} variant='primary' onClick={hideChartHandler}>Hide</Button>
+        </div>
+        {!hidden &&
+            <ResponsiveContainer minHeight={300} minWidth={300} width={'25%'} aspect={1}>
+                <LineChart
+                    width={500}
+                    height={300}
+                    data={reMappedData}
+                    margin={{
+                        top: 5,
+                        right: 10,
+                        left: 10,
+                        bottom: 25,
+                    }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="step" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey={title} stroke="#044599" />
+                </LineChart>
+            </ResponsiveContainer>
+        }
     </Fragment>
 }
 

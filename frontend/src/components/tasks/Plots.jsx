@@ -34,13 +34,9 @@ const Plots = ({id}) => {
     const plotItems = useMemo(() => {
         const plots = [];
         for (const key of Object.keys(dataToPlot)) {
-            plots.push(<Plot key={key} title={key} data={dataToPlot[key]} />);
+            plots.push(<Col key={key}><Plot key={key} title={key} data={dataToPlot[key]} /></Col>);
         }
         return plots;
-    }, [dataToPlot]);
-
-    const numberOfRows = useMemo(() => {
-        return Object.keys(dataToPlot).length / 4;
     }, [dataToPlot]);
 
     if (isLoadingPlots) {
@@ -50,7 +46,9 @@ const Plots = ({id}) => {
     return <Fragment>
         <h1>Charts ({Object.keys(dataToPlot).length})</h1>
         <Container>
-            {plotItems}
+            <Row>
+                {plotItems}
+            </Row>
         </Container>
     </Fragment>
 };

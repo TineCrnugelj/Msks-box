@@ -31,4 +31,6 @@ router.post('/tasks/:taskId/log', ctrlRuns.postLogData);
 
 router.get('/tasks/:taskId/dataToPlot', ctrlRuns.getDataToPlot);
 
+router.post('/tasks/:taskId/status', ctrlRuns.postSetStatus);
+
 module.exports = router;

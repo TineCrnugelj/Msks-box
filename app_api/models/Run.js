@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
  *    description: Managing tasks
  *  - name: Users
  *    description: Managing users
+ *  - name: Files
  */
 /**
  * @swagger
@@ -17,6 +18,8 @@ const mongoose = require('mongoose');
  *     summary: no JWT token
  *     value:
  *      message: "UnauthorizedError: No authorization token was found."
+ *    Logs:
+ *     summary: Logs added
  */
 
 /**
@@ -116,7 +119,18 @@ const mongoose = require('mongoose');
  *    required:
  *     - source
  *     - entrypoint
- *     - arguments 
+ *     - arguments
+ *
+ *   AddLogsSchema:
+ *    type: object
+ *    properties:
+ *     logData:
+ *      type: array
+ *      items:
+ *       type: string
+ *
+ *    required:
+ *     - logData
  *   
  *   AddTaskResponse:
  *    type: object
@@ -532,6 +546,82 @@ const mongoose = require('mongoose');
  *        examples:
  *         ni zetona:
  *          $ref: "#/components/examples/NoToken"
+ */
+
+/**
+ * @swagger
+ *  /tasks/{taskId}/log:
+ *   post:
+ *    summary: Add logs for task taskId
+ *    tags: [Tasks]
+ *    requestBody:
+ *     description: JSON object with key logData and an array of strings (log lines)
+ *     required: true
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: array
+ *        items:
+ *         type: string
+ *       example: {"logData": [
+ *         "2021-06-14 13:22:24,859 ignite.handlers.early_stopping.EarlyStopping INFO: EarlyStopping: Stop training",
+ *         "test_loss_seg: 0.2016",
+ *         "test_loss_loc: 0.2094",
+ *         "test_loss_box: 0.2755",
+ *         "test_loss_emb: 0.268",
+ *         "test_loss: 0.7033",
+ *         "Preview: file://epoch_038.jpg"
+ *     ]}
+ *
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    responses:
+ *     "200":
+ *      description: Array containing added lines.
+ *      content:
+ *       application/json:
+ *        examples:
+ *
+ */
+
+/**
+ * @swagger
+ *  /tasks/{taskId}/status:
+ *   post:
+ *    summary: Set status for a task
+ *    tags: [Tasks]
+ *    requestBody:
+ *     description: JSON object with key status and a string containing new status value
+ *     required: true
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: string
+ *       example: {
+ *                      "status": "PENDING"
+ *               }
+ *
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    responses:
+ *     "200":
+ *      description: Object containing updated task body
+ *      content:
+ *       application/json:
+ *        examples:
+ *
  */
 
 const runSchema = new mongoose.Schema({

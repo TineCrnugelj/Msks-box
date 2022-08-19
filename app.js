@@ -35,6 +35,7 @@ var swaggerOptions = {
   apis: [
     "./app_api/models/Run.js",
     "./app_api/models/User.js",
+    "./app_api/models/File.js",
   ]
 };
 const swaggerDocument = swaggerJsdoc(swaggerOptions);

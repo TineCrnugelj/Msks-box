@@ -256,8 +256,12 @@ const getUploadedFiles = async (req, res) => {
 const postLogData = (req, res) => {
     const logData = req.body.logData;
     const taskId = req.params.taskId;
+    console.log(logData);
 
-    fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, logData, err => console.log(err));
+    for (let line of logData) {
+        console.log(line);
+        fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, line + '\n', err => console.log(err));
+    }
 
     res.status(200).json(logData);
 };
@@ -266,6 +270,16 @@ const getDataToPlot = async (req, res) => {
     const taskId = req.params.taskId;
     const dataToPlot = await parseLogFile(`${RUNS_DIR}/${taskId}/log.txt`);
     res.status(200).json(dataToPlot);
+};
+
+const postSetStatus = async (req, res) => {
+    const newStatus = req.body.status;
+    const taskId = req.params.taskId;
+    const task = await Run.findById(taskId);
+    task.status = newStatus;
+    task.save();
+
+    res.status(200).json(task);
 };
 
 module.exports = {
@@ -283,4 +297,5 @@ module.exports = {
     getUploadedFiles,
     postLogData,
     getDataToPlot,
+    postSetStatus,
 }
