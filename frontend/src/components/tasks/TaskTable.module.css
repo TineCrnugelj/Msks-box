@@ -51,7 +51,7 @@
 }
 
 .tagBtns {
-    display: block;
+    margin-top: 0.5rem;
 }
 
 .btnAddRun {

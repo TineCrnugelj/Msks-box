@@ -124,7 +124,7 @@ const TaskTable = () => {
             </div>
 
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 440 }}>
+                <TableContainer sx={{ maxHeight: 700 }}>
                     <Table role='table' stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>

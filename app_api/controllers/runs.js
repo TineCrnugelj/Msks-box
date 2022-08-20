@@ -90,6 +90,7 @@ const putUpdateTag = async (req, res) => {
     const task = await Run.findById(taskId);
 
     task.tag = req.body.tag;
+    task.updated = Date.now();
     task.save();
     res.status(200).json(task);
 }
@@ -237,6 +238,7 @@ const postSetStatus = async (req, res) => {
     const taskId = req.params.taskId;
     const task = await Run.findById(taskId);
     task.status = newStatus;
+    task.updated = Date.now();
     task.save();
 
     res.status(200).json(task);

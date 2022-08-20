@@ -32,8 +32,8 @@ const Tag = ({task}) => {
             <div className={classes.editForm}>
                 <input className={classes.tagInput} type='text' value={tag} onChange={tagChangedHandler} />
                 <div className={classes.tagBtns}>
-                    <FaCheck className={classes.tagSubmitBtn} onClick={submitNewTag} color={'#289800'} />
-                    <FaTimes className={classes.tagCloseBtn} onClick={closeEdit} color={'#8d0000'} />
+                    <FaCheck className={classes.tagSubmitBtn} onClick={submitNewTag} color={'#289800'} size={25} />
+                    <FaTimes className={classes.tagCloseBtn} onClick={closeEdit} color={'#8d0000'} size={25} />
                 </div>
             </div>
         </Fragment>

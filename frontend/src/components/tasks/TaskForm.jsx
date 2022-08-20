@@ -13,7 +13,7 @@ const TaskForm = () => {
     let [argId, setArgId] = useState(0);
     let [argIds, setArgIds] = useState([]);
     let [children, setChildren] = useState([]);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const {
         value: enteredSource,
@@ -69,24 +69,22 @@ const TaskForm = () => {
             }
             event.target[`key${argId}`].value = '';
             event.target[`value${argId}`].value = '';
-
-            console.log(args);
-
-            const run = {
-                source: enteredSource,
-                entrypoint: enteredEntrypoint,
-                tag: enteredTag,
-                arguments: args,
-                dependencies: dependencies
-            }
-            dispatch(createRun(run));
-
-            event.target.source.value = '';
-            event.target.entrypoint.value = '';
-            event.target.tag.value = '';
-
-            navigate('/');
         }
+
+        const run = {
+            source: enteredSource,
+            entrypoint: enteredEntrypoint,
+            tag: enteredTag,
+            arguments: args,
+            dependencies: dependencies
+        }
+        dispatch(createRun(run));
+
+        event.target.source.value = '';
+        event.target.entrypoint.value = '';
+        event.target.tag.value = '';
+
+        navigate('/');
     }
 
     const addArgumentHandler = (event) => {
@@ -126,16 +124,15 @@ const TaskForm = () => {
             <label htmlFor="tag">Tag</label>
             <input type="text" id='tag' value={enteredTag} onChange={tagChangedHandler} onBlur={tagBlurHandler} />
         </div>
-        <div className={classes.argumentsGroup}>
-            <h3 className={classes.args}>Arguments</h3>
-            <div className={classes.addRemoveButtons}>
-                <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
-            </div>
-        </div>
+
+        <h3 className={classes.args}>Arguments</h3>
 
         {children}
 
-        <button className={classes.btnSubmit} disabled={!formIsValid} >Submit</button>
+        <div className={classes.addRemoveButtons}>
+            <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
+            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
+        </div>
     </form>
 };
 

@@ -5,18 +5,18 @@ import Button from 'react-bootstrap/Button';
 
 import classes from "./Dependency.module.css";
 
-const Dependency = (props) => {
+const Dependency = ({dep}) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const showDetailsHandler = (e) => {
         e.preventDefault();
-        dispatch(getRun(props.tag));
-        navigate('/tasks/' + props.tag);
+        dispatch(getRun(dep));
+        navigate('/tasks/' + dep);
     }
 
     return <p>
-        {props.tag}
+        {dep}
         <Button className={classes.btnDetails} onClick={showDetailsHandler}>Details</Button>
     </p>
 }

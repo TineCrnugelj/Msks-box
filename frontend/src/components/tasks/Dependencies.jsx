@@ -7,7 +7,7 @@ const Dependencies = (props) => {
         <h3>Dependencies:</h3>
         {props.dependencies.length === 0 ?
             <p className={'noDeps'}>No dependencies.</p> :
-            props.dependencies.map(dep => (<Dependency key={dep} tag={dep} />))
+            props.dependencies.map(dep => (<Dependency key={dep} dep={dep} />))
         }
     </Fragment>
 }

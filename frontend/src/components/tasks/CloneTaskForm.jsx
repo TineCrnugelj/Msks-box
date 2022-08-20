@@ -15,17 +15,29 @@ const CloneTaskForm = () => {
     const [entrypoint, setEntrypoint] = useState(searchParams.get('entrypoint'))
     const [tag, setTag] = useState('');
     const [action] = useState(searchParams.get('action'));
-
+    let [argId, setArgId] = useState(searchParams.get('arguments').split(',').length);
     let [numOfArgs, setNumOfArgs] = useState(searchParams.get('arguments').split(',').length);
-    let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
+    let [argIds, setArgIds] = useState([...Array(numOfArgs).keys()]);
+
+    let [children, setChildren] = useState([]);
+
+    // DODAJ ARGUMENT IDJE / componente
 
     useEffect(() => {
         action === 'update' ? setTag(searchParams.get('tag')) : setTag('');
         const args = searchParams.get('arguments').split(',');
-        const parsedArguments = parseArguments(args, numOfArgs);
-        setChildren(parsedArguments);
-    }, [])
 
+        const argElements = []
+        for (let i = 1; i <= numOfArgs; i++) { // export to function
+            const keyValue = args[i - 1].split('=')
+            const key = keyValue[0].replace(/\W@:./g, '')
+            const value = keyValue[1].replace(/\W@:./g, '')
+            argElements.push(<ArgumentPair removeArgumentHandler={removeArgumentHandler} key1={key} value={value} argId={i-1} key={Math.random()} />)
+        }
+
+        setChildren(argElements);
+    }, [])
+    console.log(argIds);
     let formIsValid = false;
 
     const navigate = useNavigate()
@@ -43,14 +55,15 @@ const CloneTaskForm = () => {
     formIsValid = source !== '' && entrypoint !== '' && numOfArgs > 0 && tag !== '';
 
     const submitFormHandler = (event) => {
+        console.log('sumbmit');
         event.preventDefault();
 
         const args = [];
         const dependencies = [];
 
-        for (let i = 1; i <= numOfArgs; i++) {
-            const key = event.target[`key${i}`].value
-            const value = event.target[`value${i}`].value;
+        for (let argId of argIds) {
+            const key = event.target[`key${argId}`].value
+            const value = event.target[`value${argId}`].value;
 
             if (value.includes('@')) {
                 const dependency = value.substring(value.indexOf('@') + 1);
@@ -60,9 +73,8 @@ const CloneTaskForm = () => {
             if (key !== '' && value !== '') {
                 args.push(key + '=' + value);
             }
-            event.target[`key${i}`].value = '';
-            event.target[`value${i}`].value = '';
-
+            event.target[`key${argId}`].value = '';
+            event.target[`value${argId}`].value = '';
         }
 
         const run = {
@@ -76,10 +88,6 @@ const CloneTaskForm = () => {
         if (action === 'clone') { // FIX THIS
             dispatch(createRun(run));
         }
-        if (action === 'update') {
-            run['id'] = searchParams.get('id');
-            dispatch(updateRun(run));
-        }
 
         event.target.source.value = '';
         event.target.entrypoint.value = '';
@@ -91,18 +99,20 @@ const CloneTaskForm = () => {
     const addArgumentHandler = (event) => {
         event.preventDefault();
         setNumOfArgs(++numOfArgs);
+        setArgId(++argId);
+        setArgIds(prevArgIds => {
+            return [...prevArgIds, argId-1];
+        })
         setChildren(prevState => {
-            return [...prevState, <ArgumentPair index={numOfArgs} key={Math.random()} />]
+            return [...prevState, <ArgumentPair index={numOfArgs-1} removeArgumentHandler={removeArgumentHandler} argId={argId-1} key={Math.random()} />]
         })
     };
 
-    const removeArgumentHandler = (event) => {
-        event.preventDefault();
+    const removeArgumentHandler = (argId) => {
         if (numOfArgs > 0) {
             setNumOfArgs(--numOfArgs);
-            let newChildren = [...children];
-            newChildren.pop();
-            setChildren(newChildren);
+            setArgIds(prevArgIds => prevArgIds.filter(arg => arg !== argId));
+            setChildren(children => children.filter(child => child.props.argId !== argId));
         }
     }
 
@@ -120,17 +130,13 @@ const CloneTaskForm = () => {
             <label htmlFor="tag">Tag</label>
             <input type="text" id='tag' value={tag} onChange={tagChangedHandler} />
         </div>
-        <div className={classes.argumentsGroup}>
-            <h3 className={classes.args}>Arguments</h3>
-            <div className={classes.addRemoveButtons}>
-                <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
-                <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
-            </div>
-        </div>
+        <h3 className={classes.args}>Arguments</h3>
 
         {children}
-
-        <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
+        <div className={classes.addRemoveButtons}>
+            <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
+            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
+        </div>
     </form>
 };
 
