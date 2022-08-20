@@ -101,6 +101,11 @@ const getDataToPlot = async (taskId) => {
     return response.data;
 }
 
+const putEditTag = async (taskId, tag) => {
+    const response = await axios.put(`${API_URL}/${taskId}/tag`, {tag: tag});
+    return response.data;
+}
+
 const runService = {
     createRun,
     getRuns,
@@ -112,6 +117,7 @@ const runService = {
     isLocked,
     getRunByTag,
     getDataToPlot,
+    putEditTag,
 }
 
 export default runService
