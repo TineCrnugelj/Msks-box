@@ -7,7 +7,7 @@ const multer = require("multer");
 const {parseLogFile, getCommitAndRepo, calculateHash} = require("../helpers/helpers");
 const fs = require("fs");
 
-const RUNS_DIR = 'runs';
+const RUNS_DIR = 'tasks';
 const LOCK_TIME = 10000;
 
 const saveRunToServer = (newRunMeta) => {
@@ -71,6 +71,8 @@ const deleteRun = asyncHandler(async (req, res) => {
     if (run.user.toString() !== req.user.id) {
         return res.status(401).json('User not authorized');
     }
+
+    fs.rmSync(`${RUNS_DIR}/${id}`, { recursive: true, force: true });
 
     await run.remove()
     res.status(200).json({id: id})

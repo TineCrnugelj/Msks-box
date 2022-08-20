@@ -115,6 +115,19 @@ const TaskTable = () => {
         dispatch(setFilteredRuns(newFilter));
     }
 
+    function getColor(status) {
+        const colors = {
+            PENDING: "#044599",
+            RUNNING: "#ffd343",
+            PREPARING: "#ffa200",
+            COMPLETE: "#0d865d",
+            FAILED: "#ba3f38",
+            ACHIEVED: "#808080",
+            UNKNOWN: "#808080"
+        };
+        return colors[status];
+    }
+
     return (
         <Fragment>
             <div className={classes.header}>
@@ -124,7 +137,7 @@ const TaskTable = () => {
             </div>
 
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                <TableContainer sx={{ maxHeight: 700 }}>
+                <TableContainer sx={{ maxHeight: 700, minHeight: 250 }}>
                     <Table role='table' stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -152,7 +165,7 @@ const TaskTable = () => {
                                                 {task.entrypoint}
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
-                                                {task.status}
+                                                <span style={{color: getColor(task.status)}}>{task.status}</span>
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
                                                 <ReactTimeAgo date={new Date(task.created)} locale='en' />

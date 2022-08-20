@@ -12,7 +12,7 @@ async function parseLogFile(filePath) {
         crlfDelay: Infinity
     });
 
-    const regex = /^[a-z_]+: [0-9]*\.?[0-9]*$/;
+    const regex = /^[a-z_]+: [+-]?[0-9]*\.?[0-9]*$/;
 
     const dataToPlot = {};
 
@@ -22,7 +22,9 @@ async function parseLogFile(filePath) {
             const key = splitted[0];
             const value = parseFloat(splitted[1].trim());
 
-            if (Object.hasOwn(dataToPlot, key)) {
+            console.log(key, value);
+
+            if (dataToPlot.hasOwnProperty(key)) {
                 dataToPlot[key].push(value);
             }
             else {
