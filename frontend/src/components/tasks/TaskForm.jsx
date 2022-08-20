@@ -9,8 +9,10 @@ import classes from './TaskForm.module.css'
 
 const TaskForm = () => {
     const dispatch = useDispatch();
-    let [numOfArgs, setNumOfArgs] = useState(1);
-    let [children, setChildren] = useState([<ArgumentPair index={1} key={Math.random()} />]);
+    let [numOfArgs, setNumOfArgs] = useState(0);
+    let [argId, setArgId] = useState(0);
+    let [argIds, setArgIds] = useState([]);
+    let [children, setChildren] = useState([]);
     const navigate = useNavigate()
 
     const {
@@ -53,9 +55,9 @@ const TaskForm = () => {
         const args = [];
         const dependencies = [];
 
-        for (let i = 1; i <= numOfArgs; i++) {
-            const key = event.target[`key${i}`].value
-            const value = event.target[`value${i}`].value;
+        for (let argId of argIds) {
+            const key = event.target[`key${argId}`].value
+            const value = event.target[`value${argId}`].value;
 
             if (value.includes('@')) {
                 const dependency = value.substring(value.indexOf('@') + 1);
@@ -65,41 +67,45 @@ const TaskForm = () => {
             if (key !== '' && value !== '') {
                 args.push(key + '=' + value);
             }
-            event.target[`key${i}`].value = '';
-            event.target[`value${i}`].value = '';
+            event.target[`key${argId}`].value = '';
+            event.target[`value${argId}`].value = '';
+
+            console.log(args);
+
+            const run = {
+                source: enteredSource,
+                entrypoint: enteredEntrypoint,
+                tag: enteredTag,
+                arguments: args,
+                dependencies: dependencies
+            }
+            dispatch(createRun(run));
+
+            event.target.source.value = '';
+            event.target.entrypoint.value = '';
+            event.target.tag.value = '';
+
+            navigate('/');
         }
-
-        const run = {
-            source: enteredSource,
-            entrypoint: enteredEntrypoint,
-            tag: enteredTag,
-            arguments: args,
-            dependencies: dependencies
-        }
-        dispatch(createRun(run));
-
-        event.target.source.value = '';
-        event.target.entrypoint.value = '';
-        event.target.tag.value = '';
-
-        navigate('/')
     }
 
     const addArgumentHandler = (event) => {
         event.preventDefault();
         setNumOfArgs(++numOfArgs);
+        setArgId(++argId);
+        setArgIds(prevArgIds => {
+            return [...prevArgIds, argId-1];
+        })
         setChildren(prevState => {
-            return [...prevState, <ArgumentPair index={numOfArgs} key={Math.random()} />]
+            return [...prevState, <ArgumentPair index={numOfArgs-1} removeArgumentHandler={removeArgumentHandler} argId={argId-1} key={Math.random()} />]
         })
     };
 
-    const removeArgumentHandler = (event) => {
-        event.preventDefault();
+    const removeArgumentHandler = (argId) => {
         if (numOfArgs > 0) {
             setNumOfArgs(--numOfArgs);
-            let newChildren = [...children];
-            newChildren.pop();
-            setChildren(newChildren);
+            setArgIds(prevArgIds => prevArgIds.filter(arg => arg !== argId));
+            setChildren(children => children.filter(child => child.props.argId !== argId));
         }
     }
 
@@ -124,7 +130,6 @@ const TaskForm = () => {
             <h3 className={classes.args}>Arguments</h3>
             <div className={classes.addRemoveButtons}>
                 <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
-                <button onClick={removeArgumentHandler} className={classes.btnAddArgument}>- Remove</button>
             </div>
         </div>
 

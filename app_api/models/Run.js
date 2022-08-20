@@ -674,4 +674,4 @@ const runSchema = new mongoose.Schema({
     locked: {type: Boolean, default: false},
 });
 
-module.exports = mongoose.model('Run', runSchema, 'Run');  
+module.exports = mongoose.model( 'Run', runSchema, 'Run');

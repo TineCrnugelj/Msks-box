@@ -252,11 +252,10 @@ export const runSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
 
-                const index = state.runs.findIndex(task => task._id === action.payload._id);
-                const newRuns = [...state.runs];
+                const index = state.filteredRuns.findIndex(task => task._id === action.payload._id);
+                const newRuns = [...state.filteredRuns];
                 newRuns[index] = action.payload;
-                console.log(newRuns[index]);
-                state.runs = newRuns;
+                state.filteredRuns = newRuns;
             })
             .addCase(putEditTag.rejected, (state, action) => {
                 state.isLoading = false

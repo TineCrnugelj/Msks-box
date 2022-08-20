@@ -1,0 +1,40 @@
+.removeArgument {
+    font: inherit;
+    cursor: pointer;
+    background-color: #95bcf0;
+    border: 1px solid #95bcf0;
+    color: black;
+    font-weight: bold;
+    margin-left: 1rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 50%;
+    position: relative;
+    top: 32px;
+}
+
+.keyValueGroup {
+    display: block;
+}
+
+.formControlArguments {
+    display: flex;
+}
+
+.formControlArguments label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    display: block;
+    margin-left: 2rem;
+}
+
+.formControlArguments input,
+.formControlArguments select {
+    font: inherit;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 15rem;
+    max-width: 100%;
+    margin-left: 2rem;
+}

@@ -1,6 +1,6 @@
 import {Fragment, useState} from "react";
 import classes from "./TaskTable.module.css";
-import {FaCheck, FaPen} from "react-icons/fa";
+import {FaCheck, FaPen, FaTimes} from "react-icons/fa";
 import {useDispatch} from "react-redux";
 import {putEditTag} from "../../features/runs/runSlice";
 
@@ -22,15 +22,22 @@ const Tag = ({task}) => {
         setTag(e.target.value);
     }
 
+    const closeEdit = () => {
+        setTag(task.tag);
+        setEditing(false);
+    }
+
     if (editing) {
         return <Fragment>
             <div className={classes.editForm}>
                 <input className={classes.tagInput} type='text' value={tag} onChange={tagChangedHandler} />
-                <FaCheck className={classes.tagSubmitBtn} onClick={submitNewTag} color={'#289800'} />
+                <div className={classes.tagBtns}>
+                    <FaCheck className={classes.tagSubmitBtn} onClick={submitNewTag} color={'#289800'} />
+                    <FaTimes className={classes.tagCloseBtn} onClick={closeEdit} color={'#8d0000'} />
+                </div>
             </div>
         </Fragment>
     }
-    console.log(tag);
     return (
         <Fragment>
             {tag}
