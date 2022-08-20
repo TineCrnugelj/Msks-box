@@ -107,6 +107,16 @@ export const getDataToPlot = createAsyncThunk('runs/getData', async (taskId, thu
     }
 });
 
+export const putEditTag = createAsyncThunk('runs/editTag', async (data, thunkAPI) => {
+    try {
+        const { taskId, tag } = data;
+        return await runService.putEditTag(taskId, tag);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
 export const runSlice = createSlice({
     name: 'runs',
     initialState,
@@ -234,6 +244,24 @@ export const runSlice = createSlice({
                 state.isLoadingPlots = false
                 state.isErrorPlots = true
                 state.messagePlots = action.payload
+            })
+            .addCase(putEditTag.pending, (state) => {
+                state.isLoading = true
+            })
+            .addCase(putEditTag.fulfilled, (state, action) => {
+                state.isLoading = false
+                state.isSuccess = true
+
+                const index = state.runs.findIndex(task => task._id === action.payload._id);
+                const newRuns = [...state.runs];
+                newRuns[index] = action.payload;
+                console.log(newRuns[index]);
+                state.runs = newRuns;
+            })
+            .addCase(putEditTag.rejected, (state, action) => {
+                state.isLoading = false
+                state.isError = true
+                state.message = action.payload
             })
     }
 })

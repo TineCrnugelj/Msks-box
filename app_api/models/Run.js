@@ -624,19 +624,53 @@ const mongoose = require('mongoose');
  *
  */
 
+/**
+ * @swagger
+ *  /tasks/{taskId}/tag:
+ *   put:
+ *    summary: Set tag for a task
+ *    tags: [Tasks]
+ *    requestBody:
+ *     description: JSON object with key tag and a string containing a new tag value
+ *     required: true
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: string
+ *       example: {
+ *                      "tag": "train_match"
+ *               }
+ *
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    responses:
+ *     "200":
+ *      description: Object containing updated task body
+ *      content:
+ *       application/json:
+ *        examples:
+ *
+ */
+
 const runSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     repository: {type: String, required: true},
     commit: {type: String, default: 'master'},
     entrypoint: {type: String, required: true},
     arguments: [{type: String, required: true}],
-    status: {type: String},
+    status: {type: String, default: 'PENDING'},
     command: {type: String},
     created: {type: Date},
     updated: {type: Date},
-    tag: {type: String, unique: true},
-    dependencies: [{type: Number}],
-    hash: {type: Number},
+    tag: {type: String},
+    dependencies: [{type: String}],
+    hash: {type: String},
     locked: {type: Boolean, default: false},
 });
 

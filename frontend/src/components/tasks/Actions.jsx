@@ -21,16 +21,11 @@ const Actions = (props) => {
         dispatch(deleteRun(props.id))
     }
 
-    const updateTaskHandler = () => {
-        navigate(`/update-run?action=update&id=${props.id}&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
-    }
-
     return (
         <DropdownButton id="dropdown-basic-button" title="Options">
             <Dropdown.Item onClick={toggleDetailsHandler} >Details</Dropdown.Item>
             <Dropdown.Item onClick={cloneTaskHandler}>Clone</Dropdown.Item>
             <Dropdown.Item onClick={deleteTaskHandler}>Delete</Dropdown.Item>
-            <Dropdown.Item onClick={updateTaskHandler}>Edit</Dropdown.Item>
         </DropdownButton>
     );
 }

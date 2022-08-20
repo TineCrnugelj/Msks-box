@@ -1,11 +1,10 @@
 const Run = require('../models/Run');
 
 const lockfile = require('proper-lockfile');
-const Environment = require('../classes/Environment.js');
 const asyncHandler = require('express-async-handler')
 const File = require("../models/File");
 const multer = require("multer");
-const {parseLogFile} = require("../helpers/helpers");
+const {parseLogFile, getCommitAndRepo, calculateHash} = require("../helpers/helpers");
 const fs = require("fs");
 
 const RUNS_DIR = 'runs';
@@ -86,65 +85,20 @@ const findByTag = (req, res) => {
         .catch(err => console.log(err));
 }
 
-const putUpdateRun = async (req, res) => {
-    const runId = req.params.taskId
-    if (!runId) {
-        return res.status(404).json({message: 'TaskId not provided'})
-    }
+const putUpdateTag = async (req, res) => {
+    const taskId = req.params.taskId;
+    const task = await Run.findById(taskId);
 
-    const run = await Run.findById(runId);
-
-    if (!run) {
-        return res.status(404).json({message: 'Task not found'});
-    }
-
-    if (!req.user) {
-        return res.status(401).json('User not found!');
-    }
-
-    if (run.user.toString() !== req.user.id) {
-        console.log(run.user.toString(), req.user.id)
-        return res.status(401).json('User not authorized');
-    }
-
-    run.repository = req.body.source
-    run.commit = req.body.commit
-    run.entrypoint = req.body.entrypoint
-    run.arguments = req.body.arguments
-    run.tag = req.body.tag
-    run.updated = Date.now()
- 
-    run.save((err, run) => {
-        if (err) {
-            return res.status(404).json(err)
-        }
-        else {
-            res.status(200).json(run)
-        }
-    }) 
-}
-
-const calculateHash = (str) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return hash;
+    task.tag = req.body.tag;
+    task.save();
+    res.status(200).json(task);
 }
 
 const postAddRun = async (req, res) => {
-    const newRun = {
-       source: req.body.source,
-       entrypoint: req.body.entrypoint,
-       arguments: req.body.arguments,
-       tag: req.body.tag,
-       force: req.body.force,
-       user: req.user.id
-    };
+    const source = req.body.source;
+    const {repository, commit} = getCommitAndRepo(source);
 
-    const env = new Environment(newRun.source);
-
-    const args = newRun.arguments;
+    const args = req.body.arguments;
     const dependencies = [];
 
     for (let arg of args) {
@@ -156,23 +110,29 @@ const postAddRun = async (req, res) => {
         }
     }
 
-    const hash = calculateHash(req.body.arguments + env.commit);
+    const taskToHash = {
+        arguments: args, // popravi
+        commit: commit,
+        dependencies: dependencies,
+        entrypoint: req.body.entrypoint,
+        repository: repository,
+    };
+
+    const hash = calculateHash(taskToHash);
 
     const newRunMeta = new Run({
-        user: newRun.user,
-        repository: env.repository,
-        commit: env.commit,
-        entrypoint: newRun.entrypoint,
+        user: req.user.id,
+        repository: repository,
+        commit: commit,
+        entrypoint: req.body.entrypoint,
         arguments: args,
-        status: 'PENDING',
         created: Date.now(),
         updated: Date.now(), 
-        tag: newRun.tag,
+        tag: req.body.tag,
         dependencies: dependencies,
         hash: hash
     });
     newRunMeta.save();
-
 
     saveRunToServer(newRunMeta);
     return res.status(201).json(newRunMeta);
@@ -289,7 +249,7 @@ module.exports = {
     getAllRuns,
     lockRun,
     unlockRun,
-    putUpdateRun,
+    putUpdateTag,
     findByTag,
     isLocked,
     upload,

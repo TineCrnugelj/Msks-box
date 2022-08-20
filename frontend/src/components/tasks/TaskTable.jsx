@@ -5,6 +5,7 @@ import { getRuns, reset, setFilteredRuns } from "../../features/runs/runSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
 import Actions from "./Actions";
 import ReactTimeAgo from "react-time-ago";
+import { FaPen, FaCheck } from 'react-icons/fa'
 import TimeAgo from 'javascript-time-ago';
 import classes from './TaskTable.module.css'
 
@@ -19,6 +20,7 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Searchbar from "./Searchbar";
+import Tag from "./Tag";
 
 TimeAgo.addLocale(en)
 
@@ -144,7 +146,7 @@ const TaskTable = () => {
                                     return (
                                         <TableRow hover role='table' tabIndex={-1} key={task._id}>
                                             <TableCell role='cell' key={task.id} align={task.align}>
-                                                {task.tag}
+                                                <Tag task={task} />
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.entrypoint}

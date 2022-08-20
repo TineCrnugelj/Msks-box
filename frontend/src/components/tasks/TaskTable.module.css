@@ -25,6 +25,23 @@
     transition: opacity 0.3s ease-out;
 }
 
+.editButton {
+    margin-left: 0.5rem;
+}
+
+.editForm {
+    display: inline-flex;
+}
+
+.tagInput {
+    width: 120px;
+}
+
+.tagSubmitBtn {
+    top: 2px;
+    margin-left: 0.2rem;
+}
+
 .btnAddRun {
     font: inherit;
     cursor: pointer;

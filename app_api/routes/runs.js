@@ -15,8 +15,6 @@ router.post('/tasks/:taskId/unlock', ctrlRuns.unlockRun);
 
 router.get('/tasks/:hash', ctrlRuns.getRun);
 
-router.put('/tasks/:taskId', protect, ctrlRuns.putUpdateRun);
-
 router.get('/tasks', protect, ctrlRuns.getAllRuns);
 
 router.get('/tasks/isLocked/:taskId', protect, ctrlRuns.isLocked);
@@ -32,5 +30,7 @@ router.post('/tasks/:taskId/log', ctrlRuns.postLogData);
 router.get('/tasks/:taskId/dataToPlot', ctrlRuns.getDataToPlot);
 
 router.post('/tasks/:taskId/status', ctrlRuns.postSetStatus);
+
+router.put('/tasks/:taskId/tag', ctrlRuns.putUpdateTag);
 
 module.exports = router;
