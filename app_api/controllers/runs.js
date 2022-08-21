@@ -15,13 +15,7 @@ const saveRunToServer = (newRunMeta) => {
     fs.mkdir(runDir, err => {
         if (err) console.log(err);
     });
-    const jsonMeta = JSON.stringify(newRunMeta);
-    fs.writeFile(`${runDir}/meta.json`, jsonMeta, 'utf-8', err => {
-        if (err) console.log(err);
-    });
-    fs.writeFile(`${runDir}/log.txt`, '', 'utf-8', err => {
-        if (err) console.log(err);
-    });
+    fs.openSync(`${runDir}/log.txt`, 'w');
 }
 
 const fileStorageEngine = multer.diskStorage({
@@ -34,6 +28,50 @@ const fileStorageEngine = multer.diskStorage({
 });
 
 const upload = multer({storage: fileStorageEngine});
+
+const postAddRun = async (req, res) => {
+    const source = req.body.source;
+    const {repository, commit} = getCommitAndRepo(source);
+
+    const args = req.body.arguments;
+    const dependencies = [];
+
+    for (let arg of args) {
+        const value = arg.split('=')[1];
+        if (value.includes('@')) {
+            const dependencyTag = value.substring(value.indexOf('@') + 1);
+            const run = await Run.findOne({tag: dependencyTag});
+            dependencies.push(run.hash);
+        }
+    }
+
+    const taskToHash = {
+        arguments: args, // popravi
+        commit: commit,
+        dependencies: dependencies,
+        entrypoint: req.body.entrypoint,
+        repository: repository,
+    };
+
+    const hash = calculateHash(taskToHash);
+
+    const newRunMeta = new Run({
+        user: req.user.id,
+        repository: repository,
+        commit: commit,
+        entrypoint: req.body.entrypoint,
+        arguments: args,
+        created: Date.now(),
+        updated: Date.now(),
+        tag: req.body.tag,
+        dependencies: dependencies,
+        hash: hash
+    });
+    newRunMeta.save();
+
+    saveRunToServer(newRunMeta);
+    return res.status(201).json(newRunMeta);
+};
 
 const getAllRuns = (req, res) => {
     Run.find({user: req.user.id})
@@ -72,7 +110,7 @@ const deleteRun = asyncHandler(async (req, res) => {
         return res.status(401).json('User not authorized');
     }
 
-    fs.rmSync(`${RUNS_DIR}/${id}`, { recursive: true, force: true });
+    // fs.rmdirSync(`${RUNS_DIR}/${id}`, { recursive: true });
 
     await run.remove()
     res.status(200).json({id: id})
@@ -96,50 +134,6 @@ const putUpdateTag = async (req, res) => {
     task.save();
     res.status(200).json(task);
 }
-
-const postAddRun = async (req, res) => {
-    const source = req.body.source;
-    const {repository, commit} = getCommitAndRepo(source);
-
-    const args = req.body.arguments;
-    const dependencies = [];
-
-    for (let arg of args) {
-        const value = arg.split('=')[1];
-        if (value.includes('@')) {
-            const dependencyTag = value.substring(value.indexOf('@') + 1);
-            const run = await Run.findOne({tag: dependencyTag});
-            dependencies.push(run.hash);
-        }
-    }
-
-    const taskToHash = {
-        arguments: args, // popravi
-        commit: commit,
-        dependencies: dependencies,
-        entrypoint: req.body.entrypoint,
-        repository: repository,
-    };
-
-    const hash = calculateHash(taskToHash);
-
-    const newRunMeta = new Run({
-        user: req.user.id,
-        repository: repository,
-        commit: commit,
-        entrypoint: req.body.entrypoint,
-        arguments: args,
-        created: Date.now(),
-        updated: Date.now(), 
-        tag: req.body.tag,
-        dependencies: dependencies,
-        hash: hash
-    });
-    newRunMeta.save();
-
-    saveRunToServer(newRunMeta);
-    return res.status(201).json(newRunMeta);
-};
 
 const isLocked = (req, res) => {
     const taskId = req.params.taskId;
@@ -222,8 +216,7 @@ const postLogData = (req, res) => {
     console.log(logData);
 
     for (let line of logData) {
-        console.log(line);
-        fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, line + '\n', err => console.log(err));
+        fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, line + '\n', err => console.log('Append line'));
     }
 
     res.status(200).json(logData);

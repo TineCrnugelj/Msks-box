@@ -1,10 +1,10 @@
-import Button from 'react-bootstrap/Button';
-import classes from './FileItem.module.css';
 import {useDispatch} from "react-redux";
 import {deleteFile, downloadFile} from "../../features/files/fileSlice";
 import Axios from "axios";
+import {FaDownload} from "react-icons/fa";
 import FileDownload from 'js-file-download'
 import {Fragment, useMemo} from "react";
+import classes from './FileItem.module.css'
 
 const API_URL = 'http://localhost:3000/';
 
@@ -60,7 +60,7 @@ const FileItem = ({id, name, size}) => {
         </td>
         <td>{sizeInMB} MB</td>
         <td>
-            <Button variant='primary' onClick={downloadHandler}>Download</Button>{' '}
+            <FaDownload className={classes.downloadBtn} onClick={downloadHandler} size={25} />{' '}
         </td>
     </tr>
 }

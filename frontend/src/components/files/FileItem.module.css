@@ -10,3 +10,7 @@
 .imgContainer {
     display: block;
 }
+
+.downloadBtn:hover {
+    cursor: pointer;
+}
