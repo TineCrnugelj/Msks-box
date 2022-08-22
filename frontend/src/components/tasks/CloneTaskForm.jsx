@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
 import { createRun, updateRun } from '../../features/runs/runSlice'
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {parseArguments} from "../../helpers/helpers"
 
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
@@ -21,8 +20,6 @@ const CloneTaskForm = () => {
 
     let [children, setChildren] = useState([]);
 
-    // DODAJ ARGUMENT IDJE / componente
-
     useEffect(() => {
         action === 'update' ? setTag(searchParams.get('tag')) : setTag('');
         const args = searchParams.get('arguments').split(',');
@@ -37,7 +34,6 @@ const CloneTaskForm = () => {
 
         setChildren(argElements);
     }, [])
-    console.log(argIds);
     let formIsValid = false;
 
     const navigate = useNavigate()
@@ -130,12 +126,14 @@ const CloneTaskForm = () => {
             <label htmlFor="tag">Tag</label>
             <input type="text" id='tag' value={tag} onChange={tagChangedHandler} />
         </div>
-        <h3 className={classes.args}>Arguments</h3>
+        <div className={classes.argumentsGroup}>
+            <h3 className={classes.args}>Arguments</h3>
+            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
+        </div>
 
         {children}
         <div className={classes.addRemoveButtons}>
             <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
-            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
         </div>
     </form>
 };

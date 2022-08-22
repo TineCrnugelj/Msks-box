@@ -8,7 +8,7 @@ import classes from './FileItem.module.css'
 
 const API_URL = 'http://localhost:3000/';
 
-const FileItem = ({id, name, size}) => {
+const FileItem = ({id, name, size, taskId}) => {
     const dispatch = useDispatch();
     let sizeInMB = (size / 1000000).toFixed(2);
     const os = useMemo(() => {
@@ -24,27 +24,36 @@ const FileItem = ({id, name, size}) => {
         return imageName.includes('jpg') || imageName.includes('png') || imageName.includes('jpeg');
     }, [name]);
 
-    const fileName = os === 'Windows' ? name.split('\\')[1] : name.split('/')[1];
+    const splitted = os === 'Windows' ? name.split('\\') : name.split('/');
+    const fileName = splitted[splitted.length-1];
 
     if (sizeInMB.toString() === '0.00') {
         sizeInMB = '0.01';
     }
 
-    const deleteFileHandler = () => {
-        dispatch(deleteFile(id));
-    }
-
     const downloadHandler = () => {
         dispatch(downloadFile(id));
 
-        Axios({
-            url: API_URL + fileName,
-            method: 'GET',
-            responseType: 'blob'
-        })
-        .then((res) => {
-            FileDownload(res.data, fileName);
-        })
+        if (fileName === 'log.txt') {
+            Axios({
+                url: API_URL + `${taskId}/log.txt`,
+                method: 'GET',
+                responseType: 'blob'
+            })
+            .then((res) => {
+                FileDownload(res.data, fileName);
+            })
+        }
+        else {
+            Axios({
+                url: API_URL + fileName,
+                method: 'GET',
+                responseType: 'blob'
+            })
+            .then((res) => {
+                FileDownload(res.data, fileName);
+            })
+        }
     }
 
     return <tr>

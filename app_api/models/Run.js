@@ -451,26 +451,6 @@ const mongoose = require('mongoose');
 
 /**
  * @swagger
- *  /tasks/{taskId}/isLocked:
- *   get:
- *    summary: Check if task is locked
- *    tags: [Tasks]
- *    parameters:
- *     - in: path
- *       name: taskId
- *       description: Unique ID of a task
- *       schema:
- *        type: string
- *       required: true
- *       example: 6ded18eb51386c3799833191
- *    responses:
- *     "200":
- *      description: Body containing true or false
- */
-
-
-/**
- * @swagger
  *  /tasks/{taskId}/unlock:
  *   post:
  *    summary: Unlock a task
@@ -619,6 +599,29 @@ const mongoose = require('mongoose');
  *        properties:
  *         token: string
  *        example: {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0YXNrSWQiOiI2MzAyNTQ3ZGNhYjNkZTZmZTc3NTNiY2QiLCJpYXQiOjE2NjExNTIzMTgsImV4cCI6MTY2MTE1MjQ5OH0.UrsyzrRqxKU9CzJDJBIC-4WDEmTzS5US7otkfr8RhnA"}
+ *    responses:
+ *     "200":
+ *      description: Object containing updated task body
+ *      schema:
+ *       type: file
+ *       format: binary
+ *
+ */
+
+/**
+ * @swagger
+ *  /tasks/{taskId}/plots:
+ *   get:
+ *    summary: Get all plots of a task
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    tags: [Tasks]
  *    responses:
  *     "200":
  *      description: Object containing updated task body

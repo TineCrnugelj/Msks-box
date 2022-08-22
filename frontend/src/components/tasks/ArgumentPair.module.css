@@ -13,6 +13,10 @@
     top: 32px;
 }
 
+.btns {
+    display: inline-flex;
+}
+
 .keyValueGroup {
     display: block;
 }

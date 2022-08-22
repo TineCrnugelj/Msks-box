@@ -35,7 +35,7 @@
     height: 2.5rem;
     border-radius: 10px;
     position: relative;
-    margin-left: 25rem;
+    margin-left: 1rem;
 }
 
 .args {
@@ -43,10 +43,6 @@
     margin-bottom: 0.5rem;
     display: block;
     margin-left: 2rem;
-}
-
-.addRemoveButtons {
-
 }
 
 .argumentsGroup {
@@ -124,4 +120,8 @@
     color: #b40e0e;
     margin-left: 2rem;
     margin-bottom: 1rem;
+}
+
+.addSubmitButtons {
+    display: block;
 }

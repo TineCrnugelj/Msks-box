@@ -33,8 +33,8 @@ const Plots = ({id}) => {
 
     const plotItems = useMemo(() => {
         const plots = [];
-        for (const key of Object.keys(dataToPlot)) {
-            plots.push(<Col key={key}><Plot key={key} title={key} data={dataToPlot[key]} /></Col>);
+        for (const plot of dataToPlot) {
+            plots.push(<Col key={plot.name}><Plot key={plot.name} title={plot.name} data={plot.data} /></Col>);
         }
         return plots;
     }, [dataToPlot]);

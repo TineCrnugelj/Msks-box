@@ -39,6 +39,7 @@ const FileList = ({id}) => {
             id={file._id}
             name={file.metadataPath}
             size={file.size}
+            taskId={id}
         />
     ));
 
@@ -53,7 +54,6 @@ const FileList = ({id}) => {
     return <Fragment>
         <div className={classes.heading}>
             <h1>Related files</h1>
-            <button className={classes.btnAddFile} onClick={redirectHandler}>+ New file</button>
         </div>
         {filesList.length > 0 ? (<Table>
             <thead>

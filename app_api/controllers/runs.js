@@ -2,19 +2,17 @@ const Run = require('../models/Run');
 const File = require('../models/File');
 const Plot = require('../models/Plot');
 
-const lockfile = require('proper-lockfile');
 const asyncHandler = require('express-async-handler')
 const multer = require("multer");
 const {parseLogFile, getCommitAndRepo, calculateHash} = require("../helpers/helpers");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const http = require('http');
 const Task = require("../models/Run");
 
 const RUNS_DIR = 'tasks';
 
 const saveRunToServer = (newRunMeta) => {
-    const runDir = RUNS_DIR + '/' + newRunMeta.id;
+    const runDir = 'public/' + newRunMeta.id;
     fs.mkdir(runDir, err => {
         if (err) console.log(err);
     });
@@ -72,6 +70,12 @@ const postAddRun = async (req, res) => {
     });
     newRunMeta.save();
 
+    File.create({
+        task: newRunMeta.id,
+        metadataPath: `${newRunMeta.id}\\log.txt`,
+        size: 0
+    });
+
     saveRunToServer(newRunMeta);
     return res.status(201).json(newRunMeta);
 };
@@ -113,9 +117,8 @@ const deleteRun = asyncHandler(async (req, res) => {
         return res.status(401).json('User not authorized');
     }
 
-    // fs.rmdirSync(`${RUNS_DIR}/${id}`, { recursive: true });
-
     await run.remove()
+    fs.rmdirSync(`public/${id}`, { recursive: true });
     res.status(200).json({id: id})
 });
 
@@ -138,17 +141,9 @@ const putUpdateTag = async (req, res) => {
     res.status(200).json(task);
 }
 
-const isLocked = async (req, res) => {
-    const taskId = req.params.taskId;
-    const task = await Run.findById(taskId);
-
-    res.status(200).json({locked: task.locked});
-
-}
-
-const generateToken = (taskId) => {
-    return jwt.sign({taskId}, process.env.JWT_SECRET, {
-        expiresIn: '180000'
+function generateAccessToken(task) {
+    return jwt.sign(task, process.env.JWT_SECRET, {
+        expiresIn: '120000'
     });
 }
 
@@ -163,9 +158,11 @@ const refreshToken = async (req, res) => {
         res.status(403).json({message: 'Refresh token does not exist'});
     }
 
-    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    const accessToken = generateToken(decoded.id);
-    return res.status(200).json({accessToken: accessToken});
+    jwt.verify(refreshToken, process.env.JWT_SECRET, (err, task) => {
+        if (err) return res.status(403).json(err);
+        const accessToken = generateAccessToken({task: task.taskId});
+        res.status(200).json({accessToken: accessToken});
+    })
 }
 
 const lockTask = asyncHandler(async (req, res) => {
@@ -174,19 +171,22 @@ const lockTask = asyncHandler(async (req, res) => {
         return res.status(400).json({message: 'Please provide taskId'});
     }
 
-    const task = await Task.findById(taskId);
-    task.locked = true;
-    task.save();
+    const taskToLock = await Task.findById(taskId);
+    taskToLock.locked = true;
+    taskToLock.save();
     setTimeout(() => {
-        task.locked = false;
-        task.save();
+        taskToLock.locked = false;
+        taskToLock.save();
     }, 180000);
 
-    const refreshToken = jwt.sign({taskId}, process.env.JWT_SECRET);
+    const task = { task: taskId };
+    const accessToken = generateAccessToken(task);
+
+    const refreshToken = jwt.sign(task, process.env.JWT_SECRET);
     refreshTokens.push(refreshToken);
 
     return res.status(201).json({
-        accessToken: generateToken(taskId),
+        accessToken: accessToken,
         refreshToken: refreshToken,
         expiresIn: new Date(Date.now() + Date.UTC(70,0,0,2,3,0)).toISOString()
     });
@@ -234,18 +234,38 @@ const getUploadedFiles = async (req, res) => {
 const getUploadedFileNames = async (req, res) => {
     File.find({task: req.params.taskId}, 'metadataPath')
         .then(files => {
-            const fileNames = files.map(file => file.metadataPath.split('//'));
+            const fileNames = files.map(file => file.metadataPath);
             res.status(200).json(fileNames);
         })
         .catch(err => res.status(400).json(err));
 };
 
-const postLogData = (req, res) => {
+const postLogData = async (req, res) => {
     const logData = req.body.logData;
     const taskId = req.params.taskId;
 
+    const regex = /^[a-z_]+: [+-]?[0-9]*\.?[0-9]*$/;
+
     for (let line of logData) {
-        fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, line + '\n', err => console.log('Append line'));
+        if (regex.test(line)) {
+            const splitted = line.split(':');
+            const key = splitted[0];
+            const value = parseFloat(splitted[1].trim());
+
+            const plot = await Plot.findOne({name: key, task: taskId});
+            if (!plot) {
+                const newPlot = await Plot.create({
+                    task: taskId,
+                    name: key,
+                    data: [value],
+                });
+            }
+            else {
+                plot.data.push(value)
+                await plot.save();
+            }
+        }
+        fs.appendFile(`public/${taskId}/log.txt`, line + '\n', err => console.log('Append line'));
     }
 
     res.status(200).json(logData);
@@ -253,7 +273,7 @@ const postLogData = (req, res) => {
 
 const getDataToPlot = async (req, res) => {
     const taskId = req.params.taskId;
-    const dataToPlot = await parseLogFile(`${RUNS_DIR}/${taskId}/log.txt`);
+    const dataToPlot = await parseLogFile(`public/${taskId}/log.txt`);
     res.status(200).json(dataToPlot);
 };
 
@@ -268,16 +288,8 @@ const postSetStatus = async (req, res) => {
     res.status(200).json(task);
 };
 
-const getPlots = async (req, res) => { // ADD TO SWAGGER
+const getPlots = async (req, res) => {
     const taskId = req.params.taskId;
-    const dataToPlot = await parseLogFile(`${RUNS_DIR}/${taskId}/log.txt`);
-    for (let key of Object.keys(dataToPlot)) {
-        await Plot.create({
-            task: taskId,
-            name: key,
-            data: dataToPlot[key],
-        });
-    }
 
     Plot.find({task: taskId})
         .then(plots => res.status(200).json(plots));
@@ -292,7 +304,6 @@ module.exports = {
     unlockTask,
     putUpdateTag,
     findByTag,
-    isLocked,
     upload,
     uploadFiles,
     getUploadedFiles,

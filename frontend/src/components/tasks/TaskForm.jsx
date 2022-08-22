@@ -87,8 +87,8 @@ const TaskForm = () => {
         navigate('/');
     }
 
-    const addArgumentHandler = (event) => {
-        event.preventDefault();
+    const addArgumentHandler = (e) => {
+        e.preventDefault();
         setNumOfArgs(++numOfArgs);
         setArgId(++argId);
         setArgIds(prevArgIds => {
@@ -124,14 +124,14 @@ const TaskForm = () => {
             <label htmlFor="tag">Tag</label>
             <input type="text" id='tag' value={enteredTag} onChange={tagChangedHandler} onBlur={tagBlurHandler} />
         </div>
-
-        <h3 className={classes.args}>Arguments</h3>
-
+        <div className={classes.argumentsGroup}>
+            <h3 className={classes.args}>Arguments</h3>
+            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
+        </div>
         {children}
 
-        <div className={classes.addRemoveButtons}>
+        <div className={classes.addSubmitButtons}>
             <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
-            <button onClick={addArgumentHandler} className={classes.btnAddArgument}>+ Add</button>
         </div>
     </form>
 };

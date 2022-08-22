@@ -15,7 +15,7 @@ const initialState = {
     isLoadingPlots: false,
     message: '',
     messagePlots: '',
-    dataToPlot: {}
+    dataToPlot: []
 }
 
 export const createRun = createAsyncThunk('runs/create', async (runData, thunkAPI) => {

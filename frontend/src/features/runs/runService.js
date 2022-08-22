@@ -97,7 +97,7 @@ const getRunByTag = async (tag, token) => {
 }
 
 const getDataToPlot = async (taskId) => {
-    const response = await axios.get(`${API_URL}/${taskId}/dataToPlot`);
+    const response = await axios.get(`${API_URL}/${taskId}/plots`);
     return response.data;
 }
 

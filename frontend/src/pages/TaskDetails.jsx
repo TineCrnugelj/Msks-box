@@ -56,7 +56,7 @@ const TaskDetails = () => {
                         <h1 className={classes.heading}>Task Details: {run.tag ? run.tag : '/'}</h1>
                     </div>
                     <p><strong>Hash: </strong>{run.hash}</p>
-                    <p><strong>Status: </strong>{run.status}, &nbsp;  <strong>Entrypoint: </strong>{run.entrypoint}, &nbsp; <strong>Commit: </strong>{run.commit}</p>
+                    <p><strong>Status: </strong>{run.status} &nbsp;  <strong>Entrypoint: </strong>{run.entrypoint} &nbsp; <strong>Commit: </strong>{run.commit}</p>
                     <p><strong>Created: </strong><ReactTimeAgo locale='en' date={new Date(run.created)} /></p>
                     <p><strong>Updated: </strong><ReactTimeAgo locale='en' date={new Date(run.updated)} /></p>
                     <h3>Arguments:</h3>
