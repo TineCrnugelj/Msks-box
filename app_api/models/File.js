@@ -35,7 +35,7 @@ const mongoose = require('mongoose');
 
 /**
  * @swagger
- *  /tasks/{taskId}/files:
+ *  /tasks/{taskId}/fileNames:
  *   get:
  *    summary: Get all files of a task
  *    parameters:
@@ -49,7 +49,7 @@ const mongoose = require('mongoose');
  *    tags: [Files]
  *    responses:
  *     "200":
- *      description: An array of all files in the database
+ *      description: An array containing all file names of a task
  *
  */
 
