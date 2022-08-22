@@ -326,17 +326,14 @@ const mongoose = require('mongoose');
  */
 /**
  * @swagger 
- *  /tasks/{taskId}:
+ *  /tasks/{hash}:
  *   get:
  *    summary: Get a single task
  *    description: Get details of a single task according to the id provided.
- *    security:
- *     - jwt: []
  *    tags: [Tasks]
  *    parameters:
  *     - in: path
- *       name: taskId
- *       description: Unique ID of a task
+ *       name: hash
  *       schema:
  *        type: string
  *       required: true
@@ -432,49 +429,6 @@ const mongoose = require('mongoose');
  *          $ref: "#/components/examples/NoToken"
  */
 
-/**
- * @swagger
- *  /tasks/{taskId}:
- *   put:
- *    summary: Update a task
- *    description: Update a task with all required data - user, repository, entrypoint and arguments
- *    tags: [Tasks]
- *    security:
- *     - jwt: []
- *    parameters:
- *     - in: path
- *       name: taskId
- *       description: Unique ID of a task
- *       schema:
- *        type: string
- *       required: true
- *       example: 6ded18eb51386c3799833191
- *    requestBody:
- *     description: Task data
- *     required: true 
- *     content:
- *      application/x-www-form-urlencoded:
- *       schema:
- *        $ref: "#/components/schemas/UpdateTaskSchema"
- *    responses:
- *     "204":
- *      description: Task successfully updated and it's retured in the response field
- *      content:
- *       application/json:
- *        schema:
- *         $ref: "#/components/schemas/UpdateTaskResponse"
- *     "400":
- *      description: Task updating failed.
- *     "401":
- *      description: Authorization error.
- *      content:
- *       application/json:
- *        schema:
- *         $ref: "#/components/schemas/Error"
- *        examples:
- *         ni zetona:
- *          $ref: "#/components/examples/NoToken"
- */
 
 /**
  * @swagger
@@ -482,8 +436,6 @@ const mongoose = require('mongoose');
  *   post:
  *    summary: Lock a task
  *    tags: [Tasks]
- *    security:
- *     - jwt: []
  *    parameters:
  *     - in: path
  *       name: taskId
@@ -494,23 +446,28 @@ const mongoose = require('mongoose');
  *       example: 6ded18eb51386c3799833191
  *    responses:
  *     "200":
- *      description: Task successfully locked.
- *     "400":
- *      description: Task locking failed.
- *      content:
- *       application/json:
- *        schema:
- *         $ref: "#/components/schemas/Error"
- *     "401":
- *      description: Authorization error.
- *      content:
- *       application/json:
- *        schema:
- *         $ref: "#/components/schemas/Error"
- *        examples:
- *         ni zetona:
- *          $ref: "#/components/examples/NoToken"
+ *      description: Body containing accessToken, refreshToken and expiresIn
  */
+
+/**
+ * @swagger
+ *  /tasks/{taskId}/isLocked:
+ *   get:
+ *    summary: Check if task is locked
+ *    tags: [Tasks]
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *    responses:
+ *     "200":
+ *      description: Body containing true or false
+ */
+
 
 /**
  * @swagger
@@ -518,8 +475,6 @@ const mongoose = require('mongoose');
  *   post:
  *    summary: Unlock a task
  *    tags: [Tasks]
- *    security:
- *     - jwt: []
  *    parameters:
  *     - in: path
  *       name: taskId
@@ -530,22 +485,7 @@ const mongoose = require('mongoose');
  *       example: 6ded18eb51386c3799833191
  *    responses:
  *     "200":
- *      description: Task successfully unlocked.
- *     "400":
- *      description: Task unlocking failed, task is not locked.
- *      content:
- *       application/json:
- *        schema:
- *         $ref: "#/components/schemas/Error"
- *     "401":
- *      description: Authorization error.
- *      content:
- *       application/json:
- *        schema:
- *         $ref: "#/components/schemas/Error"
- *        examples:
- *         ni zetona:
- *          $ref: "#/components/examples/NoToken"
+ *      description: Body containing a task.
  */
 
 /**
@@ -554,6 +494,8 @@ const mongoose = require('mongoose');
  *   post:
  *    summary: Add logs for task taskId
  *    tags: [Tasks]
+ *    security:
+ *     - jwt: []
  *    requestBody:
  *     description: JSON object with key logData and an array of strings (log lines)
  *     required: true
@@ -596,6 +538,8 @@ const mongoose = require('mongoose');
  *   post:
  *    summary: Set status for a task
  *    tags: [Tasks]
+ *    security:
+ *     - jwt: []
  *    requestBody:
  *     description: JSON object with key status and a string containing new status value
  *     required: true
@@ -657,6 +601,33 @@ const mongoose = require('mongoose');
  *        examples:
  *
  */
+
+/**
+ * @swagger
+ *  /token:
+ *   post:
+ *    summary: Get new token (extend lock)
+ *    description: Get new access token from a refresh token provided in the request's body
+ *    tags: [Tasks]
+ *    requestBody:
+ *     description: Task data
+ *     required: true
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         token: string
+ *        example: {"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0YXNrSWQiOiI2MzAyNTQ3ZGNhYjNkZTZmZTc3NTNiY2QiLCJpYXQiOjE2NjExNTIzMTgsImV4cCI6MTY2MTE1MjQ5OH0.UrsyzrRqxKU9CzJDJBIC-4WDEmTzS5US7otkfr8RhnA"}
+ *    responses:
+ *     "200":
+ *      description: Object containing updated task body
+ *      schema:
+ *       type: file
+ *       format: binary
+ *
+ */
+
 
 const runSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},

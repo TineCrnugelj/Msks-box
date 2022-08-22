@@ -1,14 +1,17 @@
 const Run = require('../models/Run');
+const File = require('../models/File');
+const Plot = require('../models/Plot');
 
 const lockfile = require('proper-lockfile');
 const asyncHandler = require('express-async-handler')
-const File = require("../models/File");
 const multer = require("multer");
 const {parseLogFile, getCommitAndRepo, calculateHash} = require("../helpers/helpers");
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
+const http = require('http');
+const Task = require("../models/Run");
 
 const RUNS_DIR = 'tasks';
-const LOCK_TIME = 10000;
 
 const saveRunToServer = (newRunMeta) => {
     const runDir = RUNS_DIR + '/' + newRunMeta.id;
@@ -135,54 +138,72 @@ const putUpdateTag = async (req, res) => {
     res.status(200).json(task);
 }
 
-const isLocked = (req, res) => {
+const isLocked = async (req, res) => {
     const taskId = req.params.taskId;
-    lockfile.check(RUNS_DIR + '/' + taskId)
-        .then((isLocked) => {
-            if (isLocked) {
-                res.status(200).json({locked: true});
-            }
-            else {
-                res.status(200).json({locked: false});
-            }
-        })
-        .catch(err => {
-            return res.status(400).json(err)
-        })
+    const task = await Run.findById(taskId);
+
+    res.status(200).json({locked: task.locked});
+
 }
 
-const lockRun = async (req, res) => {
-    const taskId = req.params.taskId;
-    const taskToLock = await Run.findById(taskId);
+const generateToken = (taskId) => {
+    return jwt.sign({taskId}, process.env.JWT_SECRET, {
+        expiresIn: '180000'
+    });
+}
 
-    if (taskToLock.locked) {
-        return res.status(200).json({msg: `Task ${taskId} already locked.`});
+let refreshTokens = [];
+
+const refreshToken = async (req, res) => {
+    const refreshToken = req.body.token;
+    if (refreshToken == null) {
+        res.status(401).json({message: 'No refresh token provided'});
+    }
+    if (!refreshTokens.includes(refreshToken)) {
+        res.status(403).json({message: 'Refresh token does not exist'});
     }
 
-    taskToLock.locked = true;
-    taskToLock.save();
-    console.log('locked');
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    const accessToken = generateToken(decoded.id);
+    return res.status(200).json({accessToken: accessToken});
+}
 
+const lockTask = asyncHandler(async (req, res) => {
+    const taskId = req.params.taskId;
+    if (!taskId) {
+        return res.status(400).json({message: 'Please provide taskId'});
+    }
+
+    const task = await Task.findById(taskId);
+    task.locked = true;
+    task.save();
     setTimeout(() => {
-        taskToLock.locked = false;
-        taskToLock.save();
-        console.log('unlocked');
-    }, LOCK_TIME);
+        task.locked = false;
+        task.save();
+    }, 180000);
 
-    res.status(200).json({msg: `Task ${taskId} locked for ${LOCK_TIME / 1000} seconds.`});
-}
+    const refreshToken = jwt.sign({taskId}, process.env.JWT_SECRET);
+    refreshTokens.push(refreshToken);
 
-const unlockRun = async (req, res) => {
-    const taskId = req.params.taskId 
-    const taskToUnlock = await Run.findById(taskId);
+    return res.status(201).json({
+        accessToken: generateToken(taskId),
+        refreshToken: refreshToken,
+        expiresIn: new Date(Date.now() + Date.UTC(70,0,0,2,3,0)).toISOString()
+    });
+});
 
-    if (!taskToUnlock.locked) {
-        return res.status(200).json({msg: 'Task not locked.'});
+const unlockTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    const task = await Task.findById(taskId);
+
+    if (!task.locked) {
+        return res.status(200).json({message: 'Task not locked.'});
     }
 
-    taskToUnlock.locked = false;
-    taskToUnlock.save();
-    res.status(200).json({msg: `Task ${taskId} unlocked.`});
+    task.locked = false;
+    task.save();
+
+    res.status(200).json(task);
 }
 
 
@@ -210,10 +231,18 @@ const getUploadedFiles = async (req, res) => {
         .catch(err => res.status(400).json(err));
 };
 
+const getUploadedFileNames = async (req, res) => {
+    File.find({task: req.params.taskId}, 'metadataPath')
+        .then(files => {
+            const fileNames = files.map(file => file.metadataPath.split('//'));
+            res.status(200).json(fileNames);
+        })
+        .catch(err => res.status(400).json(err));
+};
+
 const postLogData = (req, res) => {
     const logData = req.body.logData;
     const taskId = req.params.taskId;
-    console.log(logData);
 
     for (let line of logData) {
         fs.appendFile(`${RUNS_DIR}/${taskId}/log.txt`, line + '\n', err => console.log('Append line'));
@@ -239,13 +268,28 @@ const postSetStatus = async (req, res) => {
     res.status(200).json(task);
 };
 
+const getPlots = async (req, res) => { // ADD TO SWAGGER
+    const taskId = req.params.taskId;
+    const dataToPlot = await parseLogFile(`${RUNS_DIR}/${taskId}/log.txt`);
+    for (let key of Object.keys(dataToPlot)) {
+        await Plot.create({
+            task: taskId,
+            name: key,
+            data: dataToPlot[key],
+        });
+    }
+
+    Plot.find({task: taskId})
+        .then(plots => res.status(200).json(plots));
+};
+
 module.exports = {
     postAddRun,
     getRun,
     deleteRun,
     getAllRuns,
-    lockRun,
-    unlockRun,
+    lockTask,
+    unlockTask,
     putUpdateTag,
     findByTag,
     isLocked,
@@ -255,4 +299,7 @@ module.exports = {
     postLogData,
     getDataToPlot,
     postSetStatus,
+    getPlots,
+    refreshToken,
+    getUploadedFileNames,
 }

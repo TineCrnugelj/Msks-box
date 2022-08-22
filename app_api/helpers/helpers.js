@@ -22,8 +22,6 @@ async function parseLogFile(filePath) {
             const key = splitted[0];
             const value = parseFloat(splitted[1].trim());
 
-            console.log(key, value);
-
             if (dataToPlot.hasOwnProperty(key)) {
                 dataToPlot[key].push(value);
             }
