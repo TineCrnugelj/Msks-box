@@ -1,4 +1,4 @@
-const Run = require('../models/Task');
+const Run = require('../models/Run');
 const File = require('../models/File');
 const Plot = require('../models/Plot');
 
@@ -22,7 +22,7 @@ const fileStorageEngine = multer.diskStorage({
         cb(null, 'public');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+        cb(null, file.originalname);
     }
 });
 
@@ -70,7 +70,7 @@ const postAddRun = async (req, res) => {
 
     File.create({
         task: newRunMeta.id,
-        metadataPath: `${newRunMeta.id}\\log.txt`,
+        metadataPath: `${newRunMeta.id}/log.txt`,
         size: 0
     });
 
@@ -253,7 +253,12 @@ const getUploadedFiles = async (req, res) => {
 const getUploadedFileNames = async (req, res) => {
     File.find({task: req.params.taskId}, 'metadataPath')
         .then(files => {
-            const fileNames = files.map(file => file.metadataPath);
+            const filePaths = files.map(file => file.metadataPath);
+            const fileNames = [];
+            for (const path of filePaths) {
+                const splittedPath = path.split('/');
+                fileNames.push(splittedPath[splittedPath.length - 1]);
+            }
             res.status(200).json(fileNames);
         })
         .catch(err => res.status(400).json(err));
