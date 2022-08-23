@@ -1,11 +1,10 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from "react-router-dom";
-import { getRuns, reset, setFilteredRuns } from "../../features/runs/runSlice";
+import { getTasks, reset, setFilteredTasks } from "../../features/tasks/taskSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
 import Actions from "./Actions";
 import ReactTimeAgo from "react-time-ago";
-import { FaPen, FaCheck } from 'react-icons/fa'
 import TimeAgo from 'javascript-time-ago';
 import classes from './TaskTable.module.css'
 
@@ -56,8 +55,8 @@ const TaskTable = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    let { runs, isLoading, isError, message } = useSelector(state => state.runs);
-    let filteredRuns = useSelector(state => state.runs.filteredRuns);
+    let { tasks, isLoading, isError, message } = useSelector(state => state.tasks);
+    let filteredTasks = useSelector(state => state.tasks.filteredTasks);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -73,7 +72,7 @@ const TaskTable = () => {
             console.log(message)
         }
 
-        dispatch(getRuns());
+        dispatch(getTasks());
 
         return () => {
             dispatch(reset())
@@ -84,7 +83,7 @@ const TaskTable = () => {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
 
-    const tasksList = filteredRuns.map(task => (
+    const tasksList = filteredTasks.map(task => (
         <Actions
             key={task._id}
             source={task.repository}
@@ -106,19 +105,19 @@ const TaskTable = () => {
 
     const searchTasks = (searchQuery) => {
         const searchWord = searchQuery.toLowerCase();
-        const newFilter = runs.filter((run) => {
-            if (run.tag) {
-                return run.tag.toLowerCase().includes(searchWord) ||
-                    run.status.toLowerCase().includes(searchWord) ||
-                    run.entrypoint.toLowerCase().includes(searchWord);
+        const newFilter = tasks.filter((task) => {
+            if (task.tag) {
+                return task.tag.toLowerCase().includes(searchWord) ||
+                    task.status.toLowerCase().includes(searchWord) ||
+                    task.entrypoint.toLowerCase().includes(searchWord);
             }
             else {
-                return run.status.toLowerCase().includes(searchWord) ||
-                       run.entrypoint.toLowerCase().includes(searchWord);
+                return task.status.toLowerCase().includes(searchWord) ||
+                       task.entrypoint.toLowerCase().includes(searchWord);
             }
         });
 
-        dispatch(setFilteredRuns(newFilter));
+        dispatch(setFilteredTasks(newFilter));
     }
 
     function getColor(status) {
@@ -138,7 +137,7 @@ const TaskTable = () => {
         <Fragment>
             <div className={classes.header}>
                 <h1>Tasks ({tasksList.length})</h1>
-                <button className={classes.btnAddRun} onClick={redirectHandler}>+ Add a task</button>
+                <button className={classes.btnAddTask} onClick={redirectHandler}>+ Add a task</button>
                 <Searchbar onQueryChange={searchTasks} />
             </div>
 
@@ -159,7 +158,7 @@ const TaskTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {filteredRuns
+                            {filteredTasks
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((task) => {
                                     return (
@@ -204,7 +203,7 @@ const TaskTable = () => {
                     rowsPerPageOptions={[10, 25, 100]}
                     component="div"
                     className={classes.pagination}
-                    count={filteredRuns.length}
+                    count={filteredTasks.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     onPageChange={handleChangePage}

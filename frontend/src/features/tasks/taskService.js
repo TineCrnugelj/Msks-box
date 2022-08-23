@@ -2,20 +2,18 @@ import axios from "axios";
 
 const API_URL = '/api/tasks/'
 
-// Create new run
-const createRun = async (runData, token) => {
+const createTask = async (taskData, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
         }
     }
-    const response = await axios.post(API_URL, runData, config)
+    const response = await axios.post(API_URL, taskData, config)
 
     return response.data;
 }
 
-// Get all runs
-const getRuns = async (token) => {
+const getTasks = async (token) => {
     const config = {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -25,68 +23,67 @@ const getRuns = async (token) => {
     return response.data;
 }
 
-// Get run by id
-const getRun = async (runId) => {
-    const response = await axios.get(API_URL + runId);
+const getTask = async (taskId) => {
+    const response = await axios.get(API_URL + taskId);
     return response.data;
 }
 
-const isLocked = async (runId, token) => {
+const isLocked = async (taskId, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await axios.post(API_URL + 'isLocked/' + runId, config)
+    const response = await axios.post(API_URL + 'isLocked/' + taskId, config)
     return response.data;
 }
 
-const lockRun = async (runId, token) => {
+const lockTask = async (taskId, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await axios.post(API_URL + 'lock/' + runId, config)
+    const response = await axios.post(API_URL + 'lock/' + taskId, config)
 
     return response.data;
 }
 
-const unlockRun = async (runId, token) => {
+const unlockTask = async (taskId, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await axios.post(API_URL + 'unlock/' + runId, config)
+    const response = await axios.post(API_URL + 'unlock/' + taskId, config)
 
     return response.data;
 }
 
-const deleteRun = async (runId, token) => {
+const deleteTask = async (taskId, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const response = await axios.delete(API_URL + runId, config)
+    const response = await axios.delete(API_URL + taskId, config)
 
     return response.data;
 }
 
-const updateRun = async (runData, token) => {
+const updateTask = async (taskData, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
-    const { id } = runData;
-    const response = await axios.put(API_URL + id, runData, config)
+    const { id } = taskData;
+    const response = await axios.put(API_URL + id, taskData, config)
 
     return response.data;
 }
 
-const getRunByTag = async (tag, token) => {
+const getTaskByTag = async (tag, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -106,18 +103,18 @@ const putEditTag = async (taskId, tag) => {
     return response.data;
 }
 
-const runService = {
-    createRun,
-    getRuns,
-    getRun, 
-    lockRun,
-    unlockRun,
-    deleteRun,
-    updateRun,
+const taskService = {
+    createTask,
+    getTasks,
+    getTask,
+    lockTask,
+    unlockTask,
+    deleteTask,
+    updateTask,
     isLocked,
-    getRunByTag,
+    getTaskByTag,
     getDataToPlot,
     putEditTag,
 }
 
-export default runService
+export default taskService

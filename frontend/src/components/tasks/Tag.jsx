@@ -2,7 +2,7 @@ import {Fragment, useState} from "react";
 import classes from "./TaskTable.module.css";
 import {FaCheck, FaPen, FaTimes} from "react-icons/fa";
 import {useDispatch} from "react-redux";
-import {putEditTag} from "../../features/runs/runSlice";
+import {putEditTag} from "../../features/tasks/taskSlice";
 
 const Tag = ({task}) => {
     const dispatch = useDispatch();

@@ -1,10 +1,10 @@
-import classes from './AddRun.module.css';
+import classes from './AddTask.module.css';
 import CloneTaskForm from '../components/tasks/CloneTaskForm';
 
-const AddRun = () => {
+const AddTask = () => {
     return <section className={classes.formContainer}>
         <CloneTaskForm />
     </section>
 }
 
-export default AddRun
+export default AddTask

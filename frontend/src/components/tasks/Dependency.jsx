@@ -1,6 +1,6 @@
 import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
-import {getRun} from "../../features/runs/runSlice";
+import {useDispatch} from "react-redux";
+import {getTask} from "../../features/tasks/taskSlice";
 import Button from 'react-bootstrap/Button';
 
 import classes from "./Dependency.module.css";
@@ -11,7 +11,7 @@ const Dependency = ({dep}) => {
 
     const showDetailsHandler = (e) => {
         e.preventDefault();
-        dispatch(getRun(dep));
+        dispatch(getTask(dep));
         navigate('/tasks/' + dep);
     }
 

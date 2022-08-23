@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 import {useDispatch} from 'react-redux'
-import { deleteRun } from '../../features/runs/runSlice'
+import { deleteTask } from '../../features/tasks/taskSlice'
 import { Dropdown } from 'react-bootstrap'
 import { DropdownButton } from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,15 +10,15 @@ const Actions = (props) => {
     const navigate = useNavigate();
 
     const toggleDetailsHandler = () => {
-        navigate('/tasks/' + props.hash);
+        navigate('/tasks/' + props.id);
     }
 
     const cloneTaskHandler = () => {
-        navigate(`/update-run?action=clone&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
+        navigate(`/update-task?action=clone&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
     }
 
     const deleteTaskHandler = () => {
-        dispatch(deleteRun(props.id))
+        dispatch(deleteTask(props.id))
     }
 
     return (

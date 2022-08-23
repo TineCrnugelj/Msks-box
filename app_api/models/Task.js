@@ -55,7 +55,7 @@ const mongoose = require('mongoose');
  * @swagger
  * components:
  *  schemas:
- *   RunsSummary:
+ *   TasksSummary:
  *    type: object
  *    properties:
  *     user:
@@ -319,7 +319,7 @@ const mongoose = require('mongoose');
  *        schema:
  *         type: array
  *         items:
- *          $ref: "#/components/schemas/RunsSummary"
+ *          $ref: "#/components/schemas/TasksSummary"
  *     "401":
  *      description: Not authorized, no token
  *      content:
@@ -353,7 +353,7 @@ const mongoose = require('mongoose');
  *      content:
  *       application/json:
  *        schema:
- *          $ref: "#/components/schemas/RunsSummary"
+ *          $ref: "#/components/schemas/TasksSummary"
  *     "401":
  *      description: Not authorized, no token
  *      content:
@@ -640,8 +640,38 @@ const mongoose = require('mongoose');
  *
  */
 
+/**
+ * @swagger
+ *  /tasks/{taskId}/reset:
+ *   post:
+ *    summary: Reset task
+ *    description: Remove plots, if query parameter clear is yes also delete all related files
+ *    security:
+ *     - jwt: []
+ *    parameters:
+ *     - in: path
+ *       name: taskId
+ *       description: Unique ID of a task
+ *       schema:
+ *        type: string
+ *       required: true
+ *       example: 6ded18eb51386c3799833191
+ *     - in: query
+ *       name: clear
+ *       schema:
+ *        type: string
+ *       example: yes
+ *    tags: [Tasks]
+ *    responses:
+ *     "200":
+ *      description: Object containing updated task body
+ *      schema:
+ *       type: file
+ *       format: binary
+ *
+ */
 
-const runSchema = new mongoose.Schema({
+const taskSchema = new mongoose.Schema({
     user: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
     repository: {type: String, required: true},
     commit: {type: String, default: 'master'},
@@ -652,9 +682,10 @@ const runSchema = new mongoose.Schema({
     created: {type: Date},
     updated: {type: Date},
     tag: {type: String},
-    dependencies: [{type: String}],
+    dependencies: [{type: mongoose.Schema.Types.ObjectId, ref: 'Task'}],
+    isDependency: {type: Boolean, default: false},
     hash: {type: String},
     locked: {type: Boolean, default: false},
 });
 
-module.exports = mongoose.model( 'Run', runSchema, 'Run');
+module.exports = mongoose.model( 'Task', taskSchema, 'Task');

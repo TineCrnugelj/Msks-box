@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux'
 import useInput from '../../hooks/use-input';
-import { createRun } from '../../features/runs/runSlice'
+import { createTask } from '../../features/tasks/taskSlice'
 import { useNavigate } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
@@ -71,14 +71,14 @@ const TaskForm = () => {
             event.target[`value${argId}`].value = '';
         }
 
-        const run = {
+        const task = {
             source: enteredSource,
             entrypoint: enteredEntrypoint,
             tag: enteredTag,
             arguments: args,
             dependencies: dependencies
         }
-        dispatch(createRun(run));
+        dispatch(createTask(task));
 
         event.target.source.value = '';
         event.target.entrypoint.value = '';

@@ -1,43 +1,43 @@
 const express = require('express');
 const router = express.Router();
 
-const ctrlRuns = require('../controllers/runs');
+const ctrlTasks = require('../controllers/tasks');
 
 const {protect} = require('../middleware/auth');
 const {locked} = require('../middleware/lock');
 
-router.get('/tasks/find', protect, ctrlRuns.findByTag);
+router.get('/tasks/find', protect, ctrlTasks.findByTag);
 
-router.post('/tasks', protect, ctrlRuns.postAddRun);
+router.post('/tasks', protect, ctrlTasks.postAddTask);
 
-router.post('/tasks/:taskId/lock', ctrlRuns.lockTask);
+router.post('/tasks/:taskId/lock', ctrlTasks.lockTask);
 
-router.post('/tasks/:taskId/unlock', ctrlRuns.unlockTask);
+router.post('/tasks/:taskId/unlock', ctrlTasks.unlockTask);
 
-router.get('/tasks/:hash', ctrlRuns.getRun);
+router.get('/tasks/:taskId', ctrlTasks.getTask);
 
-router.get('/tasks', protect, ctrlRuns.getAllRuns);
+router.get('/tasks', protect, ctrlTasks.getAllTasks);
 
-router.delete('/tasks/:taskId', protect, ctrlRuns.deleteRun);
+router.delete('/tasks/:taskId', protect, ctrlTasks.deleteTask);
 
-router.post('/tasks/:taskId/files', locked, ctrlRuns.upload.array('files', 10), ctrlRuns.uploadFiles);
+router.post('/tasks/:taskId/files', locked, ctrlTasks.upload.array('files', 10), ctrlTasks.uploadFiles);
 
-router.get('/tasks/:taskId/files', ctrlRuns.getUploadedFiles);
+router.get('/tasks/:taskId/files', ctrlTasks.getUploadedFiles);
 
-router.get('/tasks/:taskId/fileNames', ctrlRuns.getUploadedFileNames);
+router.get('/tasks/:taskId/fileNames', ctrlTasks.getUploadedFileNames);
 
-router.post('/tasks/:taskId/log', locked, ctrlRuns.postLogData);
+router.post('/tasks/:taskId/log', locked, ctrlTasks.postLogData);
 
-router.get('/tasks/:taskId/dataToPlot', ctrlRuns.getDataToPlot);
+router.get('/tasks/:taskId/dataToPlot', ctrlTasks.getDataToPlot);
 
-router.post('/tasks/:taskId/status', locked, ctrlRuns.postSetStatus);
+router.post('/tasks/:taskId/status', locked, ctrlTasks.postSetStatus);
 
-router.put('/tasks/:taskId/tag', ctrlRuns.putUpdateTag);
+router.put('/tasks/:taskId/tag', ctrlTasks.putUpdateTag);
 
-router.post('/tasks/:taskId/reset', locked, ctrlRuns.resetTask);
+router.post('/tasks/:taskId/reset', locked, ctrlTasks.resetTask);
 
-router.get('/tasks/:taskId/plots', ctrlRuns.getPlots);
+router.get('/tasks/:taskId/plots', ctrlTasks.getPlots);
 
-router.post('/token', ctrlRuns.refreshToken);
+router.post('/token', ctrlTasks.refreshToken);
 
 module.exports = router;

@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import runService from "./runService";
+import taskService from "./taskService";
 
 const initialState = {
-    runs: [],
-    lockedRuns: [],
+    tasks: [],
+    lockedTasks: [],
     isLocked: false,
-    run: null,
-    filteredRuns: [],
+    task: null,
+    filteredTasks: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -18,107 +18,107 @@ const initialState = {
     dataToPlot: []
 }
 
-export const createRun = createAsyncThunk('runs/create', async (runData, thunkAPI) => {
+export const createTask = createAsyncThunk('tasks/create', async (taskData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await runService.createRun(runData, token)
+        return await taskService.createTask(taskData, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const getRuns = createAsyncThunk('runs/getAll', async (_, thunkAPI) => {
+export const getTasks = createAsyncThunk('tasks/getAll', async (_, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await runService.getRuns(token)
+        return await taskService.getTasks(token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const getRun = createAsyncThunk('runs/getOne', async (runId, thunkAPI) => {
+export const getTask = createAsyncThunk('tasks/getOne', async (taskId, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await runService.getRun(runId, token)
+        return await taskService.getTask(taskId, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const lockRun = createAsyncThunk('runs/lock', async (runId, thunkAPI) => {
+export const lockTask = createAsyncThunk('tasks/lock', async (taskId, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await runService.lockRun(runId, token)
+        return await taskService.lockTask(taskId, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const deleteRun = createAsyncThunk('runs/delete', async (runId, thunkAPI) => {
+export const deleteTask = createAsyncThunk('tasks/delete', async (taskId, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await runService.deleteRun(runId, token)
+        return await taskService.deleteTask(taskId, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const updateRun = createAsyncThunk('runs/update', async (runData, thunkAPI) => {
+export const updateTask = createAsyncThunk('tasks/update', async (taskData, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token
-        return await runService.updateRun(runData, token)
+        return await taskService.updateTask(taskData, token)
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const getRunByTag = createAsyncThunk('runs/getRunByTag', async (tag, thunkAPI) => {
+export const getTaskByTag = createAsyncThunk('tasks/getTaskByTag', async (tag, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token;
-        return await runService.getRunByTag(tag, token);
+        return await taskService.getTaskByTag(tag, token);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const isLocked = createAsyncThunk('runs/isLocked', async (id, thunkAPI) => {
+export const isLocked = createAsyncThunk('tasks/isLocked', async (id, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token;
-        return await runService.isLocked(id, token);
+        return await taskService.isLocked(id, token);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const getDataToPlot = createAsyncThunk('runs/getData', async (taskId, thunkAPI) => {
+export const getDataToPlot = createAsyncThunk('tasks/getData', async (taskId, thunkAPI) => {
     try {
-        return await runService.getDataToPlot(taskId);
+        return await taskService.getDataToPlot(taskId);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const putEditTag = createAsyncThunk('runs/editTag', async (data, thunkAPI) => {
+export const putEditTag = createAsyncThunk('tasks/editTag', async (data, thunkAPI) => {
     try {
         const { taskId, tag } = data;
-        return await runService.putEditTag(taskId, tag);
+        return await taskService.putEditTag(taskId, tag);
     } catch (error) {
         const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
         return thunkAPI.rejectWithValue(message)
     }
 });
 
-export const runSlice = createSlice({
-    name: 'runs',
+export const taskSlice = createSlice({
+    name: 'tasks',
     initialState,
     reducers: {
         reset: (state) => {
@@ -133,88 +133,88 @@ export const runSlice = createSlice({
             state.isSuccessPlots = false
             state.messagePlots = ''
         },
-        setFilteredRuns: (state, action) => {
-            state.filteredRuns = action.payload
+        setFilteredTasks: (state, action) => {
+            state.filteredTasks = action.payload
         }
     }, 
     extraReducers: (builder) => {
         builder
-            .addCase(createRun.pending, (state) => {
+            .addCase(createTask.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(createRun.fulfilled, (state, action) => {
+            .addCase(createTask.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.runs.push(action.payload)
+                state.tasks.push(action.payload)
             })
-            .addCase(createRun.rejected, (state, action) => {
+            .addCase(createTask.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(getRuns.pending, (state) => {
+            .addCase(getTasks.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(getRuns.fulfilled, (state, action) => {
+            .addCase(getTasks.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.runs = action.payload
-                state.filteredRuns = action.payload;
+                state.tasks = action.payload
+                state.filteredTasks = action.payload;
             })
-            .addCase(getRuns.rejected, (state, action) => {
+            .addCase(getTasks.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(getRun.pending, (state) => {
+            .addCase(getTask.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(getRun.fulfilled, (state, action) => {
+            .addCase(getTask.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.run = action.payload
+                state.task = action.payload
             })
-            .addCase(getRun.rejected, (state, action) => {
+            .addCase(getTask.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(getRunByTag.pending, (state) => {
+            .addCase(getTaskByTag.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(getRunByTag.fulfilled, (state, action) => {
+            .addCase(getTaskByTag.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.run = action.payload
+                state.task = action.payload
             })
-            .addCase(getRunByTag.rejected, (state, action) => {
+            .addCase(getTaskByTag.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(lockRun.pending, (state) => {
+            .addCase(lockTask.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(lockRun.fulfilled, (state, action) => {
+            .addCase(lockTask.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.lockedRuns.push(action.payload)
+                state.lockedTasks.push(action.payload)
             })
-            .addCase(lockRun.rejected, (state, action) => {
+            .addCase(lockTask.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
             })
-            .addCase(deleteRun.pending, (state) => {
+            .addCase(deleteTask.pending, (state) => {
                 state.isLoading = true
             })
-            .addCase(deleteRun.fulfilled, (state, action) => {
+            .addCase(deleteTask.fulfilled, (state, action) => {
                 state.isLoading = false
                 state.isSuccess = true
-                state.filteredRuns = state.filteredRuns.filter((run) => run._id !== action.payload.id)
-                state.runs = state.runs.filter((run) => run._id !== action.payload.id)
+                state.filteredTasks = state.filteredTasks.filter((task) => task._id !== action.payload.id)
+                state.tasks = state.tasks.filter((task) => task._id !== action.payload.id)
             })
-            .addCase(deleteRun.rejected, (state, action) => {
+            .addCase(deleteTask.rejected, (state, action) => {
                 state.isLoading = false
                 state.isError = true
                 state.message = action.payload
@@ -252,10 +252,10 @@ export const runSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
 
-                const index = state.filteredRuns.findIndex(task => task._id === action.payload._id);
-                const newRuns = [...state.filteredRuns];
-                newRuns[index] = action.payload;
-                state.filteredRuns = newRuns;
+                const index = state.filteredTasks.findIndex(task => task._id === action.payload._id);
+                const newTasks = [...state.filteredTasks];
+                newTasks[index] = action.payload;
+                state.filteredTasks = newTasks;
             })
             .addCase(putEditTag.rejected, (state, action) => {
                 state.isLoading = false
@@ -265,6 +265,6 @@ export const runSlice = createSlice({
     }
 })
 
-export const {reset, resetPlots} = runSlice.actions
-export const {setFilteredRuns} = runSlice.actions
-export default runSlice.reducer
+export const {reset, resetPlots} = taskSlice.actions
+export const {setFilteredTasks} = taskSlice.actions
+export default taskSlice.reducer

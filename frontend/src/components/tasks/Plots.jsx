@@ -1,6 +1,6 @@
 import {Fragment, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {getDataToPlot, getRun, resetPlots} from "../../features/runs/runSlice";
+import {getDataToPlot, resetPlots} from "../../features/tasks/taskSlice";
 import ClipLoader from "react-spinners/ClipLoader";
 import Plot from './Plot';
 import Container from 'react-bootstrap/Container';
@@ -17,8 +17,8 @@ const override = {
 const Plots = ({id}) => {
     let [color] = useState("#044599");
     const dispatch = useDispatch();
-    const dataToPlot = useSelector(state => state.runs.dataToPlot);
-    const { isLoadingPlots, isErrorPlots, messagePlots } = useSelector(state => state.runs);
+    const dataToPlot = useSelector(state => state.tasks.dataToPlot);
+    const { isLoadingPlots, isErrorPlots, messagePlots } = useSelector(state => state.tasks);
 
     useEffect(() => {
         if (isErrorPlots) {

@@ -1,12 +1,12 @@
 
-import classes from './AddRun.module.css';
+import classes from './AddTask.module.css';
 import TaskForm from '../components/tasks/TaskForm';
 
-const AddRun = (props) => {
+const AddTask = () => {
     return <section className={classes.formContainer}>
         <TaskForm />
     </section>
 
 };
 
-export default AddRun;
+export default AddTask;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux'
-import { createRun, updateRun } from '../../features/runs/runSlice'
+import { createTask } from '../../features/tasks/taskSlice'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
@@ -73,7 +73,7 @@ const CloneTaskForm = () => {
             event.target[`value${argId}`].value = '';
         }
 
-        const run = {
+        const task = {
             source: source,
             entrypoint: entrypoint,
             tag: tag,
@@ -82,7 +82,7 @@ const CloneTaskForm = () => {
         }
 
         if (action === 'clone') { // FIX THIS
-            dispatch(createRun(run));
+            dispatch(createTask(task));
         }
 
         event.target.source.value = '';

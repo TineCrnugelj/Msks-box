@@ -1,4 +1,4 @@
-const Run = require('../models/Run');
+const Task = require("../models/Task");
 const File = require('../models/File');
 const Plot = require('../models/Plot');
 
@@ -7,14 +7,13 @@ const multer = require("multer");
 const {parseLogFile, getCommitAndRepo, calculateHash} = require("../helpers/helpers");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const Task = require("../models/Task");
 
-const saveRunToServer = (newRunMeta) => {
-    const runDir = 'public/' + newRunMeta.id;
-    fs.mkdir(runDir, err => {
+const saveTaskToServer = (newTaskMeta) => {
+    const taskDir = 'public/' + newTaskMeta.id;
+    fs.mkdir(taskDir, err => {
         if (err) console.log(err);
     });
-    fs.openSync(`${runDir}/log.txt`, 'w');
+    fs.openSync(`${taskDir}/log.txt`, 'w');
 }
 
 const fileStorageEngine = multer.diskStorage({
@@ -28,7 +27,7 @@ const fileStorageEngine = multer.diskStorage({
 
 const upload = multer({storage: fileStorageEngine});
 
-const postAddRun = async (req, res) => {
+const postAddTask = async (req, res) => {
     const source = req.body.source;
     const {repository, commit} = getCommitAndRepo(source);
 
@@ -38,9 +37,17 @@ const postAddRun = async (req, res) => {
     for (let arg of args) {
         const value = arg.split('=')[1];
         if (value.includes('@')) {
-            const dependencyTag = value.substring(value.indexOf('@') + 1);
-            const run = await Run.findOne({tag: dependencyTag});
-            dependencies.push(run.hash);
+            const dependencyLabel = value.substring(value.indexOf('@') + 1);
+            let task;
+            if (dependencyLabel.length === 40) { // check if dependency is hash
+                task = await Task.findOne({hash: dependencyLabel});
+            }
+            else {
+                task = await Task.findOne({tag: dependencyLabel});
+            }
+            task.isDependency = true;
+            task.save();
+            dependencies.push(task.id);
         }
     }
 
@@ -54,7 +61,7 @@ const postAddRun = async (req, res) => {
 
     const hash = calculateHash(taskToHash);
 
-    const newRunMeta = new Run({
+    const newTaskMeta = new Task({
         user: req.user.id,
         repository: repository,
         commit: commit,
@@ -66,93 +73,90 @@ const postAddRun = async (req, res) => {
         dependencies: dependencies,
         hash: hash
     });
-    newRunMeta.save();
+    newTaskMeta.save();
 
     File.create({
-        task: newRunMeta.id,
-        metadataPath: `${newRunMeta.id}/log.txt`,
+        task: newTaskMeta.id,
+        metadataPath: `${newTaskMeta.id}/log.txt`,
         size: 0
     });
 
-    saveRunToServer(newRunMeta);
-    return res.status(201).json(newRunMeta);
+    saveTaskToServer(newTaskMeta);
+    return res.status(201).json(newTaskMeta);
 };
 
-const getAllRuns = async (req, res) => {
+const getAllTasks = async (req, res) => {
     const status = req.query.status;
     const sort = req.query.sort;
 
     if (status) {
         if (sort === 'asc') {
-            const tasks = await Run.find({user: req.user.id, status: status}).sort({created: 1});
+            const tasks = await Task.find({user: req.user.id, status: status}).sort({created: 1});
             return res.status(200).json(tasks);
         }
 
         if (sort === 'desc') {
-            const tasks = await Run.find({user: req.user.id, status: status}).sort({created: -1});
+            const tasks = await Task.find({user: req.user.id, status: status}).sort({created: -1});
             return res.status(200).json(tasks);
         }
 
-        const tasks = await Run.find({user: req.user.id, status: status});
+        const tasks = await Task.find({user: req.user.id, status: status});
         return res.status(200).json(tasks);
     }
     if (sort === 'asc') {
-        const tasks = await Run.find({user: req.user.id}).sort({created: 1});
+        const tasks = await Task.find({user: req.user.id}).sort({created: 1});
         return res.status(200).json(tasks);
     }
 
     if (sort === 'desc') {
-        const tasks = await Run.find({user: req.user.id}).sort({created: -1});
+        const tasks = await Task.find({user: req.user.id}).sort({created: -1});
         return res.status(200).json(tasks);
     }
 
-    const tasks = await Run.find({user: req.user.id});
+    const tasks = await Task.find({user: req.user.id});
     res.status(200).json(tasks);
 };
 
-const getRun = (req, res) => {
-    const hash = req.params.hash;
-    if (!hash) {
-        return res.status(404).json({message: 'Hash not provided'});
-    }
-    Run.findOne({hash: hash}).then((run) => {
-        return res.status(200).json(run);  
-    })
+const getTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    const task = await Task.findById(taskId);
+
+    res.status(200).json(task);
 }
 
-const deleteRun = asyncHandler(async (req, res) => {
+const deleteTask = asyncHandler(async (req, res) => {
     const id = req.params.taskId;
-    const run = await Run.findById(id);
+    const task = await Task.findById(id);
 
-    if (!run) {
-        return res.status(404).json({message: 'Run not found'});
+    if (!task) {
+        return res.status(404).json({message: 'Task not found'});
     }
 
     if (!req.user) {
         return res.status(401).json('User not found!');
     }
 
-    if (run.user.toString() !== req.user.id) {
+    if (task.user.toString() !== req.user.id) {
         return res.status(401).json('User not authorized');
     }
 
-    await run.remove()
+    await task.remove()
     fs.rmdirSync(`public/${id}`, { recursive: true });
     res.status(200).json({id: id})
 });
 
 const findByTag = (req, res) => {
     const tag = req.query.tag;
-    Run.find({user: req.user.id , tag: tag})
-        .then(run => {
-            return res.status(200).json(run[0]);
+    Task.find({user: req.user.id , tag: tag})
+        .then(task => {
+            return res.status(200).json(task[0]);
         })
         .catch(err => console.log(err));
 }
 
 const putUpdateTag = async (req, res) => {
     const taskId = req.params.taskId;
-    const task = await Run.findById(taskId);
+    const task = await Task.findById(taskId);
 
     task.tag = req.body.tag;
     task.updated = Date.now();
@@ -230,7 +234,7 @@ const uploadFiles = async (req, res) => {
     const files = req.files;
     const taskId = req.params.taskId;
 
-    const task = await Run.findById(taskId);
+    const task = await Task.findById(taskId);
 
     for (let file of files) {
         const newFile = File.create({
@@ -304,7 +308,7 @@ const getDataToPlot = async (req, res) => {
 const postSetStatus = async (req, res) => {
     const newStatus = req.body.status;
     const taskId = req.params.taskId;
-    const task = await Run.findById(taskId);
+    const task = await Task.findById(taskId);
     task.status = newStatus;
     task.updated = Date.now();
     task.save();
@@ -321,20 +325,37 @@ const getPlots = async (req, res) => {
 
 const resetTask = async (req, res) => {
     const taskId = req.params.taskId;
-    const task = await Run.findById(taskId);
+    const clear = req.query.clear;
+    const task = await Task.findById(taskId);
     task.status = 'PENDING';
     task.save();
 
-    // TODO Remove files
+    if (clear === 'yes') {
+        fs.writeFile(`public/${taskId}/log.txt`, '', () => console.log('log.txt cleared'))
+
+        // TODO Remove files in public
+        // Remove files
+        const files = await File.find({task: taskId});
+        for (let file of files) {
+            fs.unlink(file.metadataPath, err => {
+                console.log(err);
+            })
+        }
+
+        await File.deleteMany({task: taskId});
+    }
+
+    // Remove plots
+    await Plot.deleteMany({task: taskId});
 
     res.status(200).json(task);
 };
 
 module.exports = {
-    postAddRun,
-    getRun,
-    deleteRun,
-    getAllRuns,
+    postAddTask,
+    getTask,
+    deleteTask,
+    getAllTasks,
     lockTask,
     unlockTask,
     putUpdateTag,

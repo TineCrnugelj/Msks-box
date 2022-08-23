@@ -54,7 +54,7 @@ const mongoose = require('mongoose');
  */
 
 const fileSchema = new mongoose.Schema({
-    task: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Run'},
+    task: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Task'},
     metadataPath: {type: String},
     size: {type: Number},
     fileData: {

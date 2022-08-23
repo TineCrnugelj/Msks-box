@@ -12,7 +12,7 @@ import {Fragment, useEffect, useState} from "react";
 import en from 'javascript-time-ago/locale/en.json'
 import classes from './Dashboard.module.css'
 import ClipLoader from "react-spinners/ClipLoader";
-import {getRun, reset} from "../features/runs/runSlice";
+import {getTask, reset} from "../features/tasks/taskSlice";
 
 TimeAgo.addLocale(en);
 
@@ -24,17 +24,17 @@ const override = {
 
 const TaskDetails = () => {
     const dispatch = useDispatch();
-    const { hash } = useParams();
+    const { taskId } = useParams();
     let [color] = useState("#044599");
 
-    const run  = useSelector(state => state.runs.run);
-    const { isLoading, isError, message } = useSelector(state => state.runs);
+    const task  = useSelector(state => state.tasks.task);
+    const { isLoading, isError, message } = useSelector(state => state.tasks);
 
     useEffect(() => {
         if (isError) {
             console.log(message)
         }
-        dispatch(getRun(hash));
+        dispatch(getTask(taskId));
 
         return () => {
             dispatch(reset());
@@ -45,7 +45,7 @@ const TaskDetails = () => {
         return <ClipLoader color={color} loading={isLoading} cssOverride={override} size={150} />
     }
 
-    if (!run) {
+    if (!task) {
         return null;
     }
     else {
@@ -53,25 +53,25 @@ const TaskDetails = () => {
             <section className={classes.tasks}>
                 <Card>
                     <div className={classes.head}>
-                        <h1 className={classes.heading}>Task Details: {run.tag ? run.tag : '/'}</h1>
+                        <h1 className={classes.heading}>Task Details: {task.tag ? task.tag : '/'}</h1>
                     </div>
-                    <p><strong>Hash: </strong>{run.hash}</p>
-                    <p><strong>Status: </strong>{run.status} &nbsp;  <strong>Entrypoint: </strong>{run.entrypoint} &nbsp; <strong>Commit: </strong>{run.commit}</p>
-                    <p><strong>Created: </strong><ReactTimeAgo locale='en' date={new Date(run.created)} /></p>
-                    <p><strong>Updated: </strong><ReactTimeAgo locale='en' date={new Date(run.updated)} /></p>
+                    <p><strong>Hash: </strong>{task.hash}</p>
+                    <p><strong>Status: </strong>{task.status} &nbsp;  <strong>Entrypoint: </strong>{task.entrypoint} &nbsp; <strong>Commit: </strong>{task.commit}</p>
+                    <p><strong>Created: </strong><ReactTimeAgo locale='en' date={new Date(task.created)} /></p>
+                    <p><strong>Updated: </strong><ReactTimeAgo locale='en' date={new Date(task.updated)} /></p>
                     <h3>Arguments:</h3>
-                    {run.arguments.length > 0 ? <ArgumentTable args={run.arguments}/> : <p>No arguments</p>}
-                    <Dependencies dependencies={run.dependencies} id={run._id} />
+                    {task.arguments.length > 0 ? <ArgumentTable args={task.arguments}/> : <p>No arguments</p>}
+                    <Dependencies dependencies={task.dependencies} id={task._id} />
                 </Card>
             </section>
             <section className={classes.tasks}>
                 <Card>
-                    <FileList id={run._id} />
+                    <FileList id={task._id} />
                 </Card>
             </section>
             <section className={classes.tasks}>
                 <Card>
-                    <Plots id={run._id} />
+                    <Plots id={task._id} />
                 </Card>
             </section>
         </Fragment>
