@@ -27,23 +27,14 @@ const pravilnaUstavitev = (sporocilo, povratniKlic) => {
     });
 };
 
-// Ponovni zagon nodemon
 process.once("SIGUSR2", () => {
-    pravilnaUstavitev("nodemon ponovni zagon", () => {
+    pravilnaUstavitev("Nodemon restart", () => {
         process.kill(process.pid, "SIGUSR2");
     });
 });
 
-// Izhod iz aplikacije
 process.on("SIGINT", () => {
-    pravilnaUstavitev("izhod iz aplikacije", () => {
-        process.exit(0);
-    });
-});
-
-// Izhod iz aplikacije na Heroku
-process.on("SIGTERM", () => {
-    pravilnaUstavitev("izhod iz aplikacije na Heroku", () => {
+    pravilnaUstavitev("App exited", () => {
         process.exit(0);
     });
 });

@@ -107,9 +107,15 @@ const TaskTable = () => {
     const searchTasks = (searchQuery) => {
         const searchWord = searchQuery.toLowerCase();
         const newFilter = runs.filter((run) => {
-            return run.tag.toLowerCase().includes(searchWord) ||
-                   run.status.toLowerCase().includes(searchWord) ||
-                   run.entrypoint.toLowerCase().includes(searchWord);
+            if (run.tag) {
+                return run.tag.toLowerCase().includes(searchWord) ||
+                    run.status.toLowerCase().includes(searchWord) ||
+                    run.entrypoint.toLowerCase().includes(searchWord);
+            }
+            else {
+                return run.status.toLowerCase().includes(searchWord) ||
+                       run.entrypoint.toLowerCase().includes(searchWord);
+            }
         });
 
         dispatch(setFilteredRuns(newFilter));

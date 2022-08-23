@@ -34,6 +34,8 @@ router.post('/tasks/:taskId/status', locked, ctrlRuns.postSetStatus);
 
 router.put('/tasks/:taskId/tag', ctrlRuns.putUpdateTag);
 
+router.post('/tasks/:taskId/reset', locked, ctrlRuns.resetTask);
+
 router.get('/tasks/:taskId/plots', ctrlRuns.getPlots);
 
 router.post('/token', ctrlRuns.refreshToken);

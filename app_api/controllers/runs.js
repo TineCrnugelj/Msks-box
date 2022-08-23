@@ -1,4 +1,4 @@
-const Run = require('../models/Run');
+const Run = require('../models/Task');
 const File = require('../models/File');
 const Plot = require('../models/Plot');
 
@@ -7,9 +7,7 @@ const multer = require("multer");
 const {parseLogFile, getCommitAndRepo, calculateHash} = require("../helpers/helpers");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
-const Task = require("../models/Run");
-
-const RUNS_DIR = 'tasks';
+const Task = require("../models/Task");
 
 const saveRunToServer = (newRunMeta) => {
     const runDir = 'public/' + newRunMeta.id;
@@ -47,7 +45,7 @@ const postAddRun = async (req, res) => {
     }
 
     const taskToHash = {
-        arguments: args, // popravi
+        arguments: args,
         commit: commit,
         dependencies: dependencies,
         entrypoint: req.body.entrypoint,
@@ -80,15 +78,36 @@ const postAddRun = async (req, res) => {
     return res.status(201).json(newRunMeta);
 };
 
-const getAllRuns = (req, res) => {
-    Run.find({user: req.user.id})
-        .then(runs => {
-            if (!runs) {
-                return res.status(404).json({message: 'No runs found!'});
-            }
-            return res.status(200).json(runs);
-        })
-        .catch(err => console.log(err));
+const getAllRuns = async (req, res) => {
+    const status = req.query.status;
+    const sort = req.query.sort;
+
+    if (status) {
+        if (sort === 'asc') {
+            const tasks = await Run.find({user: req.user.id, status: status}).sort({created: 1});
+            return res.status(200).json(tasks);
+        }
+
+        if (sort === 'desc') {
+            const tasks = await Run.find({user: req.user.id, status: status}).sort({created: -1});
+            return res.status(200).json(tasks);
+        }
+
+        const tasks = await Run.find({user: req.user.id, status: status});
+        return res.status(200).json(tasks);
+    }
+    if (sort === 'asc') {
+        const tasks = await Run.find({user: req.user.id}).sort({created: 1});
+        return res.status(200).json(tasks);
+    }
+
+    if (sort === 'desc') {
+        const tasks = await Run.find({user: req.user.id}).sort({created: -1});
+        return res.status(200).json(tasks);
+    }
+
+    const tasks = await Run.find({user: req.user.id});
+    res.status(200).json(tasks);
 };
 
 const getRun = (req, res) => {
@@ -295,6 +314,17 @@ const getPlots = async (req, res) => {
         .then(plots => res.status(200).json(plots));
 };
 
+const resetTask = async (req, res) => {
+    const taskId = req.params.taskId;
+    const task = await Run.findById(taskId);
+    task.status = 'PENDING';
+    task.save();
+
+    // TODO Remove files
+
+    res.status(200).json(task);
+};
+
 module.exports = {
     postAddRun,
     getRun,
@@ -313,4 +343,5 @@ module.exports = {
     getPlots,
     refreshToken,
     getUploadedFileNames,
+    resetTask,
 }

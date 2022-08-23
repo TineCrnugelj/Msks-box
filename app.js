@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 
 const fileApi = require('./app_api/routes/files');
-const runApi = require('./app_api/routes/runs');
+const taskApi = require('./app_api/routes/tasks');
 const usersApi = require('./app_api/routes/users');
 const path = require('path');
 
@@ -56,11 +56,11 @@ app.use("/api", (req, res, next) => {
 });
 
 app.use('/api', fileApi);
-app.use('/api', runApi);
+app.use('/api', taskApi);
 app.use('/api', usersApi);
 
-runApi.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-runApi.get("/swagger.json", (req, res) => {
+taskApi.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+taskApi.get("/swagger.json", (req, res) => {
   res.status(200).json(swaggerDocument);
 });
 

@@ -297,14 +297,23 @@ const mongoose = require('mongoose');
  * @swagger
  *  /tasks:
  *   get:
- *    summary: A list of all runs for a user
- *    descriptions: Get a list of all runs from the database
+ *    summary: Get all tasks of a user
  *    tags: [Tasks]
  *    security:
  *     - jwt: []
+ *    parameters:
+ *     - in: query
+ *       name: status
+ *       schema:
+ *        type: string
+ *       example: PENDING
+ *     - in: query
+ *       name: sort
+ *       description: Sort value for creation timestamp, desc for descending order, asc for ascending order
+ *       example: desc
  *    responses:
  *     "200":
- *      description: Request succeeded, the list of runs is returned
+ *      description: Request succeeded, the list of tasks is returned
  *      content:
  *       application/json:
  *        schema:
