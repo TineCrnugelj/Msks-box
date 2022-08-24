@@ -6,6 +6,7 @@ import Dependencies from "../components/tasks/Dependencies";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from "javascript-time-ago";
 import Plots from "../components/tasks/Plots";
+import Logs from "../components/tasks/Logs";
 import Card from '../UI/Card';
 import {Fragment, useEffect, useState} from "react";
 
@@ -26,6 +27,7 @@ const TaskDetails = () => {
     const dispatch = useDispatch();
     const { taskId } = useParams();
     let [color] = useState("#044599");
+    const [value, setValue] = useState(0);
 
     const task  = useSelector(state => state.tasks.task);
     const { isLoading, isError, message } = useSelector(state => state.tasks);
@@ -62,6 +64,11 @@ const TaskDetails = () => {
                     <h3>Arguments:</h3>
                     {task.arguments.length > 0 ? <ArgumentTable args={task.arguments}/> : <p>No arguments</p>}
                     <Dependencies dependencies={task.dependencies} id={task._id} />
+                </Card>
+            </section>
+            <section className={classes.tasks}>
+                <Card>
+                    <Logs id={task._id} />
                 </Card>
             </section>
             <section className={classes.tasks}>

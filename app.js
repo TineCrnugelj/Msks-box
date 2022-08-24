@@ -66,4 +66,8 @@ taskApi.get("/swagger.json", (req, res) => {
 
 
 app.listen(5000);
+
+module.exports = {
+  app
+}
  

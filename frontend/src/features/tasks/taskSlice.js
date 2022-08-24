@@ -13,9 +13,14 @@ const initialState = {
     isErrorPlots: false,
     isSuccessPlots: false,
     isLoadingPlots: false,
+    isErrorLogs: false,
+    isSuccessLogs: false,
+    isLoadingLogs: false,
     message: '',
     messagePlots: '',
-    dataToPlot: []
+    messageLogs: '',
+    dataToPlot: [],
+    logs: [],
 }
 
 export const createTask = createAsyncThunk('tasks/create', async (taskData, thunkAPI) => {
@@ -107,6 +112,15 @@ export const getDataToPlot = createAsyncThunk('tasks/getData', async (taskId, th
     }
 });
 
+export const getLogs = createAsyncThunk('tasks/getLogs', async (taskId, thunkAPI) => {
+    try {
+        return await taskService.getLogs(taskId);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
 export const putEditTag = createAsyncThunk('tasks/editTag', async (data, thunkAPI) => {
     try {
         const { taskId, tag } = data;
@@ -132,6 +146,12 @@ export const taskSlice = createSlice({
             state.isErrorPlots = false
             state.isSuccessPlots = false
             state.messagePlots = ''
+        },
+        resetLogs: (state) => {
+            state.isLoadingLogs = false
+            state.isErrorLogs = false
+            state.isSuccessLogs = false
+            state.messageLogs = ''
         },
         setFilteredTasks: (state, action) => {
             state.filteredTasks = action.payload
@@ -257,14 +277,22 @@ export const taskSlice = createSlice({
                 newTasks[index] = action.payload;
                 state.filteredTasks = newTasks;
             })
-            .addCase(putEditTag.rejected, (state, action) => {
-                state.isLoading = false
-                state.isError = true
-                state.message = action.payload
+            .addCase(getLogs.pending, (state) => {
+                state.isLoadingLogs = true
+            })
+            .addCase(getLogs.fulfilled, (state, action) => {
+                state.isLoadingLogs = false
+                state.isSuccessLogs = true
+                state.logs = action.payload;
+            })
+            .addCase(getLogs.rejected, (state, action) => {
+                state.isLoadingLogs = false
+                state.isErrorLogs = true
+                state.messageLogs = action.payload
             })
     }
 })
 
-export const {reset, resetPlots} = taskSlice.actions
+export const {reset, resetPlots, resetLogs} = taskSlice.actions
 export const {setFilteredTasks} = taskSlice.actions
 export default taskSlice.reducer

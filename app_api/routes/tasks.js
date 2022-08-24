@@ -20,15 +20,15 @@ router.get('/tasks', protect, ctrlTasks.getAllTasks);
 
 router.delete('/tasks/:taskId', protect, ctrlTasks.deleteTask);
 
-router.post('/tasks/:taskId/files', locked, ctrlTasks.upload.array('files', 10), ctrlTasks.uploadFiles);
+router.post('/tasks/:taskId/files', locked, ctrlTasks.upload.array('files', 20), ctrlTasks.uploadFiles);
 
 router.get('/tasks/:taskId/files', ctrlTasks.getUploadedFiles);
 
 router.get('/tasks/:taskId/fileNames', ctrlTasks.getUploadedFileNames);
 
-router.post('/tasks/:taskId/log', locked, ctrlTasks.postLogData);
+router.post('/tasks/:taskId/log', ctrlTasks.postLogData); // ADD MW
 
-router.get('/tasks/:taskId/dataToPlot', ctrlTasks.getDataToPlot);
+router.get('/tasks/:taskId/log', ctrlTasks.getDataToPlot);
 
 router.post('/tasks/:taskId/status', locked, ctrlTasks.postSetStatus);
 

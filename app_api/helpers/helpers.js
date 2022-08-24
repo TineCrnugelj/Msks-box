@@ -12,25 +12,12 @@ async function parseLogFile(filePath) {
         crlfDelay: Infinity
     });
 
-    const regex = /^[a-z_]+: [+-]?[0-9]*\.?[0-9]*$/;
-
-    const dataToPlot = {};
+    const lines = [];
 
     for await (const line of rl) {
-        if (regex.test(line)) {
-            const splitted = line.split(':');
-            const key = splitted[0];
-            const value = parseFloat(splitted[1].trim());
-
-            if (dataToPlot.hasOwnProperty(key)) {
-                dataToPlot[key].push(value);
-            }
-            else {
-                dataToPlot[key] = [value];
-            }
-        }
+        lines.push(line);
     }
-    return dataToPlot;
+    return lines;
 }
 
 function getCommitAndRepo(source) {

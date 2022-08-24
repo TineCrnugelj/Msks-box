@@ -120,6 +120,9 @@ const getAllTasks = async (req, res) => {
 const getTask = async (req, res) => {
     const taskId = req.params.taskId;
     const task = await Task.findById(taskId);
+    if (!task) {
+        return res.status(404).json('Task does not exist');
+    }
 
     res.status(200).json(task);
 }
@@ -140,6 +143,10 @@ const deleteTask = asyncHandler(async (req, res) => {
         return res.status(401).json('User not authorized');
     }
 
+    if (task.isDependency) {
+        return res.status(200).json('Cannot delete task, task is a dependency');
+    }
+
     await task.remove()
     fs.rmdirSync(`public/${id}`, { recursive: true });
     res.status(200).json({id: id})
@@ -147,7 +154,7 @@ const deleteTask = asyncHandler(async (req, res) => {
 
 const findByTag = (req, res) => {
     const tag = req.query.tag;
-    Task.find({user: req.user.id , tag: tag})
+    Task.find({user: req.user.id, tag: tag})
         .then(task => {
             return res.status(200).json(task[0]);
         })
@@ -188,19 +195,11 @@ const refreshToken = async (req, res) => {
     })
 }
 
-const lockTask = asyncHandler(async (req, res) => {
+const lockTask = async (req, res) => {
     const taskId = req.params.taskId;
     if (!taskId) {
         return res.status(400).json({message: 'Please provide taskId'});
     }
-
-    const taskToLock = await Task.findById(taskId);
-    taskToLock.locked = true;
-    taskToLock.save();
-    setTimeout(() => {
-        taskToLock.locked = false;
-        taskToLock.save();
-    }, 180000);
 
     const task = { task: taskId };
     const accessToken = generateAccessToken(task);
@@ -213,7 +212,7 @@ const lockTask = asyncHandler(async (req, res) => {
         refreshToken: refreshToken,
         expiresIn: new Date(Date.now() + Date.UTC(70,0,0,2,3,0)).toISOString()
     });
-});
+};
 
 const unlockTask = async (req, res) => {
     const taskId = req.params.taskId;
@@ -243,7 +242,11 @@ const uploadFiles = async (req, res) => {
             size: file.size
         });
     }
-    res.status(200).json({msg: 'Files uploaded'});
+    res.status(200).json(
+        {
+            numberOfNewFiles: files.length
+        }
+    );
 };
 
 const getUploadedFiles = async (req, res) => {
@@ -279,10 +282,9 @@ const postLogData = async (req, res) => {
             const splitted = line.split(':');
             const key = splitted[0];
             const value = parseFloat(splitted[1].trim());
-
             const plot = await Plot.findOne({name: key, task: taskId});
             if (!plot) {
-                const newPlot = await Plot.create({
+                 await Plot.create({
                     task: taskId,
                     name: key,
                     data: [value],
@@ -296,13 +298,14 @@ const postLogData = async (req, res) => {
         fs.appendFile(`public/${taskId}/log.txt`, line + '\n', err => console.log('Append line'));
     }
 
-    res.status(200).json(logData);
+    const plots = await Plot.find({task: taskId});
+    return res.status(200).json(plots);
 };
 
 const getDataToPlot = async (req, res) => {
     const taskId = req.params.taskId;
-    const dataToPlot = await parseLogFile(`public/${taskId}/log.txt`);
-    res.status(200).json(dataToPlot);
+    const logData = await parseLogFile(`public/${taskId}/log.txt`);
+    res.status(200).json(logData);
 };
 
 const postSetStatus = async (req, res) => {
@@ -319,8 +322,8 @@ const postSetStatus = async (req, res) => {
 const getPlots = async (req, res) => {
     const taskId = req.params.taskId;
 
-    Plot.find({task: taskId})
-        .then(plots => res.status(200).json(plots));
+    const plots = await Plot.find({task: taskId});
+    return res.status(200).json(plots);
 };
 
 const resetTask = async (req, res) => {

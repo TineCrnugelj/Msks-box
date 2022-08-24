@@ -98,6 +98,11 @@ const getDataToPlot = async (taskId) => {
     return response.data;
 }
 
+const getLogs = async (taskId) => {
+    const response = await axios.get(`${API_URL}${taskId}/log`);
+    return response.data;
+}
+
 const putEditTag = async (taskId, tag) => {
     const response = await axios.put(`${API_URL}/${taskId}/tag`, {tag: tag});
     return response.data;
@@ -115,6 +120,7 @@ const taskService = {
     getTaskByTag,
     getDataToPlot,
     putEditTag,
+    getLogs,
 }
 
 export default taskService
