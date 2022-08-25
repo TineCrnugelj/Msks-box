@@ -29,7 +29,7 @@ const upload = multer({storage: fileStorageEngine});
 
 const postAddTask = async (req, res) => {
     const source = req.body.source;
-    const {repository, commit} = getCommitAndRepo(source);
+    const {repository, commit} = getCommitAndRepo(req.body.source);
 
     const args = req.body.arguments;
     const dependencies = [];
