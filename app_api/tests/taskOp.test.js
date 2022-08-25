@@ -22,8 +22,7 @@ describe('Create task, upload files and logs', () => {
             entrypoint: 'train_match',
             tag: 'match_16_large',
             arguments: [
-                "embedding=@testDep",
-                "backbone=resnet18@reset",
+                "backbone=resnet18",
                 "stop_epochs=200",
                 "lr_step=30",
                 "lr_gamma=0.5",
@@ -47,7 +46,7 @@ describe('Create task, upload files and logs', () => {
         taskId = body._id;
 
         expect(statusCode).toBe(201);
-        expect(body.dependencies).toHaveLength(2)
+        expect(body.dependencies).toHaveLength(0)
         expect(body.arguments).toHaveLength(14);
     });
 
