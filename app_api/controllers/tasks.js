@@ -75,12 +75,6 @@ const postAddTask = async (req, res) => {
     });
     newTaskMeta.save();
 
-    File.create({
-        task: newTaskMeta.id,
-        metadataPath: `${newTaskMeta.id}/log.txt`,
-        size: 0
-    });
-
     saveTaskToServer(newTaskMeta);
     return res.status(201).json(newTaskMeta);
 };
@@ -226,8 +220,7 @@ const unlockTask = async (req, res) => {
     task.save();
 
     res.status(200).json(task);
-}
-
+};
 
 const uploadFiles = async (req, res) => {
     const files = req.files;
@@ -336,7 +329,6 @@ const resetTask = async (req, res) => {
     if (clear === 'yes') {
         fs.writeFile(`public/${taskId}/log.txt`, '', () => console.log('log.txt cleared'))
 
-        // TODO Remove files in public
         // Remove files
         const files = await File.find({task: taskId});
         for (let file of files) {
