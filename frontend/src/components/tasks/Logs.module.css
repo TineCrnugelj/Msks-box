@@ -1,0 +1,12 @@
+.heading {
+    display: inline-flex;
+}
+
+.logsBtn {
+    margin-left: 1rem;
+}
+
+.logsList {
+    overflow-y: scroll;
+    height: 400px;
+}
