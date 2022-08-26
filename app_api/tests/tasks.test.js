@@ -16,7 +16,7 @@ describe('tasks', () => {
 
     it('Get task by id', async () => {
 
-        const taskId = '6304c1b8bec61925d90403da';
+        const taskId = '630874a2451aedb4a38eaf7e';
         const {body, statusCode} = await request.get(`/api/tasks/${taskId}`);
 
         expect(statusCode).toBe(200);
@@ -96,7 +96,7 @@ describe('tasks', () => {
     });
 
     it('Post logs with one graph', async () => {
-        const taskId = '63063976306af6a5e27ba723';
+        const taskId = '630874a2451aedb4a38eaf7e';
         const logData = {
             logData: [
                 "sine_wave: 0.0",

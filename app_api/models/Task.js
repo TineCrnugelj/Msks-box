@@ -686,6 +686,7 @@ const taskSchema = new mongoose.Schema({
     isDependency: {type: Boolean, default: false},
     hash: {type: String},
     locked: {type: Boolean, default: false},
+    logs: [{type: String}],
 });
 
 module.exports = mongoose.model( 'Task', taskSchema, 'Task');

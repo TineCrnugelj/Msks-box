@@ -16,11 +16,11 @@ describe('Create task, upload files and logs', () => {
             });
     });
 
-    it('Create a task with dependencies', async () => {
+    it('Create a task without dependencies', async () => {
         const newTask = {
             source: 'file:///home/lukacu/checkouts/gaptrack/',
             entrypoint: 'train_match',
-            tag: 'match_16_large',
+            tag: 'TEST',
             arguments: [
                 "backbone=resnet18",
                 "stop_epochs=200",
@@ -47,7 +47,7 @@ describe('Create task, upload files and logs', () => {
 
         expect(statusCode).toBe(201);
         expect(body.dependencies).toHaveLength(0)
-        expect(body.arguments).toHaveLength(14);
+        expect(body.arguments).toHaveLength(13);
     });
 
     it('Get task by id', async () => {
@@ -65,32 +65,14 @@ describe('Create task, upload files and logs', () => {
         const {body, statusCode} = await request
             .post(`/api/tasks/${taskId}/files`)
             .set('Authorization', 'Bearer ' + lockToken)
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test1.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test2.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test3.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test4.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test5.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test6.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test7.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test8.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test9.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test10.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test11.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test12.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test13.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test14.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test15.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test16.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test17.txt')
-            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test18.txt')
-
-        await request
-            .post(`/api/tasks/${taskId}/files`)
-            .set('Authorization', 'Bearer ' + token)
-            .attach('files', 'E:/Videos/Office/The.Office.US.SEASON.06.S06.COMPLETE.720p.BrRip.2CH.x265.HEVC-PSA/large_file.mkv')
+            .attach('files', '/home/tine/Faks/test_files/test1.txt')
+            .attach('files', '/home/tine/Faks/test_files/test2.txt')
+            .attach('files', '/home/tine/Faks/test_files/test3.txt')
+            .attach('files', '/home/tine/Faks/test_files/test4.txt')
+            .attach('files', '/home/tine/Faks/test_files/test5.txt')
 
         expect(statusCode).toBe(200);
-        expect(body.numberOfNewFiles).toBe(18);
+        expect(body.numberOfNewFiles).toBe(5);
     });
 
     it('Get files of the task', async () => {
@@ -98,7 +80,7 @@ describe('Create task, upload files and logs', () => {
            .get(`/api/tasks/${taskId}/files`)
 
         expect(statusCode).toBe(200);
-        expect(body).toHaveLength(19);
+        expect(body).toHaveLength(5);
     });
 
     it('Post logs for the task', async () => {
@@ -115,6 +97,7 @@ describe('Create task, upload files and logs', () => {
         expect(body).toHaveLength(12);
     });
 
+    /*
     it('Reset the task', async () => {
         const {body, statusCode} = await request
             .post(`/api/tasks/${taskId}/reset`)
@@ -130,6 +113,8 @@ describe('Create task, upload files and logs', () => {
 
         expect(body).toHaveLength(0);
     });
+
+     */
 
     it('Update status of the task', async () => {
         const newStatus = {

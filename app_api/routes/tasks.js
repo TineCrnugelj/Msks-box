@@ -28,7 +28,7 @@ router.get('/tasks/:taskId/fileNames', ctrlTasks.getUploadedFileNames);
 
 router.post('/tasks/:taskId/log', locked, ctrlTasks.postLogData); // ADD MW
 
-router.get('/tasks/:taskId/log', ctrlTasks.getDataToPlot);
+router.get('/tasks/:taskId/log', ctrlTasks.getLogs);
 
 router.post('/tasks/:taskId/status', locked, ctrlTasks.postSetStatus);
 

@@ -29,7 +29,7 @@ const upload = multer({storage: fileStorageEngine});
 
 const postAddTask = async (req, res) => {
     const source = req.body.source;
-    const {repository, commit} = getCommitAndRepo(req.body.source);
+    const {repository, commit} = getCommitAndRepo(source);
 
     const args = req.body.arguments;
     const dependencies = [];
@@ -75,7 +75,6 @@ const postAddTask = async (req, res) => {
     });
     newTaskMeta.save();
 
-    saveTaskToServer(newTaskMeta);
     return res.status(201).json(newTaskMeta);
 };
 
@@ -142,7 +141,6 @@ const deleteTask = asyncHandler(async (req, res) => {
     }
 
     await task.remove()
-    fs.rmdirSync(`public/${id}`, { recursive: true });
     res.status(200).json({id: id})
 });
 
@@ -267,10 +265,11 @@ const getUploadedFileNames = async (req, res) => {
 const postLogData = async (req, res) => {
     const logData = req.body.logData;
     const taskId = req.params.taskId;
-
+    const task = await Task.findById(taskId);
     const regex = /^[a-z_]+: [+-]?[0-9]*\.?[0-9]*$/;
 
     for (let line of logData) {
+        task.logs.push(line);
         if (regex.test(line)) {
             const splitted = line.split(':');
             const key = splitted[0];
@@ -288,17 +287,16 @@ const postLogData = async (req, res) => {
                 await plot.save();
             }
         }
-        fs.appendFile(`public/${taskId}/log.txt`, line + '\n', err => console.log('Append line'));
     }
-
+    task.save();
     const plots = await Plot.find({task: taskId});
     return res.status(200).json(plots);
 };
 
-const getDataToPlot = async (req, res) => {
+const getLogs = async (req, res) => {
     const taskId = req.params.taskId;
-    const logData = await parseLogFile(`public/${taskId}/log.txt`);
-    res.status(200).json(logData);
+    const task = await Task.findById(taskId);
+    res.status(200).json(task.logs);
 };
 
 const postSetStatus = async (req, res) => {
@@ -359,7 +357,7 @@ module.exports = {
     uploadFiles,
     getUploadedFiles,
     postLogData,
-    getDataToPlot,
+    getLogs,
     postSetStatus,
     getPlots,
     refreshToken,
