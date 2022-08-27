@@ -1,0 +1,26 @@
+.cardWidth {
+    width: 400px;
+    margin-bottom: 2rem;
+}
+
+.cardHead {
+    display: inline-flex;
+}
+
+.removeBtn:hover,
+.removeBtn {
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.plots {
+    max-width: 120rem;
+    width: 90%;
+    margin: 2rem auto;
+}
+
+.heading {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    margin-top: 0.5rem;
+}

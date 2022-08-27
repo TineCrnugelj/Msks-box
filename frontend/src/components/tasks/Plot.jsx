@@ -22,6 +22,8 @@ const Plot = ({title, data}) => {
         setHidden(prevState => !prevState);
     }
 
+    console.log(reMappedData);
+
     return <Fragment>
         <div className={classes.heading}>
             <h3>{title}</h3>

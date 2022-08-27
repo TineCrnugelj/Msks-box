@@ -26,6 +26,11 @@ function Header() {
                             <FaHome /> Tasks
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/compare'>
+                           Compare
+                        </NavLink>
+                    </li>
                     {!user ? (<Fragment>
                         <li>
                             <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/login'>

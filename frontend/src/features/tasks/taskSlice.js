@@ -21,6 +21,8 @@ const initialState = {
     messageLogs: '',
     dataToPlot: [],
     logs: [],
+    tasksToCompare: [],
+    dataToPlotCompare: [],
 }
 
 export const createTask = createAsyncThunk('tasks/create', async (taskData, thunkAPI) => {
@@ -112,6 +114,15 @@ export const getDataToPlot = createAsyncThunk('tasks/getData', async (taskId, th
     }
 });
 
+export const getDataToPlotCompare = createAsyncThunk('tasks/getDataCompare', async (taskId, thunkAPI) => {
+    try {
+        return await taskService.getDataToPlot(taskId);
+    } catch (error) {
+        const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+});
+
 export const getLogs = createAsyncThunk('tasks/getLogs', async (taskId, thunkAPI) => {
     try {
         return await taskService.getLogs(taskId);
@@ -155,6 +166,15 @@ export const taskSlice = createSlice({
         },
         setFilteredTasks: (state, action) => {
             state.filteredTasks = action.payload
+        },
+        addToCompare: (state, action) => {
+            state.tasksToCompare.push(action.payload)
+        },
+        removeFromCompare: (state, action) => {
+            state.tasksToCompare = state.tasksToCompare.filter(task => task.id !== action.payload);
+            state.dataToPlotCompare = state.dataToPlotCompare.filter(plot => {
+                return plot[0].task !== action.payload
+            });
         }
     }, 
     extraReducers: (builder) => {
@@ -265,6 +285,19 @@ export const taskSlice = createSlice({
                 state.isErrorPlots = true
                 state.messagePlots = action.payload
             })
+            .addCase(getDataToPlotCompare.pending, (state) => {
+                state.isLoadingPlots = true
+            })
+            .addCase(getDataToPlotCompare.fulfilled, (state, action) => {
+                state.isLoadingPlots = false
+                state.isSuccessPlots = true
+                state.dataToPlotCompare.push(action.payload)
+            })
+            .addCase(getDataToPlotCompare.rejected, (state, action) => {
+                state.isLoadingPlots = false
+                state.isErrorPlots = true
+                state.messagePlots = action.payload
+            })
             .addCase(putEditTag.pending, (state) => {
                 state.isLoading = true
             })
@@ -293,6 +326,6 @@ export const taskSlice = createSlice({
     }
 })
 
-export const {reset, resetPlots, resetLogs} = taskSlice.actions
+export const {reset, resetPlots, resetLogs, addToCompare, removeFromCompare} = taskSlice.actions
 export const {setFilteredTasks} = taskSlice.actions
 export default taskSlice.reducer

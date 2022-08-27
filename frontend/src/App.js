@@ -8,6 +8,7 @@ import UpdateTask from "./pages/UpdateTask"
 import Header from './UI/Header';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Compare from './pages/Compare';
 import TaskDetails from "./pages/TaskDetails";
 import Files from './pages/Files';
 import ImageFullsize from "./pages/ImageFullsize";
@@ -26,6 +27,7 @@ function App() {
             <Route path='/tasks' element={<Dashboard />} />
             <Route path='/update-task' element={<UpdateTask />} />
             <Route path='/register' element={<Register />}  />
+            <Route path='/compare' element={<Compare />} />
             <Route path='/login' element={<Login />}  />
             <Route path='/files' element={<Files />}  />
             <Route path='/image/:imageName' element={<ImageFullsize />}  />
