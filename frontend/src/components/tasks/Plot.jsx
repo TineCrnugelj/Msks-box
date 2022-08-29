@@ -47,7 +47,7 @@ const Plot = ({title, data}) => {
                     <YAxis />
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey={title} stroke="#044599" />
+                    <Line type="monotone" dataKey={title} stroke="#044599" dot={false} />
                 </LineChart>
             </ResponsiveContainer>
         }

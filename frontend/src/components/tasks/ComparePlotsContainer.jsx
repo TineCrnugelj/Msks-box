@@ -1,5 +1,5 @@
 import {useSelector} from "react-redux";
-import {Fragment, useEffect, useMemo} from "react";
+import {Fragment, useMemo} from "react";
 import Col from "react-bootstrap/Col";
 import ComparePlot from "./ComparePlot";
 import Container from "react-bootstrap/Container";
@@ -49,7 +49,7 @@ const ComparePlotsContainer = ({tasks}) => {
     }, [plotsData]);
 
     return <Fragment>
-        <h1>{allPlots.length < 2 ? 'No plots to compare' : 'Plots:'}</h1>
+        <h1>{allPlots.length < 2 ? 'No plots to compare' : `Plots (${plotItems.length})`}</h1>
         <Container>
             <Row>
                 {plotItems}
