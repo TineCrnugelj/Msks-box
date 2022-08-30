@@ -44,7 +44,7 @@ const Plots = ({id}) => {
     }
 
     return <Fragment>
-        <h1>Charts ({Object.keys(dataToPlot).length})</h1>
+        <h1>Plots ({Object.keys(dataToPlot).length})</h1>
         <Container>
             <Row>
                 {plotItems}

@@ -17,7 +17,6 @@ const Logs = ({id}) => {
     const dispatch = useDispatch();
     const logLines = useSelector(state => state.tasks.logs);
     const {isLoadingLogs, isErrorLogs, messageLogs} = useSelector(state => state.tasks);
-    const [showLogs, setShowLogs] = useState(false);
 
     const lines = useMemo(() => {
         if (logLines.length === 0) {
@@ -43,24 +42,15 @@ const Logs = ({id}) => {
         return <ClipLoader color={color} loading={isLoadingLogs} cssOverride={override} size={150} />
     }
 
-    const showLogsHandler = (e) => {
-        e.preventDefault();
-        setShowLogs(showLogs => !showLogs);
-    }
-
     return (
         <Fragment>
             <div className={classes.heading}>
-                <h1>Logs</h1>
-                <Button className={classes.logsBtn} onClick={showLogsHandler}>{showLogs ? 'Hide' : 'Show'} Logs</Button>
+                <h1>Output</h1>
             </div>
-            {showLogs ?
-                <div className={classes.logsList}>
-                    {lines}
-                </div> :
-                ''
-            }
-
+            <hr />
+            <div className={classes.logsList}>
+                {lines}
+            </div>
         </Fragment>
     );
 }

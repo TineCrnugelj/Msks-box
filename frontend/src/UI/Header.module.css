@@ -21,7 +21,7 @@
 
 .header li {
     margin: 0 1rem;
-    width: 5rem;
+    width: auto;
 }
 
 .logoutLink {

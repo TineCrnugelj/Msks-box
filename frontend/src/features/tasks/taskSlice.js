@@ -173,7 +173,9 @@ export const taskSlice = createSlice({
         removeFromCompare: (state, action) => {
             state.tasksToCompare = state.tasksToCompare.filter(task => task.id !== action.payload);
             state.dataToPlotCompare = state.dataToPlotCompare.filter(plot => {
-                return plot[0].task !== action.payload
+                if (plot[0]) {
+                    return plot[0].task !== action.payload;
+                }
             });
         }
     }, 

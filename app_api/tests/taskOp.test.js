@@ -20,10 +20,10 @@ describe('Create task, upload files and logs', () => {
         const newTask = {
             source: 'file:///home/lukacu/checkouts/gaptrack/',
             entrypoint: 'train_match',
-            tag: 'TEST2',
+            tag: 'TEST3',
             arguments: [
-                "backbone=resnet18",
-                "stop_epochs=200",
+                "backbone=@TEST1",
+                "stop_epochs=@TEST2",
                 "lr_step=30",
                 "lr_gamma=0.5",
                 "embedding_loss=false",

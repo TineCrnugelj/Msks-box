@@ -79,33 +79,6 @@ const postAddTask = async (req, res) => {
 };
 
 const getAllTasks = async (req, res) => {
-    const status = req.query.status;
-    const sort = req.query.sort;
-
-    if (status) {
-        if (sort === 'asc') {
-            const tasks = await Task.find({user: req.user.id, status: status}).sort({created: 1});
-            return res.status(200).json(tasks);
-        }
-
-        if (sort === 'desc') {
-            const tasks = await Task.find({user: req.user.id, status: status}).sort({created: -1});
-            return res.status(200).json(tasks);
-        }
-
-        const tasks = await Task.find({user: req.user.id, status: status});
-        return res.status(200).json(tasks);
-    }
-    if (sort === 'asc') {
-        const tasks = await Task.find({user: req.user.id}).sort({created: 1});
-        return res.status(200).json(tasks);
-    }
-
-    if (sort === 'desc') {
-        const tasks = await Task.find({user: req.user.id}).sort({created: -1});
-        return res.status(200).json(tasks);
-    }
-
     const tasks = await Task.find({user: req.user.id});
     res.status(200).json(tasks);
 };

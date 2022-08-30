@@ -1,4 +1,4 @@
-import { FaUser, FaHome, FaSignInAlt, FaSignOutAlt, FaFile } from 'react-icons/fa'
+import { FaUser, FaHome, FaSignInAlt, FaSignOutAlt, FaChartLine } from 'react-icons/fa'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
@@ -28,7 +28,7 @@ function Header() {
                     </li>
                     <li>
                         <NavLink className={(navData) => navData.isActive ? classes.active : ''} to='/compare'>
-                           Compare
+                           <FaChartLine /> Compare
                         </NavLink>
                     </li>
                     {!user ? (<Fragment>

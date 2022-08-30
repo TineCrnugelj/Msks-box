@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button';
 import classes from './Plot.module.css'
 
 const Plot = ({title, data}) => {
-    const [hidden, setHidden] = useState(false);
 
     const reMappedData = useMemo(() => {
         const newData = [];
@@ -18,39 +17,30 @@ const Plot = ({title, data}) => {
         return newData;
     }, []);
 
-    const hideChartHandler = () => {
-        setHidden(prevState => !prevState);
-    }
-
-    console.log(reMappedData);
-
     return <Fragment>
         <div className={classes.heading}>
             <h3>{title}</h3>
-            <Button className={classes.btnHide} variant='primary' onClick={hideChartHandler}>Hide</Button>
         </div>
-        {!hidden &&
-            <ResponsiveContainer minHeight={300} minWidth={300} width={'25%'} aspect={1}>
-                <LineChart
-                    width={500}
-                    height={300}
-                    data={reMappedData}
-                    margin={{
-                        top: 5,
-                        right: 10,
-                        left: 10,
-                        bottom: 25,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="step" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey={title} stroke="#044599" dot={false} />
-                </LineChart>
-            </ResponsiveContainer>
-        }
+        <ResponsiveContainer minHeight={300} minWidth={300} width={'25%'} aspect={1}>
+            <LineChart
+                width={500}
+                height={300}
+                data={reMappedData}
+                margin={{
+                    top: 5,
+                    right: 10,
+                    left: 5,
+                    bottom: 25,
+                }}
+            >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="step" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey={title} stroke="#044599" dot={false} />
+            </LineChart>
+        </ResponsiveContainer>
     </Fragment>
 }
 

@@ -9,3 +9,11 @@
     margin: 0;
     padding: 0;
 }
+
+.argsTitle {
+    margin-bottom: 1rem;
+}
+
+.head {
+    display: inline-flex;
+}
