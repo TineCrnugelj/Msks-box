@@ -6,12 +6,15 @@ import Plot from './Plot';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import classes from './Plots.module.css';
+
 
 const override = {
     display: "block",
     margin: "0 auto",
     borderColor: "#044599",
 };
+
 
 
 const Plots = ({id}) => {
@@ -44,7 +47,7 @@ const Plots = ({id}) => {
     }
 
     return <Fragment>
-        <h1>Plots ({Object.keys(dataToPlot).length})</h1>
+        <h1 className={classes.heading}>Plots ({Object.keys(dataToPlot).length})</h1>
         <Container>
             <Row>
                 {plotItems}

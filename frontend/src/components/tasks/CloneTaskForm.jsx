@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
+import {toast} from "react-toastify";
 
 const CloneTaskForm = () => {
     const dispatch = useDispatch();
@@ -48,10 +49,9 @@ const CloneTaskForm = () => {
         setTag(e.target.value)
     }
 
-    formIsValid = source !== '' && entrypoint !== '' && numOfArgs > 0 && tag !== '';
+    formIsValid = source !== '' && entrypoint !== '' && numOfArgs > 0;
 
     const submitFormHandler = (event) => {
-        console.log('sumbmit');
         event.preventDefault();
 
         const args = [];
@@ -89,7 +89,8 @@ const CloneTaskForm = () => {
         event.target.entrypoint.value = '';
         event.target.tag.value = '';
 
-        navigate('/')
+        navigate('/');
+        toast.success('Task successfully created!', {autoClose: 1500});
     }
 
     const addArgumentHandler = (event) => {
@@ -133,7 +134,7 @@ const CloneTaskForm = () => {
 
         {children}
         <div className={classes.addRemoveButtons}>
-            <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
+            <button className={classes.btnSubmit} disabled={!formIsValid}>Create</button>
         </div>
     </form>
 };

@@ -23,7 +23,7 @@ const Logs = ({id}) => {
             return <span>No logs</span>
         }
         return logLines.map(line => {
-            return <p key={line} className={classes.line}>{line}</p>
+            return <p key={Math.random()} className={classes.line}>{line}</p>
         })
     }, [logLines]);
 

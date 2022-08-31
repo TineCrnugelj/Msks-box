@@ -12,3 +12,8 @@
     overflow-y: scroll;
     height: 400px;
 }
+
+.line {
+    font-family: monospace;
+    margin-bottom: 0;
+}

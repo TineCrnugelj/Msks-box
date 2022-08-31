@@ -92,7 +92,7 @@ const TaskDetails = () => {
                     <Box sx={{ width: '100%' }} marginTop={3} >
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered variant='fullWidth'>
-                                <Tab label="Logs"  />
+                                <Tab label="Output"  />
                                 <Tab label="Files" />
                                 <Tab label="Plots" />
                             </Tabs>

@@ -1,6 +1,9 @@
 import classes from "./TaskTable.module.css";
 import {MDBCol} from "mdbreact";
 import {useState} from "react";
+import {FaSearch} from "react-icons/fa";
+
+import classes1 from './Search.module.css';
 
 const Searchbar = (props) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -20,6 +23,7 @@ const Searchbar = (props) => {
                 aria-label="Search"
                 value={searchQuery}
             />
+            <FaSearch className={classes1.searchBtn} size={25} />
         </div>
     </MDBCol>
 };

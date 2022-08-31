@@ -25,7 +25,7 @@ const ArgumentPair = (props) => {
             <label htmlFor="value">Value</label>
             <input value={value} onChange={valueChangedHandler} type="text" id={'value' + props.argId} />
         </div>
-        <button onClick={removeArgumentHandler} className={classes.removeArgument}>-</button>
+        <button onClick={removeArgumentHandler} className={classes.removeArgument}>X</button>
     </div>
 }
 

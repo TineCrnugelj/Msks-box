@@ -1,3 +1,7 @@
 .plots {
     display: inline-flex;
 }
+
+.heading {
+    margin-bottom: 2rem;
+}

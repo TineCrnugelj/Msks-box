@@ -109,10 +109,6 @@ const deleteTask = asyncHandler(async (req, res) => {
         return res.status(401).json('User not authorized');
     }
 
-    if (task.isDependency) {
-        return res.status(200).json('Cannot delete task, task is a dependency');
-    }
-
     await task.remove()
     res.status(200).json({id: id})
 });

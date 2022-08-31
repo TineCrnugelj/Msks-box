@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import ArgumentPair from './ArgumentPair';
 import classes from './TaskForm.module.css'
+import {toast} from "react-toastify";
 
 const TaskForm = () => {
     const dispatch = useDispatch();
@@ -85,6 +86,7 @@ const TaskForm = () => {
         event.target.tag.value = '';
 
         navigate('/');
+        toast.success('Task successfully created!', {autoClose: 1500});
     }
 
     const addArgumentHandler = (e) => {
@@ -131,7 +133,7 @@ const TaskForm = () => {
         {children}
 
         <div className={classes.addSubmitButtons}>
-            <button className={classes.btnSubmit} disabled={!formIsValid}>Submit</button>
+            <button className={classes.btnSubmit} disabled={!formIsValid}>Create</button>
         </div>
     </form>
 };

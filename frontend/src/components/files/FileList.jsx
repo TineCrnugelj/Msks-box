@@ -53,7 +53,7 @@ const FileList = ({id}) => {
 
     return <Fragment>
         <div className={classes.heading}>
-            <h1>Related files</h1>
+            <h1>Files</h1>
         </div>
         {filesList.length > 0 ? (<Table>
             <thead>

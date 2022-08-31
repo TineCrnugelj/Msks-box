@@ -18,9 +18,6 @@ const Plot = ({title, data}) => {
     }, []);
 
     return <Fragment>
-        <div className={classes.heading}>
-            <h3>{title}</h3>
-        </div>
         <ResponsiveContainer minHeight={300} minWidth={300} width={'25%'} aspect={1}>
             <LineChart
                 width={500}

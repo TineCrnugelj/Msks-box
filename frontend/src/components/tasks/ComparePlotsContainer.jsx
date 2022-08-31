@@ -5,6 +5,8 @@ import ComparePlot from "./ComparePlot";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 
+import classes from './ComparePlotsContainer.module.css';
+
 const ComparePlotsContainer = ({tasks}) => {
     const allPlots = useSelector(state => state.tasks.dataToPlotCompare);
 
@@ -49,7 +51,7 @@ const ComparePlotsContainer = ({tasks}) => {
     }, [plotsData]);
 
     return <Fragment>
-        <h1>{allPlots.length < 2 ? 'No plots to compare' : `Plots (${plotItems.length})`}</h1>
+        <h1 className={classes.heading}>{allPlots.length < 2 ? 'No plots to compare' : `Plots (${plotItems.length})`}</h1>
         <Container>
             <Row>
                 {plotItems}

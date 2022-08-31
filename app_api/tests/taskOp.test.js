@@ -18,18 +18,18 @@ describe('Create task, upload files and logs', () => {
 
     it('Create a task without dependencies', async () => {
         const newTask = {
-            source: 'file:///home/lukacu/checkouts/gaptrack/',
+            source: 'test_source',
             entrypoint: 'train_match',
-            tag: 'TEST3',
+            tag: 'TEST5',
             arguments: [
                 "backbone=@TEST1",
                 "stop_epochs=@TEST2",
-                "lr_step=30",
+                "lr_step=40",
                 "lr_gamma=0.5",
-                "embedding_loss=false",
+                "embedding_loss=true",
                 "batch_size=64",
                 "feature_reduction=256",
-                "augment_move=60",
+                "augment_move=780",
                 "delta=3",
                 "batch_size=64",
                 "augment_scale=0.2",
@@ -60,22 +60,22 @@ describe('Create task, upload files and logs', () => {
         const {body, statusCode} = await request.post(`/api/tasks/${taskId}/lock`);
         lockToken = body.accessToken;
     });
-    /*
+
     it('Upload files for the task', async () => {
         const {body, statusCode} = await request
             .post(`/api/tasks/${taskId}/files`)
             .set('Authorization', 'Bearer ' + lockToken)
-            .attach('files', '/home/tine/Faks/test_files/test1.txt')
-            .attach('files', '/home/tine/Faks/test_files/test2.txt')
-            .attach('files', '/home/tine/Faks/test_files/test3.txt')
-            .attach('files', '/home/tine/Faks/test_files/test4.txt')
-            .attach('files', '/home/tine/Faks/test_files/test5.txt')
+            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test1.txt')
+            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test2.txt')
+            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test3.txt')
+            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test4.txt')
+            .attach('files', 'C:/Users/tinec/Desktop/Faks/3.letnik/Diploma/test_files/test5.txt')
+
 
         expect(statusCode).toBe(200);
         expect(body.numberOfNewFiles).toBe(5);
     });
 
-     */
     /*
     it('Get files of the task', async () => {
        const {body, statusCode} = await request

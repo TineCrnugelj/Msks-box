@@ -137,7 +137,7 @@ const TaskTable = () => {
         <Fragment>
             <div className={classes.header}>
                 <h1>Tasks ({tasksList.length})</h1>
-                <button className={classes.btnAddTask} onClick={redirectHandler}>+ Add a task</button>
+                <button className={classes.btnAddTask} onClick={redirectHandler}>+ Add</button>
                 <Searchbar onQueryChange={searchTasks} />
             </div>
 
