@@ -13,12 +13,19 @@ import TableContainer from "@mui/material/TableContainer";
 import {styled} from "@mui/material/styles";
 import TableRow from "@mui/material/TableRow";
 import TableCell, {tableCellClasses} from "@mui/material/TableCell";
+import {NavLink} from "react-router-dom";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
     // hide last border
     '&:last-child td, &:last-child th': {
         border: 0,
     },
+    '&:nth-of-type(odd)': {
+        backgroundColor: '#ADD8E6',
+    },
+    '&:nth-of-type(even)': {
+        backgroundColor: '#FF817E',
+    }
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -37,13 +44,13 @@ const StyledTableCellDifferent = styled(TableCell)(({ theme }) => ({
         color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
-        color: 'red'
+        color: 'black',
+        fontWeight: 700
     },
 }));
 
 const Compare = () => {
     const tasksToCompare = useSelector(state => state.tasks.tasksToCompare);
-    const tasksTags = tasksToCompare.map(task => `${task.tag} `);
 
     const keys = useMemo(() => {
         if (tasksToCompare[0]) {
@@ -73,21 +80,27 @@ const Compare = () => {
 
     }, [tasksToCompare]);
 
+    if (tasksToCompare.length < 2) {
+        return <h1>No tasks to compare</h1>;
+    }
+
     return <Fragment>
         <section className={classes.plots}>
             <Card>
-            <h1 className={classes.heading}>Comparing tasks: {tasksTags}</h1>
+            <h1 className={classes.heading}>Comparing tasks ({tasksToCompare.length})</h1>
                 <div className={classes.cards}>
                     <h2>{keys.length > 0 ? 'Arguments:' : ''}</h2>
                     <TableContainer component={Paper}>
                         <Table sx={{ minWidth: 650 }} aria-label='arguments'>
                             <TableHead>
                                 <StyledTableRow>
+                                    <StyledTableCell>Task</StyledTableCell>
                                     {keys.map(key => <StyledTableCell key={Math.random()}>{key}</StyledTableCell>)}
                                 </StyledTableRow>
                             </TableHead>
                             <TableBody>
                                 <StyledTableRow>
+                                    <StyledTableCell key={Math.random()}><NavLink to={`/tasks/${tasksToCompare[0].id}`}>{tasksToCompare[0].hash}</NavLink></StyledTableCell>
                                     {values1.map((val, i) => {
                                         if (val !== values2[i]) {
                                             return <StyledTableCellDifferent key={Math.random()}>{val}</StyledTableCellDifferent>
@@ -96,6 +109,7 @@ const Compare = () => {
                                     )}
                                 </StyledTableRow>
                                 <StyledTableRow>
+                                    <StyledTableCell key={Math.random()}><NavLink to={`/tasks/${tasksToCompare[1].id}`}>{tasksToCompare[1].hash}</NavLink></StyledTableCell>
                                     {values2.map((val, i) => {
                                         if (val !== values1[i]) {
                                             return <StyledTableCellDifferent key={Math.random()}>{val}</StyledTableCellDifferent>

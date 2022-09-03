@@ -20,10 +20,8 @@ describe('Create task, upload files and logs', () => {
         const newTask = {
             source: 'test_source',
             entrypoint: 'train_match',
-            tag: 'TEST5',
+            tag: 'TEST7',
             arguments: [
-                "backbone=@TEST1",
-                "stop_epochs=@TEST2",
                 "lr_step=40",
                 "lr_gamma=0.5",
                 "embedding_loss=true",

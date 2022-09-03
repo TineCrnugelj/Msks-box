@@ -17,3 +17,8 @@
 .head {
     display: inline-flex;
 }
+
+.addToCompareBtn {
+    margin-left: 1rem;
+    height: 50px;
+}

@@ -2,6 +2,7 @@ import {Fragment, useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getDataToPlot, resetPlots} from "../../features/tasks/taskSlice";
 import ClipLoader from "react-spinners/ClipLoader";
+import {Draggable} from "react-beautiful-dnd";
 import Plot from './Plot';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -36,8 +37,16 @@ const Plots = ({id}) => {
 
     const plotItems = useMemo(() => {
         const plots = [];
+        let i = 0;
         for (const plot of dataToPlot) {
-            plots.push(<Col key={plot.name}><Plot key={plot.name} title={plot.name} data={plot.data} /></Col>);
+            plots.push(<Col key={plot.name}><Draggable key={Math.random()} draggableId={plot.name} index={i}>
+                {(provided) => (
+                    <div {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps}>
+                        <Plot key={plot.name} title={plot.name} data={plot.data} />
+                    </div>
+                )}
+            </Draggable></Col>);
+            i++;
         }
         return plots;
     }, [dataToPlot]);

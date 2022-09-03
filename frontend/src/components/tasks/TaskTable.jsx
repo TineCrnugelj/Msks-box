@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import { getTasks, reset, setFilteredTasks } from "../../features/tasks/taskSlice";
 import ClipLoader from 'react-spinners/ClipLoader'
+import {FaClock, FaCheck, FaTimes, FaQuestion, FaSpinner} from "react-icons/fa";
 import Actions from "./Actions";
 import ReactTimeAgo from "react-time-ago";
 import TimeAgo from 'javascript-time-ago';
@@ -16,6 +17,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
+import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Searchbar from "./Searchbar";
@@ -24,9 +26,10 @@ import Tag from "./Tag";
 TimeAgo.addLocale(en)
 
 const columns = [
-    { id: 'tag', label: 'Tag', minWidth: 150 },
+    { id: 'hash', label: 'Hash', minWidth: 80 },
+    { id: 'status', label: 'Status', minWidth: 150 },
+    { id: 'tag', label: 'Tag', minWidth: 140 },
     { id: 'entrypoint', label: 'Entrypoint', minWidth: 170 },
-    { id: 'status', label: 'Status', minWidth: 140 },
     { id: 'created', label: 'Created', minWidth: 170 },
     { id: 'updated', label: 'Updated', minWidth: 170 },
     { id: 'actions', label: 'Actions', minWidth: 130 },
@@ -109,28 +112,38 @@ const TaskTable = () => {
             if (task.tag) {
                 return task.tag.toLowerCase().includes(searchWord) ||
                     task.status.toLowerCase().includes(searchWord) ||
-                    task.entrypoint.toLowerCase().includes(searchWord);
+                    task.hash.toLowerCase().includes(searchWord);
             }
             else {
                 return task.status.toLowerCase().includes(searchWord) ||
-                       task.entrypoint.toLowerCase().includes(searchWord);
+                       task.hash.toLowerCase().includes(searchWord);
             }
         });
 
         dispatch(setFilteredTasks(newFilter));
     }
 
-    function getColor(status) {
+    function getStatusIcon(status) {
+        if (status === 'PENDING') {
+            return <FaClock color={"#044599"} size={25} />
+        }
+        if (status === 'COMPLETE') {
+            return <FaCheck color={"#0d865d"} size={25} />
+        }
+        if (status === 'FAILED') {
+            return <FaTimes color={"#ba3f38"} size={25} />
+        }
+        if (status === 'RUNNING') {
+            return <FaSpinner color={"#ffd343"} size={25} />
+        }
+        return <FaQuestion color={"#808080"} size={25} />
+        /*
         const colors = {
-            PENDING: "#044599",
-            RUNNING: "#ffd343",
             PREPARING: "#ffa200",
-            COMPLETE: "#0d865d",
-            FAILED: "#ba3f38",
             ACHIEVED: "#808080",
             UNKNOWN: "#808080"
         };
-        return colors[status];
+         */
     }
 
     return (
@@ -164,13 +177,18 @@ const TaskTable = () => {
                                     return (
                                         <TableRow hover role='table' tabIndex={-1} key={task._id}>
                                             <TableCell role='cell' key={task.id} align={task.align}>
+                                                <NavLink to={`/tasks/${task._id}`}>
+                                                    {task.hash}
+                                                </NavLink>
+                                            </TableCell>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
+                                                {getStatusIcon(task.status)}
+                                            </TableCell>
+                                            <TableCell role='cell' key={task.id} align={task.align}>
                                                 <Tag task={task} />
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
                                                 {task.entrypoint}
-                                            </TableCell>
-                                            <TableCell role='cell' key={task.id} align={task.align}>
-                                                <span style={{color: getColor(task.status)}}>{task.status}</span>
                                             </TableCell>
                                             <TableCell role='cell' key={task.id} align={task.align}>
                                                 <ReactTimeAgo date={new Date(task.created)} locale='en' />
@@ -197,6 +215,9 @@ const TaskTable = () => {
                                     );
                                 })}
                         </TableBody>
+                        <TableFooter>
+
+                        </TableFooter>
                     </Table>
                 </TableContainer>
                 <TablePagination

@@ -19,7 +19,7 @@ const Searchbar = (props) => {
                 onChange={onChangeQuery}
                 className="form-control my-0 py-1"
                 type="text"
-                placeholder="Search tag, entrypoint or status"
+                placeholder="Search by hash, tag or status"
                 aria-label="Search"
                 value={searchQuery}
             />

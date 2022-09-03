@@ -79,16 +79,16 @@ const TaskDetails = () => {
             <section className={classes.tasks}>
                 <Card>
                     <div className={classes.head}>
-                        <h1 className={classes.heading}>Task Details: {task.tag ? task.tag : '/'}</h1>
+                        <h1 className={classes.heading}>Task Details: {task.hash}</h1>
+                        <Button onClick={addToCompareHandler} className={classes.addToCompareBtn}>+ Add to compare</Button>
                     </div>
-                    <p><strong>Hash: </strong>{task.hash}</p>
+                    <p><strong>Tags: </strong>{task.tag ? task.tag : 'No tags'}</p>
                     <p><strong>Status: </strong>{task.status} &nbsp;  <strong>Entrypoint: </strong>{task.entrypoint} &nbsp; <strong>Commit: </strong>{task.commit}</p>
                     <p><strong>Created: </strong><ReactTimeAgo locale='en' date={new Date(task.created)} /></p>
                     <p><strong>Updated: </strong><ReactTimeAgo locale='en' date={new Date(task.updated)} /></p>
                     <h3 className={classes.argsTitle}>Arguments:</h3>
                     {task.arguments.length > 0 ? <ArgumentTable args={task.arguments}/> : <p>No arguments</p>}
                     <Dependencies dependencies={task.dependencies} id={task._id} />
-                    <Button onClick={addToCompareHandler} >+ Add to compare</Button>
                     <Box sx={{ width: '100%' }} marginTop={3} >
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered variant='fullWidth'>

@@ -10,10 +10,6 @@ const Actions = (props) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const toggleDetailsHandler = () => {
-        navigate('/tasks/' + props.id);
-    }
-
     const cloneTaskHandler = () => {
         navigate(`/update-task?action=clone&source=${props.source}&entrypoint=${props.entrypoint}&tag=${props.tag}&arguments=${props.arguments}`)
     }
@@ -27,6 +23,7 @@ const Actions = (props) => {
             id: props.id,
             source: props.source,
             entrypoint: props.entrypoint,
+            hash: props.hash,
             tag: props.tag,
             args: props.arguments,
             created: props.created,
@@ -41,7 +38,6 @@ const Actions = (props) => {
 
     return (
         <DropdownButton id="dropdown-basic-button" title="Options">
-            <Dropdown.Item onClick={toggleDetailsHandler} >Details</Dropdown.Item>
             <Dropdown.Item onClick={cloneTaskHandler}>Clone</Dropdown.Item>
             <Dropdown.Item onClick={deleteTaskHandler}>Delete</Dropdown.Item>
             <Dropdown.Item onClick={addToCompareHandler}>Add to compare</Dropdown.Item>

@@ -27,7 +27,6 @@ const ComparePlot = ({plotData}) => {
                 <XAxis dataKey="step" />
                 <YAxis />
                 <Tooltip />
-                <Legend />
                 <Line type="monotone" dataKey={dataKeys[1]} stroke="#044599" dot={false} />
                 <Line type="monotone" dataKey={dataKeys[2]} stroke="#f54242" dot={false} />
             </LineChart>
