@@ -19,3 +19,6 @@ Backend is implemented with NodeJS and ExpressJS. It supports all CRUD operation
 ## Demo images
 
 ![Main page](demo_images/home.PNG)
+![Details page](demo_images/details-page.PNG)
+![Compare page](demo_images/compare.PNG)
+![New task page](demo_images/new-task.PNG)
