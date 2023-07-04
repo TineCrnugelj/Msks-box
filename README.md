@@ -15,3 +15,7 @@ MUI, Redux Toolkit.
 ## Backend
 
 Backend is implemented with NodeJS and ExpressJS. It supports all CRUD operations, authentication with JWT, locking of experiments, file upload etc.
+
+## Demo images
+
+![Main page](demo_images/home.PNG)
